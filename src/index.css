@@ -25,6 +25,6 @@
 
 /* 모든 요소의 기본 여백 제거 → 브라우저별 기본 margin/padding 차이를 제거하여 레이아웃을 예측 가능하게 만듦 */
 * {
-  padding: 0;
-  margin: 0;
+  /* padding: 0; */
+  /* margin: 0; */
 }

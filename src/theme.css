@@ -8,4 +8,8 @@
   .bg-primary-light {
     @apply bg-[#D5DEF5];
   }
+
+  .bg-primary {
+    @apply bg-[#6181D8];
+  }
 }

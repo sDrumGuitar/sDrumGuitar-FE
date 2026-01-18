@@ -18,6 +18,7 @@ export const MenuList = () => {
               href={menu.href}
               label={menu.label}
               active={!!isActive}
+              icon={menu.icon}
             />
 
             {menu.children && isActive && (

@@ -13,27 +13,35 @@ import { cx } from "./utils";
 export const ParentMenu = ({
   href,
   label,
+  icon: Icon,
   active,
 }: {
   href: string;
   label: string;
   active: boolean;
+  icon?: React.ElementType;
 }) => (
   <NavLink
     to={href}
     className={() => cx(parentBase, active ? parentActive : parentInactive)}
   >
-    {label}
+    <span className="flex items-center gap-3">
+      {Icon && <Icon className="text-lg" />}
+      <span>{label}</span>
+    </span>
   </NavLink>
 );
 
-export const ChildMenu = ({ href, label }: MenuItem) => (
+export const ChildMenu = ({ href, label, icon: Icon }: MenuItem) => (
   <NavLink
     to={href}
     className={({ isActive }) =>
       cx(childBase, isActive ? childActive : childInactive)
     }
   >
-    {label}
+    <span className="flex items-center gap-3">
+      {Icon && <Icon className="text-lg" />}
+      <span>{label}</span>
+    </span>
   </NavLink>
 );

@@ -1,6 +1,8 @@
+import type { IconType } from "react-icons";
+
 export interface MenuItem {
   href: string;
   label: string;
-  icon?: React.ReactNode;
+  icon?: IconType;
   children?: MenuItem[];
 }

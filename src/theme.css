@@ -1,15 +1,36 @@
 @import "tailwindcss";
 
+@layer base {
+  :root {
+    --color-primary: #6181d8;
+    --color-primary-light: #d5def5;
+  }
+}
 @layer utilities {
-  .bg-primary-black {
-    @apply bg-black;
-  }
-
-  .bg-primary-light {
-    @apply bg-[#D5DEF5];
-  }
-
+  /* background */
   .bg-primary {
-    @apply bg-[#6181D8];
+    @apply bg-(--color-primary);
+  }
+  .bg-primary-light {
+    @apply bg-(--color-primary-light);
+  }
+  .hover\:bg-primary-light:hover {
+    @apply bg-(--color-primary-light);
+  }
+
+  /* text */
+  .text-primary {
+    @apply text-(--color-primary);
+  }
+  .text-primary-light {
+    @apply text-(--color-primary-light);
+  }
+
+  /* border */
+  .border-primary {
+    @apply border-(--color-primary);
+  }
+  .border-primary-light {
+    @apply border-(--color-primary-light);
   }
 }

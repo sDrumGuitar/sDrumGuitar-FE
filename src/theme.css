@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .bg-primary-black {
+    @apply bg-black;
+  }
+
+  .bg-primary-light {
+    @apply bg-[#D5DEF5];
+  }
+}

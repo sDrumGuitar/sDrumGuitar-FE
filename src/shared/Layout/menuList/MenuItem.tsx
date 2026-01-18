@@ -1,0 +1,47 @@
+import { NavLink } from "react-router-dom";
+import type { MenuItem } from "./types";
+import {
+  parentBase,
+  parentActive,
+  parentInactive,
+  childBase,
+  childActive,
+  childInactive,
+} from "./styles";
+import { cx } from "./utils";
+
+export const ParentMenu = ({
+  href,
+  label,
+  icon: Icon,
+  active,
+}: {
+  href: string;
+  label: string;
+  active: boolean;
+  icon?: React.ElementType;
+}) => (
+  <NavLink
+    to={href}
+    className={() => cx(parentBase, active ? parentActive : parentInactive)}
+  >
+    <span className="flex items-center gap-3">
+      {Icon && <Icon className="text-lg" />}
+      <span>{label}</span>
+    </span>
+  </NavLink>
+);
+
+export const ChildMenu = ({ href, label, icon: Icon }: MenuItem) => (
+  <NavLink
+    to={href}
+    className={({ isActive }) =>
+      cx(childBase, isActive ? childActive : childInactive)
+    }
+  >
+    <span className="flex items-center gap-3">
+      {Icon && <Icon className="text-lg" />}
+      <span>{label}</span>
+    </span>
+  </NavLink>
+);

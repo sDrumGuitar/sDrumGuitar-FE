@@ -25,6 +25,9 @@
   .text-primary-light {
     @apply text-(--color-primary-light);
   }
+  .hover\:text-primary:hover {
+    @apply text-(--color-primary);
+  }
 
   /* border */
   .border-primary {

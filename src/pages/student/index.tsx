@@ -1,5 +1,5 @@
-import NormalButton from "@/shared/button/NormalButton";
-import TableSection from "./components/TableSection";
+import NormalButton from '@/shared/button/NormalButton';
+import TableSection from './components/TableSection';
 
 function StudentPage() {
   return (

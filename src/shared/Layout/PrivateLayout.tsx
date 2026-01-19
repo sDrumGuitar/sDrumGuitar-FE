@@ -1,5 +1,5 @@
-import OutletLayout from "./OutletLayout";
-import PrivateSidebar from "./PrivateSidebar";
+import OutletLayout from './OutletLayout';
+import PrivateSidebar from './PrivateSidebar';
 
 function PrivateLayout() {
   return (

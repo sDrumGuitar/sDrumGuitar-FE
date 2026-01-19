@@ -1,14 +1,14 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation } from 'react-router-dom';
 
 const PAGE_TITLE_MAP: Record<string, string> = {
-  "/home": "홈",
-  "/student": "학생 관리",
-  "/course": "수강 관리",
-  "/schedule": "일정 관리",
-  "/message": "메시지",
-  "/message/send": "문자 보내기",
-  "/message/history": "발송 내역",
-  "/message/template": "문자 템플릿",
+  '/home': '홈',
+  '/student': '학생 관리',
+  '/course': '수강 관리',
+  '/schedule': '일정 관리',
+  '/message': '메시지',
+  '/message/send': '문자 보내기',
+  '/message/history': '발송 내역',
+  '/message/template': '문자 템플릿',
 };
 
 function OutletLayout() {
@@ -17,9 +17,9 @@ function OutletLayout() {
   const pageTitle =
     PAGE_TITLE_MAP[pathname] ??
     PAGE_TITLE_MAP[
-      Object.keys(PAGE_TITLE_MAP).find((key) => pathname.startsWith(key)) ?? ""
+      Object.keys(PAGE_TITLE_MAP).find((key) => pathname.startsWith(key)) ?? ''
     ] ??
-    "페이지";
+    '페이지';
 
   return (
     <div className="pt-10 px-10 w-full">

@@ -1,17 +1,17 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 // page 별 index 컴포넌트
-import LoginPage from "@/pages/login";
-import HomePage from "@/pages/home";
-import StudentPage from "@/pages/student";
-import CoursePage from "@/pages/course";
-import SchedulePage from "@/pages/schedule";
-import MessageSendPage from "@/pages/message/send";
-import MessageHistoryPage from "@/pages/message/history";
-import MessageTemplatePage from "@/pages/message/template";
+import LoginPage from '@/pages/login';
+import HomePage from '@/pages/home';
+import StudentPage from '@/pages/student';
+import CoursePage from '@/pages/course';
+import SchedulePage from '@/pages/schedule';
+import MessageSendPage from '@/pages/message/send';
+import MessageHistoryPage from '@/pages/message/history';
+import MessageTemplatePage from '@/pages/message/template';
 
 // layout 컴포넌트
-import PrivateLayout from "@/shared/Layout/PrivateLayout";
+import PrivateLayout from '@/shared/Layout/PrivateLayout';
 
 function Router() {
   return (

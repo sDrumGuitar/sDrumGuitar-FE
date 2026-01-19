@@ -8,7 +8,7 @@ function TableRow({ columns, index }: TableRowProps) {
   return (
     <tr
       className={`text-gray-600 hover:text-primary hover:font-bold ${
-        isEven ? "bg-primary-light" : ""
+        isEven ? 'bg-primary-light' : ''
       }`}
     >
       {columns.map((column) => (

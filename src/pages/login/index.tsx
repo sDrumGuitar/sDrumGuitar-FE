@@ -1,12 +1,12 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import InputField from "./components/InputField";
-import LoginButton from "./components/LoginButton";
-import LogoName from "./components/LogoName";
+import InputField from './components/InputField';
+import LoginButton from './components/LoginButton';
+import LogoName from './components/LogoName';
 
 function LoginPage() {
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const navigate = useNavigate();
@@ -20,13 +20,13 @@ function LoginPage() {
     const isValid = adminPassword === password;
 
     if (!isValid) {
-      setErrorMessage("비밀번호가 맞지 않습니다.");
+      setErrorMessage('비밀번호가 맞지 않습니다.');
       return;
     }
 
     setErrorMessage(null);
-    alert("로그인되었습니다.");
-    navigate("/home");
+    alert('로그인되었습니다.');
+    navigate('/home');
   };
 
   return (

@@ -1,5 +1,5 @@
-import { NavLink } from "react-router-dom";
-import type { MenuItem } from "./types";
+import { NavLink } from 'react-router-dom';
+import type { MenuItem } from './types';
 import {
   parentBase,
   parentActive,
@@ -7,8 +7,8 @@ import {
   childBase,
   childActive,
   childInactive,
-} from "./styles";
-import { cx } from "./utils";
+} from './styles';
+import { cx } from './utils';
 
 export const ParentMenu = ({
   href,

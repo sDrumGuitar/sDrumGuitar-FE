@@ -1,6 +1,6 @@
-import { useNavigate } from "react-router-dom";
-import { MenuList } from "./menuList/MenuList";
-import { IoIosLogOut } from "react-icons/io";
+import { useNavigate } from 'react-router-dom';
+import { MenuList } from './menuList/MenuList';
+import { IoIosLogOut } from 'react-icons/io';
 
 function PrivateSidebar() {
   return (
@@ -32,8 +32,8 @@ const LogoutButton = () => {
   const handleLogout = () => {
     // 👉 추후 실제 로그아웃 로직 추가 가능
     // ex) auth.signOut(), 토큰 삭제 등
-    alert("로그아웃 되었습니다.");
-    navigate("/");
+    alert('로그아웃 되었습니다.');
+    navigate('/');
   };
 
   return (

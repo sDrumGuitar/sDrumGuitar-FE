@@ -36,7 +36,10 @@ function StudentModal({ onSuccess }: StudentModalProps) {
         <StudentCreateForm onDirtyChange={setIsDirty} onSuccess={onSuccess} />
       )}
       {mode === 'DETAIL' && selectedStudent && (
-        <StudentDetailView student={selectedStudent} />
+        <StudentDetailView
+          onDirtyChange={setIsDirty}
+          student={selectedStudent}
+        />
       )}
     </ModalWrapper>
   );

@@ -2,6 +2,7 @@ interface TableRowProps {
   columns: string[];
   index: number;
 }
+
 function TableRow({ columns, index }: TableRowProps) {
   const isEven = index % 2 === 0;
 
@@ -11,15 +12,19 @@ function TableRow({ columns, index }: TableRowProps) {
         isEven ? 'bg-primary-light' : ''
       }`}
     >
-      {columns.map((column) => (
-        <TD key={column} column={column} />
+      {columns.map((data, idx) => (
+        <TD key={idx}>{data}</TD>
       ))}
     </tr>
   );
 }
 
-const TD = ({ column }: { column: string }) => {
-  return <td className="text-center py-2">{column}</td>;
+interface TDProps {
+  children: React.ReactNode;
+}
+
+const TD = ({ children }: TDProps) => {
+  return <td className="text-center py-2">{children}</td>;
 };
 
 export default TableRow;

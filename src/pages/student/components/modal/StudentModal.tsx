@@ -28,6 +28,7 @@ function StudentModal({ onSuccess }: StudentModalProps) {
         <h2 className="text-lg font-bold">
           {mode === 'CREATE' && '신규 학생 등록'}
           {mode === 'DETAIL' && '학생 상세'}
+          {mode === 'UPDATE' && '학생 상세 수정'}
         </h2>
         <button onClick={handleCloseRequest}>닫기</button>
       </div>
@@ -35,10 +36,10 @@ function StudentModal({ onSuccess }: StudentModalProps) {
       {mode === 'CREATE' && (
         <StudentCreateForm onDirtyChange={setIsDirty} onSuccess={onSuccess} />
       )}
-      {mode === 'DETAIL' && selectedStudent && (
+      {(mode === 'DETAIL' || mode === 'UPDATE') && selectedStudent && (
         <StudentDetailView
-          onDirtyChange={setIsDirty}
           student={selectedStudent}
+          onDirtyChange={setIsDirty}
           onSuccess={onSuccess}
         />
       )}

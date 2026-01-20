@@ -12,6 +12,7 @@ import {
 import type { Student } from '@/types/student';
 import { useEffect, useState } from 'react';
 import { updateStudent } from '@/shared/api/students';
+import { useStudentModalStore } from '@/store/studentModalStore';
 
 interface StudentFormState {
   name: string;
@@ -49,16 +50,18 @@ function StudentDetailView({
   );
 
   const [form, setForm] = useState<StudentFormState>(originalForm);
-  const [isEditMode, setIsEditMode] = useState(false);
+  const { mode, openUpdate, openDetail } = useStudentModalStore();
+  const isEditMode = mode === 'UPDATE';
 
   const isDirty = JSON.stringify(form) !== JSON.stringify(originalForm);
 
   useEffect(() => {
-    const mapped = mapStudentToForm(student);
-    setOriginalForm(mapped);
-    setForm(mapped);
-    setIsEditMode(false);
-  }, [student]);
+    if (mode !== 'UPDATE') {
+      const mapped = mapStudentToForm(student);
+      setOriginalForm(mapped);
+      setForm(mapped);
+    }
+  }, [student, mode]);
 
   useEffect(() => {
     onDirtyChange(isEditMode && isDirty);
@@ -76,14 +79,14 @@ function StudentDetailView({
 
   // 취소 / 저장 수정 버튼 로직
   const handleCancelEdit = () => {
-    setForm(originalForm); // 원래 값 복구
-    setIsEditMode(false);
+    setForm(originalForm);
+    openDetail(student);
   };
 
   const handleSave = async () => {
     console.log('PATCH 대상 student.id:', student.id);
     try {
-      await updateStudent(student.id, {
+      const updatedStudent = await updateStudent(student.id, {
         name: form.name,
         age_group: form.ageGroup,
         phone: form.phone,
@@ -94,9 +97,9 @@ function StudentDetailView({
 
       // 성공 시 기준값 갱신
       setOriginalForm(form);
-      setIsEditMode(false);
       onDirtyChange(false);
       onSuccess(); // ⭐ 목록 갱신 트리거
+      openDetail(updatedStudent);
     } catch (error) {
       console.error('학생 수정 실패', error);
       alert('학생 수정에 실패했습니다.');
@@ -156,7 +159,7 @@ function StudentDetailView({
 
       <div className="w-full flex justify-end gap-2">
         {!isEditMode && (
-          <NormalButton text="수정" onClick={() => setIsEditMode(true)} />
+          <NormalButton text="수정" onClick={() => openUpdate(student)} />
         )}
 
         {isEditMode && (

@@ -9,6 +9,9 @@ import {
   AGE_GROUP_OPTIONS,
   FAMILY_DISCOUNT_OPTIONS,
 } from '@/constants/student';
+import NormalButton from '@/shared/button/NormalButton';
+import { createStudent } from '@/shared/api/students';
+import { useStudentModalStore } from '@/store/studentModalStore';
 
 interface StudentFormState {
   name: string;
@@ -32,6 +35,7 @@ interface StudentCreateFormProps {
   onDirtyChange: (dirty: boolean) => void;
 }
 function StudentCreateForm({ onDirtyChange }: StudentCreateFormProps) {
+  const { close } = useStudentModalStore();
   const [form, setForm] = useState<StudentFormState>(INITIAL_FORM);
   const isDirty = JSON.stringify(form) !== JSON.stringify(INITIAL_FORM);
 
@@ -47,6 +51,28 @@ function StudentCreateForm({ onDirtyChange }: StudentCreateFormProps) {
       ...prev,
       [key]: value,
     }));
+  };
+
+  const handleSubmit = async () => {
+    if (!isDirty) return;
+
+    try {
+      await createStudent({
+        name: form.name,
+        age_group: form.ageGroup,
+        phone: form.phone,
+        parent_phone: form.parentPhone,
+        family_discount: Boolean(form.familyDiscount),
+        memo: form.memo,
+      });
+
+      setForm(INITIAL_FORM);
+      onDirtyChange(false);
+      close();
+    } catch (error) {
+      console.error('학생 등록 실패', error);
+      alert('학생 등록에 실패했습니다.');
+    }
   };
 
   return (
@@ -95,7 +121,9 @@ function StudentCreateForm({ onDirtyChange }: StudentCreateFormProps) {
         <Textarea value={form.memo} onChange={(v) => updateForm('memo', v)} />
       </FormField>
 
-      <button onClick={() => console.log(form)}>저장</button>
+      <div className="w-full flex justify-end">
+        <NormalButton onClick={handleSubmit} text="저장" disabled={!isDirty} />
+      </div>
     </div>
   );
 }

@@ -1,6 +1,9 @@
 import type { Student } from '@/types/student';
 import { api } from './axios';
 
+// ====================
+// GET : 모든 학생 정보 불러오기
+// ====================
 interface GetStudentsResponse {
   total_count: number;
   page: number;
@@ -29,4 +32,26 @@ export const getStudents = async ({
     size,
     students: res.data,
   };
+};
+
+// ====================
+// POST : 신규 학생 등록하기
+// ====================
+export interface CreateStudentPayload {
+  name: string;
+  age_group: string;
+  phone: string;
+  parent_phone: string;
+  family_discount: boolean;
+  memo: string;
+}
+
+export const createStudent = async (payload: CreateStudentPayload) => {
+  const res = await api.post('/students', {
+    ...payload,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  });
+
+  return res.data;
 };

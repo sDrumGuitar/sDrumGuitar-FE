@@ -1,14 +1,16 @@
 interface TableRowProps {
   columns: string[];
   index: number;
+  onClick?: (rowIndex: number) => void;
 }
 
-function TableRow({ columns, index }: TableRowProps) {
+function TableRow({ columns, index, onClick }: TableRowProps) {
   const isEven = index % 2 === 0;
 
   return (
     <tr
-      className={`text-gray-600 hover:text-primary hover:font-bold ${
+      onClick={() => onClick?.(index)}
+      className={`cursor-pointer text-gray-600 hover:text-primary hover:font-bold ${
         isEven ? 'bg-primary-light' : ''
       }`}
     >

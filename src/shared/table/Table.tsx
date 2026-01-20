@@ -4,8 +4,10 @@ import TableRow from './TableRow';
 interface TableProps {
   headers: string[];
   rows: string[][];
+  onRowClick?: (rowIndex: number) => void;
 }
-function Table({ headers, rows }: TableProps) {
+
+function Table({ headers, rows, onRowClick }: TableProps) {
   return (
     <table className="w-full table-fixed">
       <thead>
@@ -13,7 +15,12 @@ function Table({ headers, rows }: TableProps) {
       </thead>
       <tbody>
         {rows.map((row, index) => (
-          <TableRow columns={row} key={index} index={index} />
+          <TableRow
+            key={index}
+            columns={row}
+            index={index}
+            onClick={onRowClick}
+          />
         ))}
       </tbody>
     </table>

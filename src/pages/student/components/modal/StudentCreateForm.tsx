@@ -33,8 +33,12 @@ const INITIAL_FORM: StudentFormState = {
 
 interface StudentCreateFormProps {
   onDirtyChange: (dirty: boolean) => void;
+  onSuccess: () => void;
 }
-function StudentCreateForm({ onDirtyChange }: StudentCreateFormProps) {
+function StudentCreateForm({
+  onDirtyChange,
+  onSuccess,
+}: StudentCreateFormProps) {
   const { close } = useStudentModalStore();
   const [form, setForm] = useState<StudentFormState>(INITIAL_FORM);
   const isDirty = JSON.stringify(form) !== JSON.stringify(INITIAL_FORM);
@@ -84,6 +88,7 @@ function StudentCreateForm({ onDirtyChange }: StudentCreateFormProps) {
 
       setForm(INITIAL_FORM);
       onDirtyChange(false);
+      onSuccess();
       close();
     } catch (error) {
       console.error('학생 등록 실패', error);

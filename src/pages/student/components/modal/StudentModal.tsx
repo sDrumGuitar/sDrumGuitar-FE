@@ -4,7 +4,10 @@ import StudentCreateForm from './StudentCreateForm';
 import StudentDetailView from './StudentDetailView';
 import { useState } from 'react';
 
-function StudentModal() {
+interface StudentModalProps {
+  onSuccess: () => void;
+}
+function StudentModal({ onSuccess }: StudentModalProps) {
   const { mode, selectedStudent, close } = useStudentModalStore();
   const [isDirty, setIsDirty] = useState(false);
 
@@ -29,7 +32,9 @@ function StudentModal() {
         <button onClick={handleCloseRequest}>닫기</button>
       </div>
 
-      {mode === 'CREATE' && <StudentCreateForm onDirtyChange={setIsDirty} />}
+      {mode === 'CREATE' && (
+        <StudentCreateForm onDirtyChange={setIsDirty} onSuccess={onSuccess} />
+      )}
       {mode === 'DETAIL' && selectedStudent && (
         <StudentDetailView student={selectedStudent} />
       )}

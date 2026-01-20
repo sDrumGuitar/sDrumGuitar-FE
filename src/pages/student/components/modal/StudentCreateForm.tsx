@@ -53,8 +53,24 @@ function StudentCreateForm({ onDirtyChange }: StudentCreateFormProps) {
     }));
   };
 
+  const isValidForm = (form: StudentFormState) => {
+    return (
+      form.name.trim() !== '' &&
+      form.ageGroup.trim() !== '' &&
+      form.phone.trim() !== '' &&
+      form.parentPhone.trim() !== '' &&
+      form.familyDiscount !== null
+    );
+  };
+
+  const isValid = isValidForm(form);
+  const canSubmit = isDirty && isValid;
+
   const handleSubmit = async () => {
-    if (!isDirty) return;
+    if (!canSubmit) {
+      alert('필수 항목을 모두 입력해주세요.');
+      return;
+    }
 
     try {
       await createStudent({
@@ -122,7 +138,11 @@ function StudentCreateForm({ onDirtyChange }: StudentCreateFormProps) {
       </FormField>
 
       <div className="w-full flex justify-end">
-        <NormalButton onClick={handleSubmit} text="저장" disabled={!isDirty} />
+        <NormalButton
+          onClick={handleSubmit}
+          text="저장"
+          disabled={!canSubmit}
+        />
       </div>
     </div>
   );

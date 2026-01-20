@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FormField from '@/shared/form/FormField';
 import TextInput from '@/shared/form/TextInput';
 import Select from '@/shared/form/Select';
@@ -19,15 +19,25 @@ interface StudentFormState {
   memo: string;
 }
 
-function StudentCreateForm() {
-  const [form, setForm] = useState<StudentFormState>({
-    name: '',
-    ageGroup: '',
-    phone: '',
-    parentPhone: '',
-    familyDiscount: null,
-    memo: '',
-  });
+const INITIAL_FORM: StudentFormState = {
+  name: '',
+  ageGroup: '',
+  phone: '',
+  parentPhone: '',
+  familyDiscount: null,
+  memo: '',
+};
+
+interface StudentCreateFormProps {
+  onDirtyChange: (dirty: boolean) => void;
+}
+function StudentCreateForm({ onDirtyChange }: StudentCreateFormProps) {
+  const [form, setForm] = useState<StudentFormState>(INITIAL_FORM);
+  const isDirty = JSON.stringify(form) !== JSON.stringify(INITIAL_FORM);
+
+  useEffect(() => {
+    onDirtyChange(isDirty);
+  }, [isDirty, onDirtyChange]);
 
   const updateForm = <K extends keyof StudentFormState>(
     key: K,

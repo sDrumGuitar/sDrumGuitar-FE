@@ -3,9 +3,12 @@ interface NormalButtonProps {
   onClick?: () => void;
 }
 
-function NormalButton({ text }: NormalButtonProps) {
+function NormalButton({ text, onClick }: NormalButtonProps) {
   return (
-    <button className="bg-primary text-white font-bold py-1 px-2 rounded-lg hover:bg-primary-light hover:text-gray-400">
+    <button
+      onClick={onClick}
+      className="bg-primary text-white font-bold py-1 px-2 rounded-lg hover:bg-primary-light hover:text-gray-400"
+    >
       {text}
     </button>
   );

@@ -1,13 +1,15 @@
-import NormalButton from '@/shared/button/NormalButton';
+import { useStudentModalStore } from '@/store/studentModalStore';
+import ButtonSection from './components/ButtonSection';
 import TableSection from './components/TableSection';
+import StudentModal from './components/StudentModal';
 
 function StudentPage() {
+  const isOpen = useStudentModalStore((state) => state.isOpen);
+
   return (
     <div>
-      {/* <p>Student Page</p> */}
-      <div className="flex justify-end mb-4">
-        <NormalButton text="신규학생 추가" />
-      </div>
+      {isOpen && <StudentModal />}
+      <ButtonSection />
       <TableSection />
     </div>
   );

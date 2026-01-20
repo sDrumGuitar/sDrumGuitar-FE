@@ -4,22 +4,31 @@ interface SelectOption {
 }
 
 interface SelectProps {
-  value?: string;
-  onChange?: (value: string) => void;
   options: SelectOption[];
+  value: string;
+  onChange?: (value: string) => void;
+  disabled?: boolean;
 }
 
-function Select({ value, onChange, options }: SelectProps) {
+function Select({ options, value, onChange, disabled = false }: SelectProps) {
   return (
     <select
       value={value}
+      disabled={disabled}
       onChange={(e) => onChange?.(e.target.value)}
-      className="border flex-1 rounded-sm text-primary border-primary pl-2 py-1 bg-white"
+      className={`
+        border rounded-sm py-1 px-2
+        ${
+          disabled
+            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+            : 'border-primary text-primary'
+        }
+      `}
     >
       <option value="">선택</option>
-      {options.map((option) => (
-        <option key={option.value} value={option.value}>
-          {option.label}
+      {options.map((opt) => (
+        <option key={opt.value} value={opt.value}>
+          {opt.label}
         </option>
       ))}
     </select>

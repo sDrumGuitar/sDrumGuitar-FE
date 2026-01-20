@@ -4,25 +4,35 @@ interface RadioOption {
 }
 
 interface RadioGroupProps {
+  options: RadioOption[];
   value?: string;
   onChange?: (value: string) => void;
-  options: RadioOption[];
+  disabled?: boolean;
 }
 
-function RadioGroup({ value, onChange, options }: RadioGroupProps) {
+function RadioGroup({
+  options,
+  value,
+  onChange,
+  disabled = false,
+}: RadioGroupProps) {
   return (
     <div className="flex gap-4">
-      {options.map((option) => (
+      {options.map((opt) => (
         <label
-          key={option.value}
-          className="flex items-center gap-1 text-primary"
+          key={opt.value}
+          className={`flex items-center gap-1 ${
+            disabled ? 'text-gray-400 cursor-not-allowed' : ''
+          }`}
         >
           <input
             type="radio"
-            checked={value === option.value}
-            onChange={() => onChange?.(option.value)}
+            value={opt.value}
+            checked={value === opt.value}
+            disabled={disabled}
+            onChange={() => onChange?.(opt.value)}
           />
-          {option.label}
+          {opt.label}
         </label>
       ))}
     </div>

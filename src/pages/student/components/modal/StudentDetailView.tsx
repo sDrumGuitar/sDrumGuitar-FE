@@ -11,10 +11,11 @@ import {
 } from '@/constants/student';
 import type { Student } from '@/types/student';
 import { useEffect, useState } from 'react';
+import { updateStudent } from '@/shared/api/students';
 
 interface StudentFormState {
   name: string;
-  ageGroup: string;
+  ageGroup: Student['age_group'];
   phone: string;
   parentPhone: string;
   familyDiscount: boolean;
@@ -35,9 +36,14 @@ function mapStudentToForm(student: Student): StudentFormState {
 interface StudentDetailViewProps {
   student: Student;
   onDirtyChange: (dirty: boolean) => void;
+  onSuccess: () => void;
 }
 
-function StudentDetailView({ student, onDirtyChange }: StudentDetailViewProps) {
+function StudentDetailView({
+  student,
+  onDirtyChange,
+  onSuccess,
+}: StudentDetailViewProps) {
   const [originalForm, setOriginalForm] = useState<StudentFormState>(
     mapStudentToForm(student),
   );
@@ -74,13 +80,27 @@ function StudentDetailView({ student, onDirtyChange }: StudentDetailViewProps) {
     setIsEditMode(false);
   };
 
-  const handleSave = () => {
-    // TODO: UPDATE API 연결
-    console.log('수정된 값', form);
+  const handleSave = async () => {
+    console.log('PATCH 대상 student.id:', student.id);
+    try {
+      await updateStudent(student.id, {
+        name: form.name,
+        age_group: form.ageGroup,
+        phone: form.phone,
+        parent_phone: form.parentPhone,
+        family_discount: form.familyDiscount,
+        memo: form.memo,
+      });
 
-    setOriginalForm(form);
-    setIsEditMode(false);
-    onDirtyChange(false);
+      // 성공 시 기준값 갱신
+      setOriginalForm(form);
+      setIsEditMode(false);
+      onDirtyChange(false);
+      onSuccess(); // ⭐ 목록 갱신 트리거
+    } catch (error) {
+      console.error('학생 수정 실패', error);
+      alert('학생 수정에 실패했습니다.');
+    }
   };
   return (
     <div className="space-y-3">
@@ -97,7 +117,7 @@ function StudentDetailView({ student, onDirtyChange }: StudentDetailViewProps) {
           options={AGE_GROUP_OPTIONS}
           value={form.ageGroup}
           disabled={!isEditMode}
-          onChange={(v) => updateForm('ageGroup', v)}
+          onChange={(v) => updateForm('ageGroup', v as Student['age_group'])}
         />
       </FormField>
 

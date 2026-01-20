@@ -39,6 +39,7 @@ function StudentModal({ onSuccess }: StudentModalProps) {
         <StudentDetailView
           onDirtyChange={setIsDirty}
           student={selectedStudent}
+          onSuccess={onSuccess}
         />
       )}
     </ModalWrapper>

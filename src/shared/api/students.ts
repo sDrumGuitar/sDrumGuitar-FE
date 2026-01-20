@@ -55,3 +55,27 @@ export const createStudent = async (payload: CreateStudentPayload) => {
 
   return res.data;
 };
+
+// ====================
+// PATCH : 학생 정보 수정 (json-server 권장)
+// ====================
+export interface UpdateStudentPayload {
+  name: string;
+  age_group: Student['age_group'];
+  phone: string;
+  parent_phone: string;
+  family_discount: boolean;
+  memo: string;
+}
+
+export const updateStudent = async (
+  studentId: number,
+  payload: UpdateStudentPayload,
+) => {
+  const res = await api.patch(`/students/${studentId}`, {
+    ...payload,
+    updated_at: new Date().toISOString(),
+  });
+
+  return res.data;
+};

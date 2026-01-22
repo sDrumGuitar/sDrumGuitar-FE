@@ -1,21 +1,21 @@
-interface RadioOption {
+export interface RadioOption<T extends string> {
   label: string;
-  value: string;
+  value: T;
 }
 
-interface RadioGroupProps {
-  options: RadioOption[];
-  value?: string;
-  onChange?: (value: string) => void;
+interface RadioGroupProps<T extends string> {
+  options: readonly RadioOption<T>[];
+  value?: T;
+  onChange?: (value: T) => void;
   disabled?: boolean;
 }
 
-function RadioGroup({
+function RadioGroup<T extends string>({
   options,
   value,
   onChange,
   disabled = false,
-}: RadioGroupProps) {
+}: RadioGroupProps<T>) {
   return (
     <div className="flex gap-4">
       {options.map((opt) => (

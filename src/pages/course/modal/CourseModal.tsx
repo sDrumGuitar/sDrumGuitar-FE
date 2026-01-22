@@ -8,7 +8,8 @@ interface CourseModalProps {
   onSuccess: () => void;
 }
 function CourseModal({ onSuccess }: CourseModalProps) {
-  const { mode, selectedCourse, close } = useCourseModalStore();
+  // const { mode, selectedCourse, close } = useCourseModalStore();
+  const { mode, close } = useCourseModalStore();
   const [isDirty, setIsDirty] = useState(false);
 
   const handleCloseRequest = () => {

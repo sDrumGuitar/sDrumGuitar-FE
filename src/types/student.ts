@@ -1,4 +1,6 @@
-export interface Student {
+import type { Base } from './base';
+
+export interface Student extends Base {
   id: number;
   name: string;
   age_group: 'preschool' | 'element' | 'middle' | 'high' | 'adult';
@@ -6,6 +8,4 @@ export interface Student {
   parent_phone: string;
   family_discount: boolean;
   memo: string | null;
-  created_at: string;
-  updated_at: string;
 }

@@ -27,10 +27,10 @@ function StudentPage() {
         headers={['이름', '구분', '전화번호', '부모님 전화번호']}
         getRows={(students) =>
           students.map((student) => [
-            student.name,
-            student.age_group,
-            student.phone,
-            student.parent_phone,
+            student?.name,
+            student?.age_group,
+            student?.phone,
+            student?.parent_phone,
           ])
         }
         onRowClick={(student) => openDetail(student)}

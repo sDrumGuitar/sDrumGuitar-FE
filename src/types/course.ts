@@ -8,7 +8,7 @@ export interface Course extends Base {
   status: 'active' | 'paused' | 'ended';
   lesson_count: number;
   schedule: CourseSchedule[];
-  invocie: CourseInvoice;
+  invoice: CourseInvoice;
 }
 
 interface CourseStudent {

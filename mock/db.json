@@ -3,13 +3,13 @@
     {
       "id": "1",
       "name": "김광일",
-      "age_group": "elementary",
+      "age_group": "high",
       "phone": "010-1234-1234",
       "parent_phone": "010-9999-9999",
       "family_discount": true,
       "memo": "형제 할인 적용",
       "created_at": "2026-09-01T10:00:00",
-      "updated_at": "2026-01-20T16:33:02.477Z"
+      "updated_at": "2026-01-22T14:18:37.138Z"
     },
     {
       "id": "2",

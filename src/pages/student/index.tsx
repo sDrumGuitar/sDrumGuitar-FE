@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import ButtonSection from './components/ButtonSection';
 import TableSection from './components/TableSection';
 import { getStudents } from '@/shared/api/students';
 import type { Student } from '@/types/student';
 import { useStudentModalStore } from '@/store/studentModalStore';
 import StudentModal from './components/modal/StudentModal';
+import ModalOpenButton from '@/shared/modal/ModalOpenButton';
 
 function StudentPage() {
   const { isOpen } = useStudentModalStore();
@@ -15,13 +15,15 @@ function StudentPage() {
     setStudents(students);
   };
 
+  const openCreate = useStudentModalStore((state) => state.openCreate);
+
   useEffect(() => {
     loadStudents();
   }, []);
 
   return (
     <div>
-      <ButtonSection />
+      <ModalOpenButton text="신규학생 추가" openModal={openCreate} />
       <TableSection students={students} />
       {isOpen && <StudentModal onSuccess={loadStudents} />}
     </div>

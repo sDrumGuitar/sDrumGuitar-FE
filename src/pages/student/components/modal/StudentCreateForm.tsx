@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import FormField from '@/shared/form/FormField';
-import TextInput from '@/shared/form/TextInput';
-import Select from '@/shared/form/Select';
-import NumberInput from '@/shared/form/NumberInput';
-import RadioGroup from '@/shared/form/RadioGroup';
-import Textarea from '@/shared/form/Textarea';
+import {
+  FormField,
+  TextInput,
+  Select,
+  NumberInput,
+  RadioGroup,
+  Textarea,
+} from '@/shared/form/index';
 import {
   AGE_GROUP_OPTIONS,
   FAMILY_DISCOUNT_OPTIONS,
@@ -99,7 +101,11 @@ function StudentCreateForm({
   return (
     <div className="space-y-3">
       <FormField label="이름">
-        <TextInput value={form.name} onChange={(v) => updateForm('name', v)} />
+        <TextInput
+          type="text"
+          value={form.name}
+          onChange={(v) => updateForm('name', v)}
+        />
       </FormField>
 
       <FormField label="구분">

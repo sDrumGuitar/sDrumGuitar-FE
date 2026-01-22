@@ -3,18 +3,18 @@ import type { Base } from './base';
 export interface Course extends Base {
   id: number;
   student: CourseStudent;
-  class_type: 'DRUM' | 'GUITAR';
+  class_type: 'DRUM' | 'GUITAR' | null;
   start_date: string;
-  status: 'active' | 'paused' | 'ended';
+  status: 'active' | 'paused' | 'ended' | null;
   lesson_count: number;
   schedules: CourseSchedule[];
   invoice: CourseInvoice;
 }
 
-interface CourseStudent {
+export interface CourseStudent {
   student_id: number;
   name: string;
-  age_group: 'preschool' | 'element' | 'middle' | 'high' | 'adult';
+  age_group: 'preschool' | 'element' | 'middle' | 'high' | 'adult' | null;
   phone: string;
   parent_phone: string;
 }
@@ -26,9 +26,9 @@ export interface CourseSchedule {
   time: string;
 }
 
-interface CourseInvoice {
+export interface CourseInvoice {
   invoice_id: number;
-  method: 'card' | 'cash';
+  method: 'card' | 'cash' | null;
   status: 'paid' | null;
   paid_at: string;
 }

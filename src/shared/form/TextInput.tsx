@@ -1,4 +1,5 @@
 interface TextInputProps {
+  type: string;
   value: string;
   onChange?: (value: string) => void;
   placeholder?: string;
@@ -6,6 +7,7 @@ interface TextInputProps {
 }
 
 function TextInput({
+  type,
   value,
   onChange,
   placeholder,
@@ -13,7 +15,7 @@ function TextInput({
 }: TextInputProps) {
   return (
     <input
-      type="text"
+      type={type}
       value={value}
       placeholder={placeholder}
       disabled={disabled}

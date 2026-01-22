@@ -1,0 +1,238 @@
+[
+  {
+    "course_id": 11,
+    "student": {
+      "student_id": 1,
+      "name": "김광일",
+      "age_group": "adult",
+      "phone": "010-1234-1234",
+      "parent_phone": "010-9999-9999"
+    },
+    "class_type": "DRUM",
+    "start_date": "2026-10-01",
+    "status": "active",
+    "lesson_count": 12,
+    "schedule": [
+      { "weekday": "MON", "time": "15:00" },
+      { "weekday": "WED", "time": "15:00" }
+    ],
+    "invoice": {
+      "invoice_id": 21,
+      "method": "card",
+      "status": "paid",
+      "paid_at": "2026-09-28T14:10:00"
+    },
+    "created_at": "2026-09-25T10:00:00",
+    "updated_at": "2026-10-01T09:00:00"
+  },
+  {
+    "course_id": 12,
+    "student": {
+      "student_id": 2,
+      "name": "이민규",
+      "age_group": "high",
+      "phone": "010-2345-3456",
+      "parent_phone": "010-8888-8888"
+    },
+    "class_type": "GUITAR",
+    "start_date": "2026-10-03",
+    "status": "active",
+    "lesson_count": 8,
+    "schedule": [{ "weekday": "TUE", "time": "18:00" }],
+    "invoice": {
+      "invoice_id": 22,
+      "method": "cash",
+      "status": "paid",
+      "paid_at": "2026-10-01T17:20:00"
+    },
+    "created_at": "2026-09-29T11:30:00",
+    "updated_at": "2026-10-03T09:00:00"
+  },
+  {
+    "course_id": 13,
+    "student": {
+      "student_id": 3,
+      "name": "박서연",
+      "age_group": "middle",
+      "phone": "010-3456-4567",
+      "parent_phone": "010-7777-7777"
+    },
+    "class_type": "PIANO",
+    "start_date": "2026-10-05",
+    "status": "paused",
+    "lesson_count": 10,
+    "schedule": [{ "weekday": "FRI", "time": "16:30" }],
+    "invoice": {
+      "invoice_id": 23,
+      "method": "card",
+      "status": "paid",
+      "paid_at": "2026-10-02T13:00:00"
+    },
+    "created_at": "2026-10-01T10:00:00",
+    "updated_at": "2026-10-10T10:00:00"
+  },
+  {
+    "course_id": 14,
+    "student": {
+      "student_id": 4,
+      "name": "정우진",
+      "age_group": "element",
+      "phone": "010-4567-5678",
+      "parent_phone": "010-6666-6666"
+    },
+    "class_type": "DRUM",
+    "start_date": "2026-10-07",
+    "status": "active",
+    "lesson_count": 12,
+    "schedule": [{ "weekday": "SAT", "time": "11:00" }],
+    "invoice": {
+      "invoice_id": 24,
+      "method": "transfer",
+      "status": null,
+      "paid_at": null
+    },
+    "created_at": "2026-10-05T09:00:00",
+    "updated_at": "2026-10-07T09:00:00"
+  },
+  {
+    "course_id": 15,
+    "student": {
+      "student_id": 5,
+      "name": "최은지",
+      "age_group": "adult",
+      "phone": "010-5678-6789",
+      "parent_phone": null
+    },
+    "class_type": "VOCAL",
+    "start_date": "2026-10-02",
+    "status": "ended",
+    "lesson_count": 6,
+    "schedule": [{ "weekday": "THU", "time": "20:00" }],
+    "invoice": {
+      "invoice_id": 25,
+      "method": "card",
+      "status": "paid",
+      "paid_at": "2026-09-30T19:00:00"
+    },
+    "created_at": "2026-09-20T14:00:00",
+    "updated_at": "2026-10-15T21:00:00"
+  },
+  {
+    "course_id": 16,
+    "student": {
+      "student_id": 6,
+      "name": "김도윤",
+      "age_group": "preschool",
+      "phone": "010-6789-7890",
+      "parent_phone": "010-5555-5555"
+    },
+    "class_type": "PIANO",
+    "start_date": "2026-10-08",
+    "status": "active",
+    "lesson_count": 12,
+    "schedule": [
+      { "weekday": "MON", "time": "14:00" },
+      { "weekday": "THU", "time": "14:00" }
+    ],
+    "invoice": {
+      "invoice_id": 26,
+      "method": "cash",
+      "status": "paid",
+      "paid_at": "2026-10-06T12:10:00"
+    },
+    "created_at": "2026-10-04T09:30:00",
+    "updated_at": "2026-10-08T09:00:00"
+  },
+  {
+    "course_id": 17,
+    "student": {
+      "student_id": 7,
+      "name": "오지훈",
+      "age_group": "high",
+      "phone": "010-7890-8901",
+      "parent_phone": "010-4444-4444"
+    },
+    "class_type": "GUITAR",
+    "start_date": "2026-10-09",
+    "status": "paused",
+    "lesson_count": 10,
+    "schedule": [{ "weekday": "WED", "time": "19:00" }],
+    "invoice": {
+      "invoice_id": 27,
+      "method": "transfer",
+      "status": "paid",
+      "paid_at": "2026-10-07T18:40:00"
+    },
+    "created_at": "2026-10-02T10:00:00",
+    "updated_at": "2026-10-12T10:00:00"
+  },
+  {
+    "course_id": 18,
+    "student": {
+      "student_id": 8,
+      "name": "한수아",
+      "age_group": "middle",
+      "phone": "010-8901-9012",
+      "parent_phone": "010-3333-3333"
+    },
+    "class_type": "VOCAL",
+    "start_date": "2026-10-11",
+    "status": "active",
+    "lesson_count": 8,
+    "schedule": [{ "weekday": "SUN", "time": "13:00" }],
+    "invoice": {
+      "invoice_id": 28,
+      "method": "card",
+      "status": null,
+      "paid_at": null
+    },
+    "created_at": "2026-10-06T11:00:00",
+    "updated_at": "2026-10-11T09:00:00"
+  },
+  {
+    "course_id": 19,
+    "student": {
+      "student_id": 9,
+      "name": "윤하린",
+      "age_group": "element",
+      "phone": "010-9012-0123",
+      "parent_phone": "010-2222-2222"
+    },
+    "class_type": "DRUM",
+    "start_date": "2026-10-12",
+    "status": "active",
+    "lesson_count": 12,
+    "schedule": [{ "weekday": "FRI", "time": "17:00" }],
+    "invoice": {
+      "invoice_id": 29,
+      "method": "cash",
+      "status": "paid",
+      "paid_at": "2026-10-10T16:30:00"
+    },
+    "created_at": "2026-10-07T09:00:00",
+    "updated_at": "2026-10-12T09:00:00"
+  },
+  {
+    "course_id": 20,
+    "student": {
+      "student_id": 10,
+      "name": "서준호",
+      "age_group": "adult",
+      "phone": "010-0123-1234",
+      "parent_phone": null
+    },
+    "class_type": "GUITAR",
+    "start_date": "2026-10-13",
+    "status": "ended",
+    "lesson_count": 4,
+    "schedule": [{ "weekday": "TUE", "time": "21:00" }],
+    "invoice": {
+      "invoice_id": 30,
+      "method": "card",
+      "status": "paid",
+      "paid_at": "2026-10-12T20:10:00"
+    },
+    "created_at": "2026-09-15T15:00:00",
+    "updated_at": "2026-10-20T21:00:00"
+  }
+]

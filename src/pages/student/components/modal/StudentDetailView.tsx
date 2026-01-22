@@ -109,6 +109,7 @@ function StudentDetailView({
     <div className="space-y-3">
       <FormField label="이름">
         <TextInput
+          type="text"
           value={form.name}
           disabled={!isEditMode}
           onChange={(v) => updateForm('name', v)}

@@ -33,14 +33,16 @@ function CoursePage() {
         ]}
         getRows={(courses) =>
           courses.map((course) => [
-            course?.student?.name,
-            course?.class_type,
+            course.student?.name ?? '',
+            course.class_type ?? '',
             String(course.lesson_count),
-            course?.schedules
-              ?.map((schedule) => schedule?.weekday + ' ' + schedule?.time)
-              .join(' '),
-            course?.status,
-            course?.invoice?.paid_at,
+            course.schedules?.length
+              ? course.schedules
+                  .map((schedule) => `${schedule.weekday} ${schedule.time}`)
+                  .join(', ')
+              : '',
+            course.invoice.status ?? 'unpaid',
+            course.invoice?.paid_at ?? '',
           ])
         }
         onRowClick={(course) => openDetail(course)}

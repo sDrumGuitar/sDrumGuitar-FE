@@ -1,4 +1,4 @@
-import type { Course } from '@/types/course';
+import type { Course, CourseSchedule } from '@/types/course';
 import { api } from './axios';
 
 // ====================
@@ -32,4 +32,29 @@ export const getCourses = async ({
     size,
     courses: res.data,
   };
+};
+
+interface CreateCoursePayload {
+  student: {
+    student_id: number;
+    name: string;
+  };
+  class_type: string;
+  lesson_count: number;
+  start_date: string;
+  schedules: CourseSchedule[];
+  invoice: {
+    status: 'paid' | null;
+    method?: string;
+    paid_at?: string;
+  };
+}
+// ====================
+// POST : 수강 정보 생성하기
+// ====================
+export const createCourse = async (
+  payload: CreateCoursePayload,
+): Promise<Course> => {
+  const res = await api.post<Course>('/courses', payload);
+  return res.data;
 };

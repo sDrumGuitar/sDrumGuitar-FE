@@ -137,8 +137,14 @@
       "status": "active",
       "lesson_count": 12,
       "schedules": [
-        { "weekday": "MON", "time": "15:00" },
-        { "weekday": "WED", "time": "15:00" }
+        {
+          "weekday": "MON",
+          "time": "15:00"
+        },
+        {
+          "weekday": "WED",
+          "time": "15:00"
+        }
       ],
       "invoice": {
         "invoice_id": 21,
@@ -162,7 +168,12 @@
       "start_date": "2026-10-03",
       "status": "active",
       "lesson_count": 8,
-      "schedules": [{ "weekday": "TUE", "time": "18:00" }],
+      "schedules": [
+        {
+          "weekday": "TUE",
+          "time": "18:00"
+        }
+      ],
       "invoice": {
         "invoice_id": 22,
         "method": "cash",
@@ -185,7 +196,12 @@
       "start_date": "2026-10-05",
       "status": "paused",
       "lesson_count": 10,
-      "schedules": [{ "weekday": "FRI", "time": "16:30" }],
+      "schedules": [
+        {
+          "weekday": "FRI",
+          "time": "16:30"
+        }
+      ],
       "invoice": {
         "invoice_id": 23,
         "method": "card",
@@ -208,7 +224,12 @@
       "start_date": "2026-10-07",
       "status": "active",
       "lesson_count": 12,
-      "schedules": [{ "weekday": "SAT", "time": "11:00" }],
+      "schedules": [
+        {
+          "weekday": "SAT",
+          "time": "11:00"
+        }
+      ],
       "invoice": {
         "invoice_id": 24,
         "method": "transfer",
@@ -231,7 +252,12 @@
       "start_date": "2026-10-02",
       "status": "ended",
       "lesson_count": 6,
-      "schedules": [{ "weekday": "THU", "time": "20:00" }],
+      "schedules": [
+        {
+          "weekday": "THU",
+          "time": "20:00"
+        }
+      ],
       "invoice": {
         "invoice_id": 25,
         "method": "card",
@@ -255,8 +281,14 @@
       "status": "active",
       "lesson_count": 12,
       "schedules": [
-        { "weekday": "MON", "time": "14:00" },
-        { "weekday": "THU", "time": "14:00" }
+        {
+          "weekday": "MON",
+          "time": "14:00"
+        },
+        {
+          "weekday": "THU",
+          "time": "14:00"
+        }
       ],
       "invoice": {
         "invoice_id": 26,
@@ -280,7 +312,12 @@
       "start_date": "2026-10-09",
       "status": "paused",
       "lesson_count": 10,
-      "schedules": [{ "weekday": "WED", "time": "19:00" }],
+      "schedules": [
+        {
+          "weekday": "WED",
+          "time": "19:00"
+        }
+      ],
       "invoice": {
         "invoice_id": 27,
         "method": "transfer",
@@ -303,7 +340,12 @@
       "start_date": "2026-10-11",
       "status": "active",
       "lesson_count": 8,
-      "schedules": [{ "weekday": "SUN", "time": "13:00" }],
+      "schedules": [
+        {
+          "weekday": "SUN",
+          "time": "13:00"
+        }
+      ],
       "invoice": {
         "invoice_id": 28,
         "method": "card",
@@ -326,7 +368,12 @@
       "start_date": "2026-10-12",
       "status": "active",
       "lesson_count": 12,
-      "schedules": [{ "weekday": "FRI", "time": "17:00" }],
+      "schedules": [
+        {
+          "weekday": "FRI",
+          "time": "17:00"
+        }
+      ],
       "invoice": {
         "invoice_id": 29,
         "method": "cash",
@@ -349,7 +396,12 @@
       "start_date": "2026-10-13",
       "status": "ended",
       "lesson_count": 4,
-      "schedules": [{ "weekday": "TUE", "time": "21:00" }],
+      "schedules": [
+        {
+          "weekday": "TUE",
+          "time": "21:00"
+        }
+      ],
       "invoice": {
         "invoice_id": 30,
         "method": "card",
@@ -358,6 +410,86 @@
       },
       "created_at": "2026-09-15T15:00:00",
       "updated_at": "2026-10-20T21:00:00"
+    },
+    {
+      "id": "74b1",
+      "student": {
+        "student_id": "1",
+        "name": "김광일"
+      },
+      "class_type": "GUITAR",
+      "lesson_count": 4,
+      "start_date": "2026-01-03",
+      "schedules": [
+        {
+          "weekday": "SAT",
+          "time": "03:00"
+        }
+      ],
+      "invoice": {
+        "status": null
+      }
+    },
+    {
+      "id": "0904",
+      "student": {
+        "student_id": "2",
+        "name": "이민규"
+      },
+      "class_type": "GUITAR",
+      "lesson_count": 8,
+      "start_date": "2026-01-31",
+      "schedules": [
+        {
+          "weekday": "FRI",
+          "time": "02:00"
+        },
+        {
+          "weekday": "THU",
+          "time": "03:00"
+        }
+      ],
+      "invoice": {
+        "status": null
+      }
+    },
+    {
+      "id": "365d",
+      "student": {
+        "student_id": "2",
+        "name": "이민규"
+      },
+      "class_type": "DRUM",
+      "lesson_count": 12,
+      "start_date": "2026-01-08",
+      "schedules": [
+        {
+          "weekday": "SUN",
+          "time": "02:00"
+        }
+      ],
+      "invoice": {
+        "status": null
+      }
+    },
+    {
+      "id": "d8b3",
+      "student": {
+        "student_id": "2",
+        "name": "이민규"
+      },
+      "class_type": "DRUM",
+      "lesson_count": 4,
+      "start_date": "2025-12-31",
+      "schedules": [
+        {
+          "weekday": "FRI",
+          "time": "01:00"
+        }
+      ],
+      "invoice": {
+        "status": null
+      }
     }
   ]
 }

@@ -16,6 +16,9 @@ import { useEffect, useState } from 'react';
 import CourseScheduleTimeList from './CourseScheduleTimeList';
 import type { CourseSchedule } from '@/types/course';
 import NormalButton from '@/shared/button/NormalButton';
+import StudentSearchInput from './StudentSearchInput';
+import { createCourse } from '@/shared/api/courses';
+import { useCourseModalStore } from '@/store/courseModalStore';
 
 interface CourseFormState {
   student: {
@@ -27,7 +30,7 @@ interface CourseFormState {
   start_date: string;
   schedules: CourseSchedule[];
   invoice: {
-    status: string | null;
+    status: 'paid' | null;
     method: string;
     paid_at: string;
   };
@@ -58,6 +61,7 @@ export default function CourseCreateForm({
   onDirtyChange,
   onSuccess,
 }: CourseCreateFormProps) {
+  const { close } = useCourseModalStore();
   const [form, setForm] = useState<CourseFormState>(INITIAL_FORM);
   const isDirty = JSON.stringify(form) !== JSON.stringify(INITIAL_FORM);
 
@@ -99,9 +103,23 @@ export default function CourseCreateForm({
     }
 
     try {
-      // await createCourse({
-
-      // });
+      await createCourse({
+        student: {
+          student_id: form.student.student_id,
+          name: form.student.name,
+        },
+        class_type: form.class_type,
+        lesson_count: form.lesson_count,
+        start_date: form.start_date,
+        schedules: form.schedules,
+        invoice: {
+          status: form.invoice.status,
+          ...(form.invoice.status === 'paid' && {
+            method: form.invoice.method,
+            paid_at: form.invoice.paid_at,
+          }),
+        },
+      });
 
       setForm(INITIAL_FORM);
       onDirtyChange(false);
@@ -116,18 +134,16 @@ export default function CourseCreateForm({
   return (
     <div className="space-y-3">
       <FormField label="수강생">
-        <TextInput
-          type="text"
+        <StudentSearchInput
           value={form.student.name}
-          onChange={(v) =>
+          onSelect={(student) =>
             updateForm('student', {
-              ...form.student,
-              name: v,
+              student_id: student.id,
+              name: student.name,
             })
           }
         />
       </FormField>
-
       <FormField label="클래스">
         <Select
           options={CLASS_TYPE_OPTIONS}
@@ -228,6 +244,7 @@ export default function CourseCreateForm({
       <div className="w-full flex justify-end">
         <NormalButton
           onClick={handleSubmit}
+          // onClick={() => console.log(form)}
           text="저장"
           disabled={!canSubmit}
         />

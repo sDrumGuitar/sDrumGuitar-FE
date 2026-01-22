@@ -79,3 +79,21 @@ export const updateStudent = async (
 
   return res.data;
 };
+
+// ====================
+// GET : 학생 이름으로 검색해서 정보 얻기
+// ====================
+
+export interface StudentSearchItem {
+  id: number;
+  name: string;
+  phone?: string;
+}
+
+export const searchStudents = async (keyword: string) => {
+  const response = await api.get<StudentSearchItem[]>('/students', {
+    params: { keyword },
+  });
+
+  return response.data;
+};

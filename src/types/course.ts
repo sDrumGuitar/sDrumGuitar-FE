@@ -7,7 +7,7 @@ export interface Course extends Base {
   start_date: string;
   status: 'active' | 'paused' | 'ended';
   lesson_count: number;
-  schedule: CourseSchedule[];
+  schedules: CourseSchedule[];
   invoice: CourseInvoice;
 }
 
@@ -19,8 +19,10 @@ interface CourseStudent {
   parent_phone: string;
 }
 
-interface CourseSchedule {
-  weekday: 'MON' | 'TUE' | 'WED' | 'THU' | 'FRI' | 'SAT' | 'SUN';
+type Weekday = 'MON' | 'TUE' | 'WED' | 'THU' | 'FRI' | 'SAT' | 'SUN';
+
+export interface CourseSchedule {
+  weekday: Weekday;
   time: string;
 }
 

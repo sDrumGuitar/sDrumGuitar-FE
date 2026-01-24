@@ -11,6 +11,7 @@ interface CourseModalState {
   openCreate: () => void;
   openDetail: (course: Course) => void;
   openUpdate: (course: Course) => void;
+  setMode: (mode: ModalMode) => void;
   close: () => void;
 }
 
@@ -39,6 +40,8 @@ export const useCourseModalStore = create<CourseModalState>((set) => ({
       mode: 'UPDATE',
       selectedCourse: course,
     }),
+
+  setMode: (mode) => set({ mode }),
 
   close: () =>
     set({

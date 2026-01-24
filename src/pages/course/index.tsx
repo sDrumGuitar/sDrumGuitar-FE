@@ -32,8 +32,9 @@ function CoursePage() {
           '결제상태',
           '결제일',
         ]}
-        getRows={(courses) =>
-          courses.map((course) => [
+        getRows={(courses) => {
+          if (!courses || courses.length === 0) return [];
+          return courses.map((course) => [
             course.student?.name ?? '',
             course.class_type ?? '',
             String(course.lesson_count),
@@ -44,8 +45,8 @@ function CoursePage() {
               : '',
             course.invoice.status ?? 'unpaid',
             course.invoice?.paid_at ?? '',
-          ])
-        }
+          ]);
+        }}
         onRowClick={(course) => openDetail(course)}
       />
       {isOpen && <CourseModal onSuccess={loadCourse} />}

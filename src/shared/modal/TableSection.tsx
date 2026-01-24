@@ -13,6 +13,13 @@ function TableSection<T>({
   getRows,
   onRowClick,
 }: TableSectionProps<T>) {
+  if (!dataList || dataList.length === 0) {
+    return (
+      <div className="py-10 text-center text-gray-500">
+        <p>조회 내용이 없습니다.</p>
+      </div>
+    );
+  }
   const rows = getRows(dataList);
 
   const handleRowClick = (rowIndex: number) => {

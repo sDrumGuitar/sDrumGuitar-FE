@@ -37,3 +37,9 @@
     @apply border-(--color-primary-light);
   }
 }
+
+@layer utilities {
+  .pressable {
+    @apply transition-transform duration-500 ease-out active:scale-50 cursor-pointer;
+  }
+}

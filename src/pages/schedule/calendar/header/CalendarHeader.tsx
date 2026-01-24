@@ -1,10 +1,30 @@
 import SelectMonthSection from './SelectMonthSection';
 import CarryListSection from './CarryListSection';
 
-function CalendarHeader() {
+interface CalendarHeaderProps {
+  year: number;
+  month: number;
+  onPrevMonth: () => void;
+  onNextMonth: () => void;
+  onToday: () => void; // New prop for Today button
+}
+
+function CalendarHeader({
+  year,
+  month,
+  onPrevMonth,
+  onNextMonth,
+  onToday,
+}: CalendarHeaderProps) {
   return (
     <div className="flex justify-between items-center">
-      <SelectMonthSection />
+      <SelectMonthSection
+        year={year}
+        month={month}
+        onPrevMonth={onPrevMonth}
+        onNextMonth={onNextMonth}
+        onToday={onToday}
+      />
       <CarryListSection />
     </div>
   );

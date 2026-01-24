@@ -14,7 +14,7 @@ import {
 } from '@/shared/form';
 import { useEffect, useState } from 'react';
 import CourseScheduleTimeList from './CourseScheduleTimeList';
-import type { CourseSchedule } from '@/types/course';
+import type { Course, CourseSchedule } from '@/types/course';
 import NormalButton from '@/shared/button/NormalButton';
 import StudentSearchInput from './StudentSearchInput';
 import { createCourse, updateCourse } from '@/shared/api/courses';
@@ -60,47 +60,33 @@ interface CourseFormProps {
   onSuccess: () => void;
 }
 
+const mapCourseToForm = (course: Course): CourseFormState => ({
+  student: {
+    student_id: course.student.student_id,
+    name: course.student.name,
+  },
+  class_type: course.class_type || '',
+  lesson_count: course.lesson_count,
+  start_date: course.start_date,
+  schedules: course.schedules ?? [],
+  invoice: {
+    status: course.invoice.status,
+    method: course.invoice.method || '',
+    paid_at: course.invoice.paid_at || '',
+  },
+});
+
 export default function CourseForm({
   onDirtyChange,
   onSuccess,
 }: CourseFormProps) {
   const { mode, selectedCourse, setMode, close } = useCourseModalStore();
-  const [form, setForm] = useState<CourseFormState>(INITIAL_FORM);
-  const [initialForm, setInitialForm] = useState<CourseFormState>(INITIAL_FORM);
-
-  const { isOpen, selectedDate, open } = useDateModalStore();
-  useEffect(() => {
-    if (selectedDate) {
-      updateForm('start_date', selectedDate);
-    }
-  }, [selectedDate]);
-
-  const isViewMode = mode === 'DETAIL';
-  const isDirty = JSON.stringify(form) !== JSON.stringify(initialForm);
-
-  useEffect(() => {
-    if ((mode === 'DETAIL' || mode === 'UPDATE') && selectedCourse) {
-      const courseData = {
-        ...selectedCourse,
-        class_type: selectedCourse.class_type || '', // Handle null
-        invoice: {
-          status: selectedCourse.invoice.status,
-          method: selectedCourse.invoice.method || '',
-          paid_at: selectedCourse.invoice.paid_at || '',
-        },
-      };
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setForm(courseData);
-      setInitialForm(courseData);
-    } else {
-      setForm(INITIAL_FORM);
-      setInitialForm(INITIAL_FORM);
-    }
-  }, [mode, selectedCourse]);
-
-  useEffect(() => {
-    onDirtyChange(isDirty);
-  }, [isDirty, onDirtyChange]);
+  const initialState =
+    (mode === 'DETAIL' || mode === 'UPDATE') && selectedCourse
+      ? mapCourseToForm(selectedCourse)
+      : INITIAL_FORM;
+  const [form, setForm] = useState<CourseFormState>(initialState);
+  const [initialForm] = useState<CourseFormState>(initialState);
 
   const updateForm = <K extends keyof CourseFormState>(
     key: K,
@@ -111,6 +97,15 @@ export default function CourseForm({
       [key]: value,
     }));
   };
+
+  const { isOpen, open } = useDateModalStore();
+
+  const isViewMode = mode === 'DETAIL';
+  const isDirty = JSON.stringify(form) !== JSON.stringify(initialForm);
+
+  useEffect(() => {
+    onDirtyChange(isDirty);
+  }, [isDirty, onDirtyChange]);
 
   const isBaseInfoValid =
     form.student.name.trim() !== '' &&
@@ -221,7 +216,11 @@ export default function CourseForm({
             선택
           </button>
         </div>
-        {isOpen && <CalendarModal />}
+        {isOpen && (
+          <CalendarModal
+            onSelect={(date) => updateForm('start_date', date)}
+          />
+        )}
       </FormField>
 
       <FormField label="수강 요일">

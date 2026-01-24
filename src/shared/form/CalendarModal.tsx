@@ -10,7 +10,11 @@ import NormalButton from '../button/NormalButton';
 export type DatePiece = Date | null;
 export type SelectedDate = DatePiece | [DatePiece, DatePiece];
 
-function CalendarModal() {
+interface CalendarModalProps {
+  onSelect?: (date: string) => void;
+}
+
+function CalendarModal({ onSelect }: CalendarModalProps) {
   const [originSelectedDate, setOriginSelectedDate] = useState<SelectedDate>(
     new Date(),
   );
@@ -20,6 +24,7 @@ function CalendarModal() {
     const date = originSelectedDate?.toString();
     if (date) {
       setSelectedDate(date);
+      onSelect?.(date);
     }
 
     close();

@@ -13,41 +13,39 @@ export default function StudentSearchInput({
   onSelect,
   disabled = false,
 }: StudentSearchInputProps) {
-  const [keyword, setKeyword] = useState(value);
+  const [draft, setDraft] = useState('');
   const [results, setResults] = useState<StudentSearchItem[]>([]);
   const [open, setOpen] = useState(false);
   const [isUserTyping, setIsUserTyping] = useState(false);
 
-  useEffect(() => {
-    setKeyword(value);
-    setIsUserTyping(false);
-  }, [value]);
+  const displayValue = isUserTyping ? draft : value;
 
   useEffect(() => {
-    if (disabled || !isUserTyping || keyword.trim().length < 2) {
+    if (disabled || !isUserTyping || draft.trim().length < 2) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setResults([]);
+      setOpen(false);
       return;
     }
 
     const fetch = async () => {
-      const data = await searchStudents(keyword);
-      const filtered = data.filter((student) => student.name.includes(keyword));
+      const data = await searchStudents(draft);
+      const filtered = data.filter((student) => student.name.includes(draft));
       setResults(filtered);
       setOpen(true);
     };
 
     fetch();
-  }, [keyword, disabled, isUserTyping]);
+  }, [draft, disabled, isUserTyping]);
 
   return (
     <div className="relative">
       <TextInput
         type="text"
-        value={keyword}
+        value={displayValue}
         placeholder="이름으로 검색"
         onChange={(v) => {
-          setKeyword(v);
+          setDraft(v);
           setIsUserTyping(true);
           setOpen(true);
         }}
@@ -62,7 +60,7 @@ export default function StudentSearchInput({
               className="px-3 py-2 cursor-pointer hover:bg-gray-100"
               onClick={() => {
                 onSelect(student);
-                setKeyword(student.name);
+                setDraft('');
                 setIsUserTyping(false);
                 setOpen(false);
               }}

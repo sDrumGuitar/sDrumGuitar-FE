@@ -16,9 +16,15 @@ export default function StudentSearchInput({
   const [keyword, setKeyword] = useState(value);
   const [results, setResults] = useState<StudentSearchItem[]>([]);
   const [open, setOpen] = useState(false);
+  const [isUserTyping, setIsUserTyping] = useState(false);
 
   useEffect(() => {
-    if (disabled || keyword.trim().length < 2) {
+    setKeyword(value);
+    setIsUserTyping(false);
+  }, [value]);
+
+  useEffect(() => {
+    if (disabled || !isUserTyping || keyword.trim().length < 2) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setResults([]);
       return;
@@ -32,7 +38,7 @@ export default function StudentSearchInput({
     };
 
     fetch();
-  }, [keyword, disabled]);
+  }, [keyword, disabled, isUserTyping]);
 
   return (
     <div className="relative">
@@ -42,6 +48,7 @@ export default function StudentSearchInput({
         placeholder="이름으로 검색"
         onChange={(v) => {
           setKeyword(v);
+          setIsUserTyping(true);
           setOpen(true);
         }}
         disabled={disabled}
@@ -56,6 +63,7 @@ export default function StudentSearchInput({
               onClick={() => {
                 onSelect(student);
                 setKeyword(student.name);
+                setIsUserTyping(false);
                 setOpen(false);
               }}
             >

@@ -176,10 +176,10 @@
         "phone": "010-3456-4567",
         "parent_phone": "010-7777-7777"
       },
-      "class_type": "PIANO",
+      "class_type": "DRUM",
       "start_date": "2026-10-05",
       "status": "paused",
-      "lesson_count": 10,
+      "lesson_count": 12,
       "schedules": [
         {
           "weekday": "FRI",
@@ -234,10 +234,10 @@
         "phone": "010-5678-6789",
         "parent_phone": null
       },
-      "class_type": "VOCAL",
+      "class_type": "GUITAR",
       "start_date": "2026-10-02",
       "status": "ended",
-      "lesson_count": 6,
+      "lesson_count": 8,
       "schedules": [
         {
           "weekday": "THU",
@@ -257,13 +257,13 @@
     {
       "course_id": 16,
       "student": {
-        "student_id": 6,
+        "student_id": 8,
         "name": "김도윤",
         "age_group": "preschool",
         "phone": "010-6789-7890",
         "parent_phone": "010-5555-5555"
       },
-      "class_type": "PIANO",
+      "class_type": "DRUM",
       "start_date": "2026-10-08",
       "status": "active",
       "lesson_count": 12,
@@ -299,7 +299,7 @@
       "class_type": "GUITAR",
       "start_date": "2026-10-09",
       "status": "paused",
-      "lesson_count": 10,
+      "lesson_count": 12,
       "schedules": [
         {
           "weekday": "WED",
@@ -325,7 +325,7 @@
         "phone": "010-8901-9012",
         "parent_phone": "010-3333-3333"
       },
-      "class_type": "VOCAL",
+      "class_type": "GUITAR",
       "start_date": "2026-10-11",
       "status": "active",
       "lesson_count": 8,

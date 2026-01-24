@@ -5,33 +5,34 @@ import { searchStudents, type StudentSearchItem } from '@/shared/api/students';
 interface StudentSearchInputProps {
   value: string;
   onSelect: (student: StudentSearchItem) => void;
+  disabled?: boolean;
 }
 
 export default function StudentSearchInput({
   value,
   onSelect,
+  disabled = false,
 }: StudentSearchInputProps) {
   const [keyword, setKeyword] = useState(value);
   const [results, setResults] = useState<StudentSearchItem[]>([]);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (keyword.trim().length < 2) {
+    if (disabled || keyword.trim().length < 2) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setResults([]);
       return;
     }
 
     const fetch = async () => {
       const data = await searchStudents(keyword);
-
       const filtered = data.filter((student) => student.name.includes(keyword));
-
       setResults(filtered);
       setOpen(true);
     };
 
     fetch();
-  }, [keyword]);
+  }, [keyword, disabled]);
 
   return (
     <div className="relative">
@@ -43,9 +44,10 @@ export default function StudentSearchInput({
           setKeyword(v);
           setOpen(true);
         }}
+        disabled={disabled}
       />
 
-      {open && results.length > 0 && (
+      {open && !disabled && results.length > 0 && (
         <ul className="absolute z-10 w-full bg-white border rounded shadow">
           {results.map((student, index) => (
             <li

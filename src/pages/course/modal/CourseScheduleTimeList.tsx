@@ -3,6 +3,7 @@ import type { CourseSchedule } from '@/types/course';
 interface CourseScheduleTimeListProps {
   schedules: CourseSchedule[];
   onChange: (next: CourseSchedule[]) => void;
+  disabled?: boolean;
 }
 
 import TimeSelect from '@/shared/form/TimeSelect';
@@ -20,6 +21,7 @@ const weekdayLabelMap: Record<CourseSchedule['weekday'], string> = {
 function CourseScheduleTimeList({
   schedules,
   onChange,
+  disabled,
 }: CourseScheduleTimeListProps) {
   if (schedules.length === 0) return null;
 
@@ -27,6 +29,8 @@ function CourseScheduleTimeList({
     weekday: CourseSchedule['weekday'],
     time: string,
   ) => {
+    if (disabled) return;
+
     const nextSchedules = schedules.map((s) =>
       s.weekday === weekday ? { ...s, time } : s,
     );
@@ -43,6 +47,7 @@ function CourseScheduleTimeList({
           </span>
 
           <TimeSelect
+            disabled={disabled}
             value={schedule.time}
             onChange={(v) => handleTimeChange(schedule.weekday, v)}
           />

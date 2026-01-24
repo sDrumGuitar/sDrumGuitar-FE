@@ -13,9 +13,14 @@ const MINUTE_OPTIONS = Array.from({ length: 12 }, (_, i) => {
 interface HourMinuteSelectProps {
   value: string; // "HH:mm"
   onChange: (value: string) => void;
+  disabled?: boolean;
 }
 
-function HourMinuteSelect({ value, onChange }: HourMinuteSelectProps) {
+function HourMinuteSelect({
+  value,
+  onChange,
+  disabled,
+}: HourMinuteSelectProps) {
   const [hour, minute] = value ? value.split(':') : ['00', '00'];
 
   const handleHourChange = (h: string) => {
@@ -28,9 +33,15 @@ function HourMinuteSelect({ value, onChange }: HourMinuteSelectProps) {
 
   return (
     <div className="flex items-center gap-2">
-      <Select options={HOUR_OPTIONS} value={hour} onChange={handleHourChange} />
+      <Select
+        disabled={disabled}
+        options={HOUR_OPTIONS}
+        value={hour}
+        onChange={handleHourChange}
+      />
       <span>시</span>
       <Select
+        disabled={disabled}
         options={MINUTE_OPTIONS}
         value={minute}
         onChange={handleMinuteChange}

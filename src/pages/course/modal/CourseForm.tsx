@@ -19,6 +19,9 @@ import NormalButton from '@/shared/button/NormalButton';
 import StudentSearchInput from './StudentSearchInput';
 import { createCourse, updateCourse } from '@/shared/api/courses';
 import { useCourseModalStore } from '@/store/courseModalStore';
+import { useDateModalStore } from '@/store/dateModalStore';
+import CalendarModal from '@/shared/form/CalendarModal';
+import { formatKoreanDate } from '@/utils/formDate';
 
 interface CourseFormState {
   student: {
@@ -64,6 +67,13 @@ export default function CourseForm({
   const { mode, selectedCourse, setMode, close } = useCourseModalStore();
   const [form, setForm] = useState<CourseFormState>(INITIAL_FORM);
   const [initialForm, setInitialForm] = useState<CourseFormState>(INITIAL_FORM);
+
+  const { isOpen, selectedDate, open } = useDateModalStore();
+  useEffect(() => {
+    if (selectedDate) {
+      updateForm('start_date', selectedDate);
+    }
+  }, [selectedDate]);
 
   const isViewMode = mode === 'DETAIL';
   const isDirty = JSON.stringify(form) !== JSON.stringify(initialForm);
@@ -190,12 +200,28 @@ export default function CourseForm({
       </FormField>
 
       <FormField label="수강 시작 날짜">
-        <TextInput
-          type="date"
-          value={form.start_date}
-          onChange={(v) => updateForm('start_date', v)}
-          disabled={isViewMode}
-        />
+        <div
+          className={`border rounded-sm py-1 px-2 flex justify-between
+        ${
+          isViewMode
+            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+            : 'border-primary text-primary'
+        }`}
+        >
+          <p>
+            {form.start_date
+              ? formatKoreanDate(form.start_date)
+              : '날짜를 선택해주세요.'}
+          </p>
+          <button
+            onClick={open}
+            disabled={isViewMode}
+            className={`${isViewMode && 'cursor-none'}`}
+          >
+            선택
+          </button>
+        </div>
+        {isOpen && <CalendarModal />}
       </FormField>
 
       <FormField label="수강 요일">

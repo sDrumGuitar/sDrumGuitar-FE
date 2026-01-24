@@ -125,12 +125,12 @@
   "courses": [
     {
       "student": {
-        "student_id": 1,
+        "student_id": "1",
         "name": "김광일"
       },
       "class_type": "DRUM",
       "lesson_count": 4,
-      "start_date": "2026-10-01",
+      "start_date": "Sat Jan 03 2026 00:00:00 GMT+0900 (한국 표준시)",
       "schedules": [
         {
           "weekday": "MON",
@@ -148,12 +148,12 @@
     },
     {
       "student": {
-        "student_id": 2,
+        "student_id": "2",
         "name": "이민규"
       },
       "class_type": "GUITAR",
       "lesson_count": 8,
-      "start_date": "2026-10-03",
+      "start_date": "Fri Jan 23 2026 00:00:00 GMT+0900 (한국 표준시)",
       "schedules": [
         {
           "weekday": "TUE",

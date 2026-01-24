@@ -5,6 +5,7 @@ import type { Student } from '@/types/student';
 import { useStudentModalStore } from '@/store/studentModalStore';
 import StudentModal from './components/modal/StudentModal';
 import ModalOpenButton from '@/shared/modal/ModalOpenButton';
+import { getAgeGroupLabel } from '@/utils/getAgeGroupLabel';
 
 function StudentPage() {
   const { isOpen, openCreate, openDetail } = useStudentModalStore();
@@ -30,7 +31,7 @@ function StudentPage() {
           if (!students || students.length === 0) return [];
           return students.map((student) => [
             student?.name,
-            student?.age_group,
+            getAgeGroupLabel(student?.age_group),
             student?.phone,
             student?.parent_phone,
           ]);

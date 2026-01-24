@@ -19,19 +19,31 @@ export const getCourses = async ({
   page,
   size,
 }: GetCoursesProps): Promise<GetCoursesResponse> => {
-  const res = await api.get<Course[]>('/courses', {
-    params: {
-      _page: page,
-      _limit: size,
-    },
-  });
+  try {
+    const res = await api.get<Course[]>('/courses', {
+      params: {
+        _page: page,
+        _limit: size,
+      },
+    });
 
-  return {
-    total_count: Number(res.headers['x-total-count'] ?? res.data.length),
-    page,
-    size,
-    courses: res.data,
-  };
+    const courses = Array.isArray(res.data) ? res.data : [];
+
+    return {
+      total_count: Number(res.headers['x-total-count'] ?? courses.length),
+      page,
+      size,
+      courses,
+    };
+  } catch (error) {
+    console.error('Failed to fetch courses:', error);
+    return {
+      total_count: 0,
+      page,
+      size,
+      courses: [],
+    };
+  }
 };
 
 interface CreateCoursePayload {

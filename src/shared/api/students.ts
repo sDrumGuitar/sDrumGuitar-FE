@@ -19,19 +19,31 @@ export const getStudents = async ({
   page,
   size,
 }: GetStudentsProps): Promise<GetStudentsResponse> => {
-  const res = await api.get<Student[]>('/students', {
-    params: {
-      _page: page,
-      _limit: size,
-    },
-  });
+  try {
+    const res = await api.get<Student[]>('/students', {
+      params: {
+        _page: page,
+        _limit: size,
+      },
+    });
 
-  return {
-    total_count: Number(res.headers['x-total-count'] ?? res.data.length),
-    page,
-    size,
-    students: res.data,
-  };
+    const students = Array.isArray(res.data) ? res.data : [];
+
+    return {
+      total_count: Number(res.headers['x-total-count'] ?? students.length),
+      page,
+      size,
+      students,
+    };
+  } catch (error) {
+    console.error('Failed to fetch students:', error);
+    return {
+      total_count: 0,
+      page,
+      size,
+      students: [],
+    };
+  }
 };
 
 // ====================

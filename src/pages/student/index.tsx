@@ -16,6 +16,7 @@ function StudentPage() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadStudents();
   }, []);
 
@@ -25,14 +26,15 @@ function StudentPage() {
       <TableSection<Student>
         dataList={students}
         headers={['이름', '구분', '전화번호', '부모님 전화번호']}
-        getRows={(students) =>
-          students.map((student) => [
+        getRows={(students) => {
+          if (!students || students.length === 0) return [];
+          return students.map((student) => [
             student?.name,
             student?.age_group,
             student?.phone,
             student?.parent_phone,
-          ])
-        }
+          ]);
+        }}
         onRowClick={(student) => openDetail(student)}
       />
       {isOpen && <StudentModal onSuccess={loadStudents} />}

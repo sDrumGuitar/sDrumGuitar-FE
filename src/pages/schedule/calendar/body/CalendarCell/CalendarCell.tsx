@@ -1,6 +1,6 @@
 import type { Lesson } from '../../types';
+import { DateLabel } from './DateLabel';
 import LessonBarList from './LessonBarList';
-import dayjs from 'dayjs';
 
 // 캘린더 내 Cell
 interface CalendarCellProps {
@@ -9,11 +9,6 @@ interface CalendarCellProps {
   lessons: Lesson[];
   onClick: (date: string) => void;
 }
-
-// Cell 내 '일자'
-const DateLabel = ({ date }: { date: string }) => {
-  return <div className="text-sm font-medium">{dayjs(date).date()}</div>;
-};
 
 function CalendarCell({
   date,
@@ -26,7 +21,7 @@ function CalendarCell({
 
   return (
     <div
-      className={`h-32 border-r border-b p-1 cursor-pointer hover:bg-[#d5def5]
+      className={`h-40 border-r border-b p-1 cursor-pointer hover:bg-[#d5def5]
         ${!isCurrentMonth ? 'bg-gray-50 text-gray-400' : ''}`}
       onClick={() => onClick(date)}
     >

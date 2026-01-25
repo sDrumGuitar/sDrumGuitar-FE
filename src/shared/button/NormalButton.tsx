@@ -17,7 +17,7 @@ function NormalButton({
       onClick={onClick}
       className={`
         font-bold py-1 px-2 rounded-lg
-        transition
+        transition pressable
         ${
           disabled
             ? 'bg-gray-400 text-white cursor-not-allowed'

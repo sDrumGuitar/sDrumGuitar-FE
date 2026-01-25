@@ -13,6 +13,8 @@ import type { Student } from '@/types/student';
 import { useEffect, useState } from 'react';
 import { updateStudent } from '@/shared/api/students';
 import { useStudentModalStore } from '@/store/studentModalStore';
+// ✅ 추가
+import { useInvoiceModalStore } from '@/store/invoiceModalStore';
 
 interface StudentFormState {
   name: string;
@@ -52,6 +54,9 @@ function StudentDetailView({
   const [form, setForm] = useState<StudentFormState>(originalForm);
   const { mode, openUpdate, openDetail } = useStudentModalStore();
   const isEditMode = mode === 'UPDATE';
+
+  // ✅ 추가
+  const { open: openInvoiceModal } = useInvoiceModalStore();
 
   const isDirty = JSON.stringify(form) !== JSON.stringify(originalForm);
 
@@ -158,21 +163,34 @@ function StudentDetailView({
         />
       </FormField>
 
-      <div className="w-full flex justify-end gap-2">
-        {!isEditMode && (
-          <NormalButton text="수정" onClick={() => openUpdate(student)} />
+      {/* 좌측 청구서 목록 버튼 추가 */}
+      <div className="w-full flex justify-between gap-2">
+        {/* 상세보기일 때만 */}
+        {!isEditMode ? (
+          <NormalButton
+            text="청구서 목록"
+            onClick={() => openInvoiceModal(student)}
+          />
+        ) : (
+          <div /> 
         )}
 
-        {isEditMode && (
-          <>
-            <NormalButton
-              text="저장"
-              onClick={handleSave}
-              disabled={!isDirty}
-            />
-            <NormalButton text="취소" onClick={handleCancelEdit} />
-          </>
-        )}
+        <div className="flex justify-end gap-2">
+          {!isEditMode && (
+            <NormalButton text="수정" onClick={() => openUpdate(student)} />
+          )}
+
+          {isEditMode && (
+            <>
+              <NormalButton
+                text="저장"
+                onClick={handleSave}
+                disabled={!isDirty}
+              />
+              <NormalButton text="취소" onClick={handleCancelEdit} />
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

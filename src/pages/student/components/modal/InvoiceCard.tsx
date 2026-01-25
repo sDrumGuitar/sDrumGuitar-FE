@@ -1,0 +1,290 @@
+import { useMemo, useState } from 'react';
+import dayjs from 'dayjs';
+import FormField from '@/shared/form/FormField';
+import Select from '@/shared/form/Select';
+import TextInput from '@/shared/form/TextInput';
+import NormalButton from '@/shared/button/NormalButton';
+import type { PatchInvoicePayload } from '@/types/invoice';
+import { patchInvoice } from '@/shared/api/invoices';
+
+type InvoiceStatus = 'paid' | 'unpaid';
+type PaymentMethod = 'card' | 'cash' | null;
+
+interface InvoiceCardProps {
+  invoiceId: number;
+  courseId: number;
+  issuedAt: string;
+
+  paidAt: string | null;
+  status: InvoiceStatus;
+  method: PaymentMethod;
+
+  lessonCount: number;
+  familyDiscount: boolean;
+  classType: string;
+  totalAmount: number;
+
+  onPatched: (next: {
+    invoice_id: number;
+    status: InvoiceStatus;
+    method: PaymentMethod;
+    paid_at: string | null;
+  }) => void;
+}
+
+const STATUS_OPTIONS = [
+  { label: '미납', value: 'unpaid' },
+  { label: '완료', value: 'paid' },
+] as const;
+
+const METHOD_OPTIONS = [
+  { label: '카드', value: 'card' },
+  { label: '현금', value: 'cash' },
+] as const;
+
+// ✅ date용 변환 (YYYY-MM-DD)
+function toDateOnly(iso: string) {
+  // "2026-01-17T15:30:00" -> "2026-01-17"
+  return iso.slice(0, 10);
+}
+function fromDateOnly(v: string) {
+  // "2026-01-17" -> "2026-01-17T00:00:00"
+  if (!v) return null;
+  return `${v}T00:00:00`;
+}
+
+function classTypeLabel(v: string) {
+  if (v === 'DRUM') return '드럼';
+  if (v === 'GUITAR') return '기타';
+  if (v === 'PIANO') return '피아노';
+  if (v === 'VOCAL') return '보컬';
+  return v;
+}
+
+function statusLabel(v: InvoiceStatus) {
+  return v === 'paid' ? '완료' : '미납';
+}
+
+function methodLabel(v: PaymentMethod) {
+  if (v === 'card') return '카드';
+  if (v === 'cash') return '현금';
+  return '-';
+}
+
+export default function InvoiceCard(props: InvoiceCardProps) {
+  const [isEdit, setIsEdit] = useState(false);
+
+  // 편집 상태 (props 기준으로 초기화)
+  const [status, setStatus] = useState<InvoiceStatus>(props.status);
+  const [method, setMethod] = useState<PaymentMethod>(props.method);
+  const [paidAtDate, setPaidAtDate] = useState<string>(
+    props.paidAt ? toDateOnly(props.paidAt) : '',
+  );
+
+  const [loading, setLoading] = useState(false);
+
+  const validationError = useMemo(() => {
+    if (status === 'paid') {
+      if (!method) return '완료 상태면 납부 방법이 필요합니다.';
+      if (!paidAtDate) return '완료 상태면 납부 날짜가 필요합니다.';
+    }
+    return null;
+  }, [status, method, paidAtDate]);
+
+  const handleCancel = () => {
+    setIsEdit(false);
+    setStatus(props.status);
+    setMethod(props.method);
+    setPaidAtDate(props.paidAt ? toDateOnly(props.paidAt) : '');
+  };
+
+  const handleSave = async () => {
+    if (validationError) {
+      alert(validationError);
+      return;
+    }
+
+    let payload: PatchInvoicePayload = {
+      status,
+      method,
+      paid_at: paidAtDate ? fromDateOnly(paidAtDate) : null,
+    };
+
+    if (status === 'unpaid') {
+      payload = { status: 'unpaid', method: null, paid_at: null };
+    }
+
+    try {
+      setLoading(true);
+      await patchInvoice(props.invoiceId, payload);
+
+      props.onPatched({
+        invoice_id: props.invoiceId,
+        status: payload.status,
+        method: payload.method,
+        paid_at: payload.paid_at,
+      });
+
+      setIsEdit(false);
+    } catch (e) {
+      console.error(e);
+      alert('청구 정보 수정에 실패했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // GUI 표기용 값들
+  const paidAtText = props.paidAt
+    ? dayjs(props.paidAt).format('YYYY / MM / DD')
+    : '-';
+  const issuedAtText = dayjs(props.issuedAt).format('YYYY / MM / DD');
+  const statusText = statusLabel(props.status);
+  const methodText = methodLabel(props.method);
+  const classText = classTypeLabel(props.classType);
+
+  const statusColor = props.status === 'paid' ? 'text-green-600' : 'text-red-500';
+  return (
+    <div className="rounded-lg bg-white border border-gray-300 p-6">
+      <div className="flex justify-end gap-2">
+        {!isEdit ? (
+          <NormalButton text="수정하기" onClick={() => setIsEdit(true)} />
+        ) : (
+          <>
+            <NormalButton text="취소" onClick={handleCancel} />
+            <NormalButton
+              text={loading ? '저장중...' : '저장'}
+              onClick={handleSave}
+              disabled={loading}
+            />
+          </>
+        )}
+      </div>
+
+      <div className="mt-2">
+        {/* 여기서부터 교체 */}
+        {(() => {
+          const leftLabelW = 'w-20';   // 왼쪽 라벨 폭
+          const rightLabelW = 'w-28';  // 오른쪽 라벨 폭 고정
+
+          return (
+            <div className="grid grid-cols-2 gap-x-2 gap-y-6">
+              {/* row 1 */}
+              <div className="flex items-center gap-8">
+                <div className={`${leftLabelW} text-sm font-semibold text-gray-800`}>
+                  납부 날짜
+                </div>
+                <div className="text-sm text-gray-800">{paidAtText}</div>
+              </div>
+
+              <div className="flex items-center gap-8">
+                <div className={`${rightLabelW} text-sm font-semibold text-gray-800`}>
+                  납부 상태
+                </div>
+                <div className={`text-sm font-semibold ${statusColor}`}>
+                  {statusText}
+                </div>
+              </div>
+
+              {/* row 2 */}
+              <div className="flex items-center gap-8">
+                <div className={`${leftLabelW} text-sm font-semibold text-gray-800`}>
+                  납부 방법
+                </div>
+                <div className="text-sm text-gray-800">{methodText}</div>
+              </div>
+
+              <div className="flex items-center gap-8">
+                <div className={`${rightLabelW} text-sm font-semibold text-gray-800`}>
+                  선택 레슨 회차
+                </div>
+                <div className="text-sm text-gray-800">{props.lessonCount}</div>
+              </div>
+
+              {/* row 3 */}
+              <div className="flex items-center gap-8">
+                <div className={`${leftLabelW} text-sm font-semibold text-gray-800`}>
+                  클래스
+                </div>
+                <div className="text-sm text-gray-800">{classText}</div>
+              </div>
+
+              <div className="flex items-center gap-8">
+                <div className={`${rightLabelW} text-sm font-semibold text-gray-800`}>
+                  가족 할인 여부
+                </div>
+                <div className="text-sm text-gray-800">
+                  {props.familyDiscount ? 'O' : 'X'}
+                </div>
+              </div>
+
+              {/* row 4 */}
+              <div />
+
+              <div className="flex items-center gap-8">
+                <div className={`${rightLabelW} text-sm font-semibold text-gray-800`}>
+                  총 금액
+                </div>
+                <div className="text-sm text-gray-800">
+                  {Number.isFinite(props.totalAmount)
+                    ? props.totalAmount.toLocaleString()
+                    : '-'}
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
+        <div className="mt-6 flex justify-end text-sm text-gray-700">
+          <span className="font-semibold mr-3">청구서 발행 날짜</span>
+          <span>{issuedAtText}</span>
+        </div>
+      </div>
+
+      {/* 수정 UI는 아래에만 추가로 펼치기 ( 열이 달라서 부자연스러워서 분리) */}
+      {isEdit && (
+        <div className="mt-4 pt-4 border-t border-gray-200 space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <FormField label="납부 상태">
+              <Select
+                options={STATUS_OPTIONS}
+                value={status}
+                onChange={(v) => {
+                  const next = v as InvoiceStatus;
+                  setStatus(next);
+                  if (next === 'unpaid') {
+                    setMethod(null);
+                    setPaidAtDate('');
+                  }
+                }}
+              />
+            </FormField>
+
+            <FormField label="납부 방법">
+              <Select
+                options={METHOD_OPTIONS}
+                value={method ?? ''}
+                disabled={status === 'unpaid'}
+                onChange={(v) => setMethod(v ? (v as PaymentMethod) : null)}
+              />
+            </FormField>
+
+            <FormField label="납부 날짜">
+              {/* YYYY-MM-DD만 */}
+              <TextInput
+                type="date"
+                value={paidAtDate}
+                disabled={status === 'unpaid'}
+                onChange={(v) => setPaidAtDate(v)}
+              />
+            </FormField>
+          </div>
+
+          {validationError && (
+            <div className="text-sm text-red-500">{validationError}</div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}

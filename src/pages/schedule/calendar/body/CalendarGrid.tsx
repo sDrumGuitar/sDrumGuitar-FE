@@ -1,8 +1,8 @@
-import type { CalendarDate, CalendarDay } from '../types'; // Import CalendarDay
+import { WEEKDAY_LABELS } from '../constants';
+import type { CalendarDate, CalendarDay } from '../types';
 import CalendarCell from './CalendarCell/CalendarCell';
 
-const WEEKDAY_LABELS = ['일', '월', '화', '수', '목', '금', '토'];
-
+// 캘린더 본문
 interface CalendarGridProps {
   dates: CalendarDate[];
   dataMap: Record<string, CalendarDay>;
@@ -22,6 +22,7 @@ function CalendarGrid({ dates, dataMap, onSelectDate }: CalendarGridProps) {
   );
 }
 
+// 캘린더 Header
 const CalendarHeader = () => {
   return (
     <div className="grid grid-cols-7 border-t border-l">
@@ -39,6 +40,7 @@ const CalendarHeader = () => {
   );
 };
 
+// 캘린더 Body
 interface CalendarBodyProps {
   dates: CalendarDate[];
   dataMap: Record<string, CalendarDay>;

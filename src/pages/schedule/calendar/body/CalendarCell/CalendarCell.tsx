@@ -1,15 +1,16 @@
 import type { Lesson } from '../../types';
-import LessonBarList from './LessonBarList'; // Import LessonBarList
-import dayjs from 'dayjs'; // Import dayjs for date manipulation
+import LessonBarList from './LessonBarList';
+import dayjs from 'dayjs';
 
+// 캘린더 내 Cell
 interface CalendarCellProps {
-  date: string; // YYYY-MM-DD
+  date: string;
   isCurrentMonth: boolean;
   lessons: Lesson[];
   onClick: (date: string) => void;
 }
 
-// Define DateLabel helper component
+// Cell 내 '일자'
 const DateLabel = ({ date }: { date: string }) => {
   return <div className="text-sm font-medium">{dayjs(date).date()}</div>;
 };
@@ -29,8 +30,10 @@ function CalendarCell({
         ${!isCurrentMonth ? 'bg-gray-50 text-gray-400' : ''}`}
       onClick={() => onClick(date)}
     >
+      {/* 일자 */}
       <DateLabel date={date} />
 
+      {/* 회차 리스트 */}
       <LessonBarList lessons={visibleLessons} hasMore={hasMore} />
     </div>
   );

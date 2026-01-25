@@ -6,7 +6,7 @@ interface CalendarHeaderProps {
   month: number;
   onPrevMonth: () => void;
   onNextMonth: () => void;
-  onToday: () => void; // New prop for Today button
+  onToday: () => void;
 }
 
 function CalendarHeader({

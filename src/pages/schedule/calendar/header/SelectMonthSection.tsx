@@ -29,6 +29,7 @@ function SelectMonthSection({
   );
 }
 
+// 월 이동 버튼
 interface SelectMonthProps {
   year: number;
   month: number;
@@ -49,9 +50,8 @@ const SelectMonth = ({
         size={20}
         onClick={onPrevMonth}
       />
-      <p className="text-xl font-semibold">{`${year}년 ${
-        month + 1
-      }월`}</p> {/* month is 0-indexed */}
+      <p className="text-xl font-semibold">{`${year}년 ${month + 1}월`}</p>{' '}
+      {/* month is 0-indexed */}
       <AiFillCaretRight
         className="hover:opacity-50 pressable cursor-pointer"
         size={20}
@@ -61,6 +61,7 @@ const SelectMonth = ({
   );
 };
 
+// 오늘 버튼
 interface TodayButtonProps {
   onToday: () => void;
 }

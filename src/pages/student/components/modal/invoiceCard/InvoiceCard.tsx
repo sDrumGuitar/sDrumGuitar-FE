@@ -7,7 +7,7 @@ import type { PatchInvoicePayload } from '@/types/invoice';
 import { patchInvoice } from '@/shared/api/invoices';
 import InvoiceCardHeader from './invoiceCardHeader';
 import { METHOD_OPTIONS, STATUS_OPTIONS } from '@/constants/invoice';
-import InvoiceCell from './invoiceCell';
+import InvoiceCell from './InvoiceCell';
 
 type InvoiceStatus = 'paid' | 'unpaid';
 type PaymentMethod = 'card' | 'cash' | null;
@@ -163,8 +163,8 @@ export default function InvoiceCard({ invoice, onPatched }: InvoiceCardProps) {
               {/* row 1 */}
               <InvoiceCell
                 className={leftLabelW}
-                cellName="납부 날짜"
-                value={paidAtText}
+                cellName="클래스"
+                value={classText}
               />
               <InvoiceCell
                 className={`${rightLabelW}`}
@@ -178,25 +178,25 @@ export default function InvoiceCard({ invoice, onPatched }: InvoiceCardProps) {
               {/* row 2 */}
               <InvoiceCell
                 className={leftLabelW}
-                cellName="납부 방법"
-                value={methodText}
+                cellName="선택 레슨 회차"
+                value={lessonCount}
               />
               <InvoiceCell
                 className={rightLabelW}
-                cellName="선택 레슨 회차"
-                value={lessonCount}
+                cellName="납부 방법"
+                value={methodText}
               />
 
               {/* row 3 */}
               <InvoiceCell
                 className={leftLabelW}
-                cellName="클래스"
-                value={classText}
+                cellName="가족 할인 여부"
+                value={familyDiscount}
               />
               <InvoiceCell
                 className={rightLabelW}
-                cellName="가족 할인 여부"
-                value={familyDiscount}
+                cellName="납부 날짜"
+                value={paidAtText}
               />
 
               {/* row 4 */}

@@ -3,10 +3,11 @@ import dayjs from 'dayjs';
 import FormField from '@/shared/form/FormField';
 import Select from '@/shared/form/Select';
 import TextInput from '@/shared/form/TextInput';
-import NormalButton from '@/shared/button/NormalButton';
 import type { PatchInvoicePayload } from '@/types/invoice';
 import { patchInvoice } from '@/shared/api/invoices';
 import InvoiceCardHeader from './invoiceCardHeader';
+import { METHOD_OPTIONS, STATUS_OPTIONS } from '@/constants/invoice';
+import InvoiceCell from './invoiceCell';
 
 type InvoiceStatus = 'paid' | 'unpaid';
 type PaymentMethod = 'card' | 'cash' | null;
@@ -34,16 +35,6 @@ interface InvoiceCardProps {
     paid_at: string | null;
   }) => void;
 }
-
-const STATUS_OPTIONS = [
-  { label: '미납', value: 'unpaid' },
-  { label: '완료', value: 'paid' },
-] as const;
-
-const METHOD_OPTIONS = [
-  { label: '카드', value: 'card' },
-  { label: '현금', value: 'cash' },
-] as const;
 
 // ✅ date용 변환 (YYYY-MM-DD)
 function toDateOnly(iso: string) {
@@ -144,10 +135,13 @@ export default function InvoiceCard({ invoice, onPatched }: InvoiceCardProps) {
   const issuedAtText = dayjs(invoice.issuedAt).format('YYYY / MM / DD');
   const statusText = statusLabel(invoice.status);
   const methodText = methodLabel(invoice.method);
+  const lessonCount = invoice.lessonCount.toString();
   const classText = classTypeLabel(invoice.classType);
+  const familyDiscount = invoice.familyDiscount ? 'O' : 'X';
+  const totalPrice = Number.isFinite(invoice.totalAmount)
+    ? invoice.totalAmount.toLocaleString()
+    : '-';
 
-  const statusColor =
-    invoice.status === 'paid' ? 'text-green-600' : 'text-red-500';
   return (
     <div className="rounded-lg bg-white border border-gray-300 p-6">
       <InvoiceCardHeader
@@ -167,83 +161,51 @@ export default function InvoiceCard({ invoice, onPatched }: InvoiceCardProps) {
           return (
             <div className="grid grid-cols-2 gap-x-2 gap-y-6">
               {/* row 1 */}
-              <div className="flex items-center gap-8">
-                <div
-                  className={`${leftLabelW} text-sm font-semibold text-gray-800`}
-                >
-                  납부 날짜
-                </div>
-                <div className="text-sm text-gray-800">{paidAtText}</div>
-              </div>
-
-              <div className="flex items-center gap-8">
-                <div
-                  className={`${rightLabelW} text-sm font-semibold text-gray-800`}
-                >
-                  납부 상태
-                </div>
-                <div className={`text-sm font-semibold ${statusColor}`}>
-                  {statusText}
-                </div>
-              </div>
+              <InvoiceCell
+                className={leftLabelW}
+                cellName="납부 날짜"
+                value={paidAtText}
+              />
+              <InvoiceCell
+                className={`${rightLabelW}`}
+                cellName="납부 상태"
+                value={statusText}
+                cellStyle={
+                  invoice.status === 'paid' ? 'text-green-600' : 'text-red-500'
+                }
+              />
 
               {/* row 2 */}
-              <div className="flex items-center gap-8">
-                <div
-                  className={`${leftLabelW} text-sm font-semibold text-gray-800`}
-                >
-                  납부 방법
-                </div>
-                <div className="text-sm text-gray-800">{methodText}</div>
-              </div>
-
-              <div className="flex items-center gap-8">
-                <div
-                  className={`${rightLabelW} text-sm font-semibold text-gray-800`}
-                >
-                  선택 레슨 회차
-                </div>
-                <div className="text-sm text-gray-800">
-                  {invoice.lessonCount}
-                </div>
-              </div>
+              <InvoiceCell
+                className={leftLabelW}
+                cellName="납부 방법"
+                value={methodText}
+              />
+              <InvoiceCell
+                className={rightLabelW}
+                cellName="선택 레슨 회차"
+                value={lessonCount}
+              />
 
               {/* row 3 */}
-              <div className="flex items-center gap-8">
-                <div
-                  className={`${leftLabelW} text-sm font-semibold text-gray-800`}
-                >
-                  클래스
-                </div>
-                <div className="text-sm text-gray-800">{classText}</div>
-              </div>
-
-              <div className="flex items-center gap-8">
-                <div
-                  className={`${rightLabelW} text-sm font-semibold text-gray-800`}
-                >
-                  가족 할인 여부
-                </div>
-                <div className="text-sm text-gray-800">
-                  {invoice.familyDiscount ? 'O' : 'X'}
-                </div>
-              </div>
+              <InvoiceCell
+                className={leftLabelW}
+                cellName="클래스"
+                value={classText}
+              />
+              <InvoiceCell
+                className={rightLabelW}
+                cellName="가족 할인 여부"
+                value={familyDiscount}
+              />
 
               {/* row 4 */}
               <div />
-
-              <div className="flex items-center gap-8">
-                <div
-                  className={`${rightLabelW} text-sm font-semibold text-gray-800`}
-                >
-                  총 금액
-                </div>
-                <div className="text-sm text-gray-800">
-                  {Number.isFinite(invoice.totalAmount)
-                    ? invoice.totalAmount.toLocaleString()
-                    : '-'}
-                </div>
-              </div>
+              <InvoiceCell
+                className={rightLabelW}
+                cellName="총 금액"
+                value={totalPrice}
+              />
             </div>
           );
         })()}

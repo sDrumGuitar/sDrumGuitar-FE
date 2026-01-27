@@ -1,16 +1,17 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ModalWrapper from '@/shared/modal/ModalWrapper';
 import { useInvoiceModalStore } from '@/store/invoiceModalStore';
 import { api } from '@/shared/api/axios';
-import InvoiceCard from './invoiceCard/InvoiceCard';
 import LoadingText from '@/shared/text/LoadingText';
 import EmptyText from '@/shared/text/EmptyText';
+import InvoiceListModalHeader from './InvoiceListModalHeader';
+import InvoiceListModalBody from './InvoiceListModalBody';
 
 type InvoiceStatus = 'paid' | 'unpaid';
 type PaymentMethod = 'card' | 'cash' | null;
 type ClassType = 'DRUM' | 'GUITAR' | 'PIANO' | 'VOCAL';
 
-type InvoiceItem = {
+export type InvoiceItem = {
   invoice_id: number;
   course_id: number;
   issued_at: string;
@@ -46,11 +47,6 @@ export default function InvoiceListModal() {
   const { isOpen, student, close } = useInvoiceModalStore();
   const [loading, setLoading] = useState(false);
   const [invociesList, setInvociesList] = useState<InvoiceItem[]>([]);
-
-  const title = useMemo(() => {
-    const name = student?.name ?? '';
-    return name ? `${name}의 청구서 목록` : '청구서 목록';
-  }, [student]);
 
   const load = async () => {
     if (!student) return;
@@ -121,10 +117,7 @@ export default function InvoiceListModal() {
   return (
     <ModalWrapper onClose={close}>
       {/* 헤더 */}
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold">{title}</h2>
-        <button onClick={close}>닫기</button>
-      </div>
+      <InvoiceListModalHeader />
 
       {/* 본문 */}
       {loading ? (
@@ -132,32 +125,10 @@ export default function InvoiceListModal() {
       ) : invociesList.length === 0 ? (
         <EmptyText>청구서가 없습니다.</EmptyText>
       ) : (
-        <div className="max-h-120 overflow-y-auto space-y-4 pr-1">
-          {invociesList.map((invoice) => {
-            const invoiceObject = {
-              invoiceId: invoice.invoice_id,
-              courseId: invoice.course_id,
-              issuedAt: invoice.issued_at,
-
-              paidAt: invoice.paid_at,
-              status: invoice.status,
-              method: invoice.method,
-
-              lessonCount: invoice.lesson_count,
-              familyDiscount: invoice.family_discount,
-              classType: invoice.class_type,
-              totalAmount: invoice.total_amount,
-            };
-
-            return (
-              <InvoiceCard
-                key={invoice.invoice_id}
-                invoice={invoiceObject}
-                onPatched={handlePatched}
-              />
-            );
-          })}
-        </div>
+        <InvoiceListModalBody
+          invociesList={invociesList}
+          handlePatched={handlePatched}
+        />
       )}
     </ModalWrapper>
   );

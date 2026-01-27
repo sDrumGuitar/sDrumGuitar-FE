@@ -13,8 +13,9 @@ import type { Student } from '@/types/student';
 import { useEffect, useState } from 'react';
 import { updateStudent } from '@/shared/api/students';
 import { useStudentModalStore } from '@/store/studentModalStore';
-// ✅ 추가
+import { formatPhoneNumber } from '@/shared/utils/phone';
 import { useInvoiceModalStore } from '@/store/invoiceModalStore';
+
 
 interface StudentFormState {
   name: string;
@@ -29,8 +30,8 @@ function mapStudentToForm(student: Student): StudentFormState {
   return {
     name: student.name,
     ageGroup: student.age_group,
-    phone: student.phone,
-    parentPhone: student.parent_phone,
+    phone: formatPhoneNumber(student.phone),
+    parentPhone: formatPhoneNumber(student.parent_phone),
     familyDiscount: student.family_discount,
     memo: student.memo ?? '',
   };
@@ -135,6 +136,7 @@ function StudentDetailView({
           value={displayForm.phone}
           disabled={!isEditMode}
           onChange={(v) => updateForm('phone', v)}
+          formatter={formatPhoneNumber}
         />
       </FormField>
 
@@ -143,6 +145,7 @@ function StudentDetailView({
           value={displayForm.parentPhone}
           disabled={!isEditMode}
           onChange={(v) => updateForm('parentPhone', v)}
+          formatter={formatPhoneNumber}
         />
       </FormField>
 

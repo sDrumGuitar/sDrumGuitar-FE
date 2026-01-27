@@ -7,7 +7,7 @@
       "phone": "010-1234-1234",
       "parent_phone": "010-9999-9999",
       "family_discount": true,
-      "memo": "형제 할인 적용",
+      "memo": "형제 할인 적용!!!",
       "created_at": "2026-09-01T10:00:00",
       "updated_at": "2026-01-24T03:08:16.783Z"
     },
@@ -120,6 +120,17 @@
       "memo": "형제 할인 2명",
       "created_at": "2026-09-30T17:30:00",
       "updated_at": "2026-10-04T11:00:00"
+    },
+    {
+      "id": "b54f",
+      "name": "박민지",
+      "age_group": "preschool",
+      "phone": "01012341234",
+      "parent_phone": "01012312312",
+      "family_discount": true,
+      "memo": "없음",
+      "created_at": "2026-01-26T12:52:44.704Z",
+      "updated_at": "2026-01-26T12:52:44.704Z"
     }
   ],
   "courses": [

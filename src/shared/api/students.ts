@@ -21,10 +21,10 @@ export const getStudents = async ({
 }: GetStudentsProps): Promise<GetStudentsResponse> => {
   try {
     const res = await api.get<Student[]>('/students', {
-      params: {
-        _page: page,
-        _limit: size,
-      },
+      // params: {
+      //   _page: page,
+      //   _limit: size,
+      // },
     });
 
     const students = Array.isArray(res.data) ? res.data : [];
@@ -84,7 +84,7 @@ export const updateStudent = async (
   studentId: number,
   payload: UpdateStudentPayload,
 ) => {
-  const res = await api.patch(`/students/${studentId}`, {
+  const res = await api.put(`/students/${studentId}`, {
     ...payload,
     updated_at: new Date().toISOString(),
   });

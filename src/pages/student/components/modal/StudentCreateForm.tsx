@@ -14,6 +14,7 @@ import {
 import NormalButton from '@/shared/button/NormalButton';
 import { createStudent } from '@/shared/api/students';
 import { useStudentModalStore } from '@/store/studentModalStore';
+import { formatPhoneNumber } from '@/shared/utils/phone';
 
 interface StudentFormState {
   name: string;
@@ -121,6 +122,7 @@ function StudentCreateForm({
           value={form.phone}
           onChange={(v) => updateForm('phone', v)}
           placeholder="숫자만 입력"
+          formatter={formatPhoneNumber}
         />
       </FormField>
 
@@ -129,6 +131,7 @@ function StudentCreateForm({
           value={form.parentPhone}
           onChange={(v) => updateForm('parentPhone', v)}
           placeholder="숫자만 입력"
+          formatter={formatPhoneNumber}
         />
       </FormField>
 

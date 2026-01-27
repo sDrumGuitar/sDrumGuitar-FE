@@ -3,6 +3,7 @@ interface NumberInputProps {
   onChange?: (value: string) => void;
   placeholder?: string;
   disabled?: boolean;
+  formatter?: (value: string) => string;
 }
 
 function NumberInput({
@@ -10,6 +11,7 @@ function NumberInput({
   onChange,
   placeholder,
   disabled = false,
+  formatter,
 }: NumberInputProps) {
   return (
     <input
@@ -20,7 +22,10 @@ function NumberInput({
       disabled={disabled}
       onChange={(e) => {
         if (disabled) return;
-        onChange?.(e.target.value.replace(/\D/g, ''));
+        const nextValue = formatter
+          ? formatter(e.target.value)
+          : e.target.value.replace(/\D/g, '');
+        onChange?.(nextValue);
       }}
       className={`
         border flex-1 rounded-sm pl-2 py-1

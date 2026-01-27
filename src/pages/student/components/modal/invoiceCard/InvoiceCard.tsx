@@ -6,23 +6,26 @@ import TextInput from '@/shared/form/TextInput';
 import NormalButton from '@/shared/button/NormalButton';
 import type { PatchInvoicePayload } from '@/types/invoice';
 import { patchInvoice } from '@/shared/api/invoices';
+import InvoiceCardHeader from './invoiceCardHeader';
 
 type InvoiceStatus = 'paid' | 'unpaid';
 type PaymentMethod = 'card' | 'cash' | null;
 
 interface InvoiceCardProps {
-  invoiceId: number;
-  courseId: number;
-  issuedAt: string;
+  invoice: {
+    invoiceId: number;
+    courseId: number;
+    issuedAt: string;
 
-  paidAt: string | null;
-  status: InvoiceStatus;
-  method: PaymentMethod;
+    paidAt: string | null;
+    status: InvoiceStatus;
+    method: PaymentMethod;
 
-  lessonCount: number;
-  familyDiscount: boolean;
-  classType: string;
-  totalAmount: number;
+    lessonCount: number;
+    familyDiscount: boolean;
+    classType: string;
+    totalAmount: number;
+  };
 
   onPatched: (next: {
     invoice_id: number;
@@ -71,14 +74,14 @@ function methodLabel(v: PaymentMethod) {
   return '-';
 }
 
-export default function InvoiceCard(props: InvoiceCardProps) {
+export default function InvoiceCard({ invoice, onPatched }: InvoiceCardProps) {
   const [isEdit, setIsEdit] = useState(false);
 
   // 편집 상태 (props 기준으로 초기화)
-  const [status, setStatus] = useState<InvoiceStatus>(props.status);
-  const [method, setMethod] = useState<PaymentMethod>(props.method);
+  const [status, setStatus] = useState<InvoiceStatus>(invoice.status);
+  const [method, setMethod] = useState<PaymentMethod>(invoice.method);
   const [paidAtDate, setPaidAtDate] = useState<string>(
-    props.paidAt ? toDateOnly(props.paidAt) : '',
+    invoice.paidAt ? toDateOnly(invoice.paidAt) : '',
   );
 
   const [loading, setLoading] = useState(false);
@@ -93,9 +96,9 @@ export default function InvoiceCard(props: InvoiceCardProps) {
 
   const handleCancel = () => {
     setIsEdit(false);
-    setStatus(props.status);
-    setMethod(props.method);
-    setPaidAtDate(props.paidAt ? toDateOnly(props.paidAt) : '');
+    setStatus(invoice.status);
+    setMethod(invoice.method);
+    setPaidAtDate(invoice.paidAt ? toDateOnly(invoice.paidAt) : '');
   };
 
   const handleSave = async () => {
@@ -116,10 +119,10 @@ export default function InvoiceCard(props: InvoiceCardProps) {
 
     try {
       setLoading(true);
-      await patchInvoice(props.invoiceId, payload);
+      await patchInvoice(invoice.invoiceId, payload);
 
-      props.onPatched({
-        invoice_id: props.invoiceId,
+      onPatched({
+        invoice_id: invoice.invoiceId,
         status: payload.status,
         method: payload.method,
         paid_at: payload.paid_at,
@@ -135,50 +138,48 @@ export default function InvoiceCard(props: InvoiceCardProps) {
   };
 
   // GUI 표기용 값들
-  const paidAtText = props.paidAt
-    ? dayjs(props.paidAt).format('YYYY / MM / DD')
+  const paidAtText = invoice.paidAt
+    ? dayjs(invoice.paidAt).format('YYYY / MM / DD')
     : '-';
-  const issuedAtText = dayjs(props.issuedAt).format('YYYY / MM / DD');
-  const statusText = statusLabel(props.status);
-  const methodText = methodLabel(props.method);
-  const classText = classTypeLabel(props.classType);
+  const issuedAtText = dayjs(invoice.issuedAt).format('YYYY / MM / DD');
+  const statusText = statusLabel(invoice.status);
+  const methodText = methodLabel(invoice.method);
+  const classText = classTypeLabel(invoice.classType);
 
-  const statusColor = props.status === 'paid' ? 'text-green-600' : 'text-red-500';
+  const statusColor =
+    invoice.status === 'paid' ? 'text-green-600' : 'text-red-500';
   return (
     <div className="rounded-lg bg-white border border-gray-300 p-6">
-      <div className="flex justify-end gap-2">
-        {!isEdit ? (
-          <NormalButton text="수정하기" onClick={() => setIsEdit(true)} />
-        ) : (
-          <>
-            <NormalButton text="취소" onClick={handleCancel} />
-            <NormalButton
-              text={loading ? '저장중...' : '저장'}
-              onClick={handleSave}
-              disabled={loading}
-            />
-          </>
-        )}
-      </div>
+      <InvoiceCardHeader
+        isEdit={isEdit}
+        setIsEdit={setIsEdit}
+        handleCancel={handleCancel}
+        loading={loading}
+        handleSave={handleSave}
+      />
 
       <div className="mt-2">
         {/* 여기서부터 교체 */}
         {(() => {
-          const leftLabelW = 'w-20';   // 왼쪽 라벨 폭
-          const rightLabelW = 'w-28';  // 오른쪽 라벨 폭 고정
+          const leftLabelW = 'w-20'; // 왼쪽 라벨 폭
+          const rightLabelW = 'w-28'; // 오른쪽 라벨 폭 고정
 
           return (
             <div className="grid grid-cols-2 gap-x-2 gap-y-6">
               {/* row 1 */}
               <div className="flex items-center gap-8">
-                <div className={`${leftLabelW} text-sm font-semibold text-gray-800`}>
+                <div
+                  className={`${leftLabelW} text-sm font-semibold text-gray-800`}
+                >
                   납부 날짜
                 </div>
                 <div className="text-sm text-gray-800">{paidAtText}</div>
               </div>
 
               <div className="flex items-center gap-8">
-                <div className={`${rightLabelW} text-sm font-semibold text-gray-800`}>
+                <div
+                  className={`${rightLabelW} text-sm font-semibold text-gray-800`}
+                >
                   납부 상태
                 </div>
                 <div className={`text-sm font-semibold ${statusColor}`}>
@@ -188,33 +189,43 @@ export default function InvoiceCard(props: InvoiceCardProps) {
 
               {/* row 2 */}
               <div className="flex items-center gap-8">
-                <div className={`${leftLabelW} text-sm font-semibold text-gray-800`}>
+                <div
+                  className={`${leftLabelW} text-sm font-semibold text-gray-800`}
+                >
                   납부 방법
                 </div>
                 <div className="text-sm text-gray-800">{methodText}</div>
               </div>
 
               <div className="flex items-center gap-8">
-                <div className={`${rightLabelW} text-sm font-semibold text-gray-800`}>
+                <div
+                  className={`${rightLabelW} text-sm font-semibold text-gray-800`}
+                >
                   선택 레슨 회차
                 </div>
-                <div className="text-sm text-gray-800">{props.lessonCount}</div>
+                <div className="text-sm text-gray-800">
+                  {invoice.lessonCount}
+                </div>
               </div>
 
               {/* row 3 */}
               <div className="flex items-center gap-8">
-                <div className={`${leftLabelW} text-sm font-semibold text-gray-800`}>
+                <div
+                  className={`${leftLabelW} text-sm font-semibold text-gray-800`}
+                >
                   클래스
                 </div>
                 <div className="text-sm text-gray-800">{classText}</div>
               </div>
 
               <div className="flex items-center gap-8">
-                <div className={`${rightLabelW} text-sm font-semibold text-gray-800`}>
+                <div
+                  className={`${rightLabelW} text-sm font-semibold text-gray-800`}
+                >
                   가족 할인 여부
                 </div>
                 <div className="text-sm text-gray-800">
-                  {props.familyDiscount ? 'O' : 'X'}
+                  {invoice.familyDiscount ? 'O' : 'X'}
                 </div>
               </div>
 
@@ -222,12 +233,14 @@ export default function InvoiceCard(props: InvoiceCardProps) {
               <div />
 
               <div className="flex items-center gap-8">
-                <div className={`${rightLabelW} text-sm font-semibold text-gray-800`}>
+                <div
+                  className={`${rightLabelW} text-sm font-semibold text-gray-800`}
+                >
                   총 금액
                 </div>
                 <div className="text-sm text-gray-800">
-                  {Number.isFinite(props.totalAmount)
-                    ? props.totalAmount.toLocaleString()
+                  {Number.isFinite(invoice.totalAmount)
+                    ? invoice.totalAmount.toLocaleString()
                     : '-'}
                 </div>
               </div>

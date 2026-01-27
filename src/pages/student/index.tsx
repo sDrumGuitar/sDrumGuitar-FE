@@ -6,6 +6,7 @@ import { useStudentModalStore } from '@/store/studentModalStore';
 import StudentModal from './components/modal/StudentModal';
 import ModalOpenButton from '@/shared/modal/ModalOpenButton';
 import { getAgeGroupLabel } from '@/utils/getAgeGroupLabel';
+import InvoiceListModal from './components/modal/InvoiceListModal';
 
 function StudentPage() {
   const { isOpen, openCreate, openDetail } = useStudentModalStore();
@@ -39,6 +40,8 @@ function StudentPage() {
         onRowClick={(student) => openDetail(student)}
       />
       {isOpen && <StudentModal onSuccess={loadStudents} />}
+
+      <InvoiceListModal />
     </div>
   );
 }

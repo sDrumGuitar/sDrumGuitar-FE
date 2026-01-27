@@ -7,9 +7,9 @@
       "phone": "010-1234-1234",
       "parent_phone": "010-9999-9999",
       "family_discount": true,
-      "memo": "형제 할인 적용",
+      "memo": "형제 할인 적용!!!",
       "created_at": "2026-09-01T10:00:00",
-      "updated_at": "2026-01-22T14:18:37.138Z"
+      "updated_at": "2026-01-26T12:52:22.747Z"
     },
     {
       "id": "2",
@@ -120,6 +120,17 @@
       "memo": "형제 할인 2명",
       "created_at": "2026-09-30T17:30:00",
       "updated_at": "2026-10-04T11:00:00"
+    },
+    {
+      "id": "b54f",
+      "name": "박민지",
+      "age_group": "preschool",
+      "phone": "01012341234",
+      "parent_phone": "01012312312",
+      "family_discount": true,
+      "memo": "없음",
+      "created_at": "2026-01-26T12:52:44.704Z",
+      "updated_at": "2026-01-26T12:52:44.704Z"
     }
   ],
   "courses": [
@@ -500,6 +511,31 @@
       ],
       "invoice": {
         "status": null
+      }
+    },
+    {
+      "id": "3691",
+      "student": {
+        "student_id": "1",
+        "name": "김광일"
+      },
+      "class_type": "GUITAR",
+      "lesson_count": 8,
+      "start_date": "Thu Jan 08 2026 00:00:00 GMT+0900 (한국 표준시)",
+      "schedules": [
+        {
+          "weekday": "MON",
+          "time": "04:25"
+        },
+        {
+          "weekday": "TUE",
+          "time": "05:45"
+        }
+      ],
+      "invoice": {
+        "status": "paid",
+        "method": "card",
+        "paid_at": "2026-01-17"
       }
     }
   ]

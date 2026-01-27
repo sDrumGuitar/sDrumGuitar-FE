@@ -1,14 +1,17 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ModalWrapper from '@/shared/modal/ModalWrapper';
 import { useInvoiceModalStore } from '@/store/invoiceModalStore';
 import { api } from '@/shared/api/axios';
-import InvoiceCard from './InvoiceCard';
+import LoadingText from '@/shared/text/LoadingText';
+import EmptyText from '@/shared/text/EmptyText';
+import InvoiceListModalHeader from './InvoiceListModalHeader';
+import InvoiceListModalBody from './InvoiceListModalBody';
 
 type InvoiceStatus = 'paid' | 'unpaid';
 type PaymentMethod = 'card' | 'cash' | null;
 type ClassType = 'DRUM' | 'GUITAR' | 'PIANO' | 'VOCAL';
 
-type InvoiceItem = {
+export type InvoiceItem = {
   invoice_id: number;
   course_id: number;
   issued_at: string;
@@ -43,12 +46,7 @@ type InvoiceRow = {
 export default function InvoiceListModal() {
   const { isOpen, student, close } = useInvoiceModalStore();
   const [loading, setLoading] = useState(false);
-  const [items, setItems] = useState<InvoiceItem[]>([]);
-
-  const title = useMemo(() => {
-    const name = student?.name ?? '';
-    return name ? `${name}의 청구서 목록` : '청구서 목록';
-  }, [student]);
+  const [invociesList, setInvociesList] = useState<InvoiceItem[]>([]);
 
   const load = async () => {
     if (!student) return;
@@ -79,7 +77,7 @@ export default function InvoiceListModal() {
         total_amount: Number(inv.total_amount),
       }));
 
-      setItems(mapped);
+      setInvociesList(mapped);
     } catch (e) {
       console.error(e);
       alert('청구서 정보를 불러오는데 실패했습니다.');
@@ -100,10 +98,15 @@ export default function InvoiceListModal() {
     method: PaymentMethod;
     paid_at: string | null;
   }) => {
-    setItems((prev) =>
+    setInvociesList((prev) =>
       prev.map((p) =>
         p.invoice_id === next.invoice_id
-          ? { ...p, status: next.status, method: next.method, paid_at: next.paid_at }
+          ? {
+              ...p,
+              status: next.status,
+              method: next.method,
+              paid_at: next.paid_at,
+            }
           : p,
       ),
     );
@@ -114,40 +117,18 @@ export default function InvoiceListModal() {
   return (
     <ModalWrapper onClose={close}>
       {/* 헤더 */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="text-xl font-semibold">{title}</div>
-        <button
-          className="text-sm text-gray-500 hover:text-gray-800"
-          onClick={close}
-        >
-          닫기
-        </button>
-      </div>
+      <InvoiceListModalHeader />
 
       {/* 본문 */}
       {loading ? (
-        <div className="text-sm text-gray-500">불러오는 중...</div>
-      ) : items.length === 0 ? (
-        <div className="text-sm text-gray-500">청구서가 없습니다.</div>
+        <LoadingText>불러오는 중...</LoadingText>
+      ) : invociesList.length === 0 ? (
+        <EmptyText>청구서가 없습니다.</EmptyText>
       ) : (
-        <div className="max-h-[70vh] overflow-y-auto space-y-4 pr-1">
-          {items.map((it) => (
-            <InvoiceCard
-              key={it.invoice_id}
-              invoiceId={it.invoice_id}
-              courseId={it.course_id}
-              issuedAt={it.issued_at}
-              paidAt={it.paid_at}
-              status={it.status}
-              method={it.method}
-              lessonCount={it.lesson_count}
-              familyDiscount={it.family_discount}
-              classType={it.class_type}
-              totalAmount={it.total_amount}
-              onPatched={handlePatched}
-            />
-          ))}
-        </div>
+        <InvoiceListModalBody
+          invociesList={invociesList}
+          handlePatched={handlePatched}
+        />
       )}
     </ModalWrapper>
   );

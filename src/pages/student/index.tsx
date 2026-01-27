@@ -6,7 +6,7 @@ import { useStudentModalStore } from '@/store/studentModalStore';
 import StudentModal from './components/modal/StudentModal';
 import ModalOpenButton from '@/shared/modal/ModalOpenButton';
 import { getAgeGroupLabel } from '@/utils/getAgeGroupLabel';
-import InvoiceListModal from './components/modal/InvoiceListModal';
+import InvoiceListModal from './components/modal/InvoiceListModal/InvoiceListModal';
 
 function StudentPage() {
   const { isOpen, openCreate, openDetail } = useStudentModalStore();

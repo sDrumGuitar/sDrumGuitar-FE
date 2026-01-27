@@ -651,15 +651,15 @@
       "student_id": 1,
       "course_id": 29873,
       "issued_at": "2026-01-03T09:00:00",
-      "paid_at": null,
-      "status": "unpaid",
-      "method": null,
+      "paid_at": "2026-01-01T00:00:00",
+      "status": "paid",
+      "method": "card",
       "class_type": "GUITAR",
       "lesson_count": 4,
       "family_discount": true,
       "total_amount": 72000,
       "created_at": "2026-01-03T09:00:00",
-      "updated_at": "2026-01-03T09:00:00"
+      "updated_at": "2026-01-27T13:32:43.130Z"
     },
     {
       "id": "32",
@@ -704,7 +704,7 @@
       "family_discount": false,
       "total_amount": 88000,
       "created_at": "2025-12-31T09:00:00",
-      "updated_at": "2026-01-25T04:02:10.554Z"
+      "updated_at": "2026-01-27T09:41:15.932Z"
     }
   ]
 }

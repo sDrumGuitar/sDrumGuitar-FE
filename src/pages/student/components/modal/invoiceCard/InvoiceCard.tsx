@@ -3,26 +3,30 @@ import dayjs from 'dayjs';
 import FormField from '@/shared/form/FormField';
 import Select from '@/shared/form/Select';
 import TextInput from '@/shared/form/TextInput';
-import NormalButton from '@/shared/button/NormalButton';
 import type { PatchInvoicePayload } from '@/types/invoice';
 import { patchInvoice } from '@/shared/api/invoices';
+import InvoiceCardHeader from './invoiceCardHeader';
+import { METHOD_OPTIONS, STATUS_OPTIONS } from '@/constants/invoice';
+import InvoiceCell from './InvoiceCell';
 
 type InvoiceStatus = 'paid' | 'unpaid';
 type PaymentMethod = 'card' | 'cash' | null;
 
 interface InvoiceCardProps {
-  invoiceId: number;
-  courseId: number;
-  issuedAt: string;
+  invoice: {
+    invoiceId: number;
+    courseId: number;
+    issuedAt: string;
 
-  paidAt: string | null;
-  status: InvoiceStatus;
-  method: PaymentMethod;
+    paidAt: string | null;
+    status: InvoiceStatus;
+    method: PaymentMethod;
 
-  lessonCount: number;
-  familyDiscount: boolean;
-  classType: string;
-  totalAmount: number;
+    lessonCount: number;
+    familyDiscount: boolean;
+    classType: string;
+    totalAmount: number;
+  };
 
   onPatched: (next: {
     invoice_id: number;
@@ -31,16 +35,6 @@ interface InvoiceCardProps {
     paid_at: string | null;
   }) => void;
 }
-
-const STATUS_OPTIONS = [
-  { label: '미납', value: 'unpaid' },
-  { label: '완료', value: 'paid' },
-] as const;
-
-const METHOD_OPTIONS = [
-  { label: '카드', value: 'card' },
-  { label: '현금', value: 'cash' },
-] as const;
 
 // ✅ date용 변환 (YYYY-MM-DD)
 function toDateOnly(iso: string) {
@@ -71,14 +65,14 @@ function methodLabel(v: PaymentMethod) {
   return '-';
 }
 
-export default function InvoiceCard(props: InvoiceCardProps) {
+export default function InvoiceCard({ invoice, onPatched }: InvoiceCardProps) {
   const [isEdit, setIsEdit] = useState(false);
 
   // 편집 상태 (props 기준으로 초기화)
-  const [status, setStatus] = useState<InvoiceStatus>(props.status);
-  const [method, setMethod] = useState<PaymentMethod>(props.method);
+  const [status, setStatus] = useState<InvoiceStatus>(invoice.status);
+  const [method, setMethod] = useState<PaymentMethod>(invoice.method);
   const [paidAtDate, setPaidAtDate] = useState<string>(
-    props.paidAt ? toDateOnly(props.paidAt) : '',
+    invoice.paidAt ? toDateOnly(invoice.paidAt) : '',
   );
 
   const [loading, setLoading] = useState(false);
@@ -93,9 +87,9 @@ export default function InvoiceCard(props: InvoiceCardProps) {
 
   const handleCancel = () => {
     setIsEdit(false);
-    setStatus(props.status);
-    setMethod(props.method);
-    setPaidAtDate(props.paidAt ? toDateOnly(props.paidAt) : '');
+    setStatus(invoice.status);
+    setMethod(invoice.method);
+    setPaidAtDate(invoice.paidAt ? toDateOnly(invoice.paidAt) : '');
   };
 
   const handleSave = async () => {
@@ -116,10 +110,10 @@ export default function InvoiceCard(props: InvoiceCardProps) {
 
     try {
       setLoading(true);
-      await patchInvoice(props.invoiceId, payload);
+      await patchInvoice(invoice.invoiceId, payload);
 
-      props.onPatched({
-        invoice_id: props.invoiceId,
+      onPatched({
+        invoice_id: invoice.invoiceId,
         status: payload.status,
         method: payload.method,
         paid_at: payload.paid_at,
@@ -135,102 +129,83 @@ export default function InvoiceCard(props: InvoiceCardProps) {
   };
 
   // GUI 표기용 값들
-  const paidAtText = props.paidAt
-    ? dayjs(props.paidAt).format('YYYY / MM / DD')
+  const paidAtText = invoice.paidAt
+    ? dayjs(invoice.paidAt).format('YYYY / MM / DD')
     : '-';
-  const issuedAtText = dayjs(props.issuedAt).format('YYYY / MM / DD');
-  const statusText = statusLabel(props.status);
-  const methodText = methodLabel(props.method);
-  const classText = classTypeLabel(props.classType);
+  const issuedAtText = dayjs(invoice.issuedAt).format('YYYY / MM / DD');
+  const statusText = statusLabel(invoice.status);
+  const methodText = methodLabel(invoice.method);
+  const lessonCount = invoice.lessonCount.toString();
+  const classText = classTypeLabel(invoice.classType);
+  const familyDiscount = invoice.familyDiscount ? 'O' : 'X';
+  const totalPrice = Number.isFinite(invoice.totalAmount)
+    ? invoice.totalAmount.toLocaleString()
+    : '-';
 
-  const statusColor = props.status === 'paid' ? 'text-green-600' : 'text-red-500';
   return (
     <div className="rounded-lg bg-white border border-gray-300 p-6">
-      <div className="flex justify-end gap-2">
-        {!isEdit ? (
-          <NormalButton text="수정하기" onClick={() => setIsEdit(true)} />
-        ) : (
-          <>
-            <NormalButton text="취소" onClick={handleCancel} />
-            <NormalButton
-              text={loading ? '저장중...' : '저장'}
-              onClick={handleSave}
-              disabled={loading}
-            />
-          </>
-        )}
-      </div>
+      <InvoiceCardHeader
+        isEdit={isEdit}
+        setIsEdit={setIsEdit}
+        handleCancel={handleCancel}
+        loading={loading}
+        handleSave={handleSave}
+      />
 
       <div className="mt-2">
         {/* 여기서부터 교체 */}
         {(() => {
-          const leftLabelW = 'w-20';   // 왼쪽 라벨 폭
-          const rightLabelW = 'w-28';  // 오른쪽 라벨 폭 고정
+          const leftLabelW = 'w-20'; // 왼쪽 라벨 폭
+          const rightLabelW = 'w-28'; // 오른쪽 라벨 폭 고정
 
           return (
             <div className="grid grid-cols-2 gap-x-2 gap-y-6">
               {/* row 1 */}
-              <div className="flex items-center gap-8">
-                <div className={`${leftLabelW} text-sm font-semibold text-gray-800`}>
-                  납부 날짜
-                </div>
-                <div className="text-sm text-gray-800">{paidAtText}</div>
-              </div>
-
-              <div className="flex items-center gap-8">
-                <div className={`${rightLabelW} text-sm font-semibold text-gray-800`}>
-                  납부 상태
-                </div>
-                <div className={`text-sm font-semibold ${statusColor}`}>
-                  {statusText}
-                </div>
-              </div>
+              <InvoiceCell
+                className={leftLabelW}
+                cellName="클래스"
+                value={classText}
+              />
+              <InvoiceCell
+                className={`${rightLabelW}`}
+                cellName="납부 상태"
+                value={statusText}
+                cellStyle={
+                  invoice.status === 'paid' ? 'text-green-600' : 'text-red-500'
+                }
+              />
 
               {/* row 2 */}
-              <div className="flex items-center gap-8">
-                <div className={`${leftLabelW} text-sm font-semibold text-gray-800`}>
-                  납부 방법
-                </div>
-                <div className="text-sm text-gray-800">{methodText}</div>
-              </div>
-
-              <div className="flex items-center gap-8">
-                <div className={`${rightLabelW} text-sm font-semibold text-gray-800`}>
-                  선택 레슨 회차
-                </div>
-                <div className="text-sm text-gray-800">{props.lessonCount}</div>
-              </div>
+              <InvoiceCell
+                className={leftLabelW}
+                cellName="선택 레슨 회차"
+                value={lessonCount}
+              />
+              <InvoiceCell
+                className={rightLabelW}
+                cellName="납부 방법"
+                value={methodText}
+              />
 
               {/* row 3 */}
-              <div className="flex items-center gap-8">
-                <div className={`${leftLabelW} text-sm font-semibold text-gray-800`}>
-                  클래스
-                </div>
-                <div className="text-sm text-gray-800">{classText}</div>
-              </div>
-
-              <div className="flex items-center gap-8">
-                <div className={`${rightLabelW} text-sm font-semibold text-gray-800`}>
-                  가족 할인 여부
-                </div>
-                <div className="text-sm text-gray-800">
-                  {props.familyDiscount ? 'O' : 'X'}
-                </div>
-              </div>
+              <InvoiceCell
+                className={leftLabelW}
+                cellName="가족 할인 여부"
+                value={familyDiscount}
+              />
+              <InvoiceCell
+                className={rightLabelW}
+                cellName="납부 날짜"
+                value={paidAtText}
+              />
 
               {/* row 4 */}
               <div />
-
-              <div className="flex items-center gap-8">
-                <div className={`${rightLabelW} text-sm font-semibold text-gray-800`}>
-                  총 금액
-                </div>
-                <div className="text-sm text-gray-800">
-                  {Number.isFinite(props.totalAmount)
-                    ? props.totalAmount.toLocaleString()
-                    : '-'}
-                </div>
-              </div>
+              <InvoiceCell
+                className={rightLabelW}
+                cellName="총 금액"
+                value={totalPrice}
+              />
             </div>
           );
         })()}

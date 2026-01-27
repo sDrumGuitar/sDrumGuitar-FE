@@ -47,26 +47,19 @@ function StudentDetailView({
   onDirtyChange,
   onSuccess,
 }: StudentDetailViewProps) {
+  const mappedStudent = mapStudentToForm(student);
   const [originalForm, setOriginalForm] = useState<StudentFormState>(
-    mapStudentToForm(student),
+    mappedStudent,
   );
-
-  const [form, setForm] = useState<StudentFormState>(originalForm);
+  const [form, setForm] = useState<StudentFormState>(mappedStudent);
   const { mode, openUpdate, openDetail } = useStudentModalStore();
   const isEditMode = mode === 'UPDATE';
 
   // ✅ 추가
   const { open: openInvoiceModal } = useInvoiceModalStore();
 
-  const isDirty = JSON.stringify(form) !== JSON.stringify(originalForm);
-
-  useEffect(() => {
-    if (mode !== 'UPDATE') {
-      const mapped = mapStudentToForm(student);
-      setOriginalForm(mapped);
-      setForm(mapped);
-    }
-  }, [student, mode]);
+  const isDirty = isEditMode && JSON.stringify(form) !== JSON.stringify(originalForm);
+  const displayForm = isEditMode ? form : mappedStudent;
 
   useEffect(() => {
     onDirtyChange(isEditMode && isDirty);
@@ -86,6 +79,13 @@ function StudentDetailView({
   const handleCancelEdit = () => {
     setForm(originalForm);
     openDetail(student);
+  };
+
+  const handleStartEdit = () => {
+    const mapped = mapStudentToForm(student);
+    setOriginalForm(mapped);
+    setForm(mapped);
+    openUpdate(student);
   };
 
   const handleSave = async () => {
@@ -115,7 +115,7 @@ function StudentDetailView({
       <FormField label="이름">
         <TextInput
           type="text"
-          value={form.name}
+          value={displayForm.name}
           disabled={!isEditMode}
           onChange={(v) => updateForm('name', v)}
         />
@@ -124,7 +124,7 @@ function StudentDetailView({
       <FormField label="구분">
         <Select
           options={AGE_GROUP_OPTIONS}
-          value={form.ageGroup}
+          value={displayForm.ageGroup}
           disabled={!isEditMode}
           onChange={(v) => updateForm('ageGroup', v as Student['age_group'])}
         />
@@ -132,7 +132,7 @@ function StudentDetailView({
 
       <FormField label="전화번호">
         <NumberInput
-          value={form.phone}
+          value={displayForm.phone}
           disabled={!isEditMode}
           onChange={(v) => updateForm('phone', v)}
         />
@@ -140,7 +140,7 @@ function StudentDetailView({
 
       <FormField label="학부모 전화번호">
         <NumberInput
-          value={form.parentPhone}
+          value={displayForm.parentPhone}
           disabled={!isEditMode}
           onChange={(v) => updateForm('parentPhone', v)}
         />
@@ -149,7 +149,7 @@ function StudentDetailView({
       <FormField label="가족 할인">
         <RadioGroup
           options={FAMILY_DISCOUNT_OPTIONS}
-          value={String(form.familyDiscount)}
+          value={String(displayForm.familyDiscount)}
           disabled={!isEditMode}
           onChange={(v) => updateForm('familyDiscount', v === 'true')}
         />
@@ -157,7 +157,7 @@ function StudentDetailView({
 
       <FormField label="메모">
         <Textarea
-          value={form.memo ?? ''}
+          value={displayForm.memo ?? ''}
           disabled={!isEditMode}
           onChange={(v) => updateForm('memo', v)}
         />
@@ -175,22 +175,20 @@ function StudentDetailView({
           <div /> 
         )}
 
-        <div className="flex justify-end gap-2">
           {!isEditMode && (
-            <NormalButton text="수정" onClick={() => openUpdate(student)} />
+            <NormalButton text="수정" onClick={handleStartEdit} />
           )}
 
-          {isEditMode && (
-            <>
-              <NormalButton
-                text="저장"
-                onClick={handleSave}
-                disabled={!isDirty}
-              />
-              <NormalButton text="취소" onClick={handleCancelEdit} />
-            </>
-          )}
-        </div>
+        {isEditMode && (
+          <>
+            <NormalButton
+              text="저장"
+              onClick={handleSave}
+              disabled={!isDirty}
+            />
+            <NormalButton text="취소" onClick={handleCancelEdit} />
+          </>
+        )}
       </div>
     </div>
   );

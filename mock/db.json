@@ -124,18 +124,13 @@
   ],
   "courses": [
     {
-      "course_id": 11,
       "student": {
-        "student_id": 1,
-        "name": "김광일",
-        "age_group": "adult",
-        "phone": "010-1234-1234",
-        "parent_phone": "010-9999-9999"
+        "student_id": "1",
+        "name": "김광일"
       },
       "class_type": "DRUM",
-      "start_date": "2026-10-01",
-      "status": "active",
-      "lesson_count": 12,
+      "lesson_count": 4,
+      "start_date": "Sat Jan 03 2026 00:00:00 GMT+0900 (한국 표준시)",
       "schedules": [
         {
           "weekday": "MON",
@@ -147,28 +142,18 @@
         }
       ],
       "invoice": {
-        "invoice_id": 21,
-        "method": "card",
-        "status": "paid",
-        "paid_at": "2026-09-28T14:10:00"
+        "status": null
       },
-      "created_at": "2026-09-25T10:00:00",
-      "updated_at": "2026-10-01T09:00:00",
-      "id": "3ef1"
+      "id": "c2d4"
     },
     {
-      "course_id": 12,
       "student": {
-        "student_id": 2,
-        "name": "이민규",
-        "age_group": "high",
-        "phone": "010-2345-3456",
-        "parent_phone": "010-8888-8888"
+        "student_id": "2",
+        "name": "이민규"
       },
       "class_type": "GUITAR",
-      "start_date": "2026-10-03",
-      "status": "active",
       "lesson_count": 8,
+      "start_date": "Fri Jan 23 2026 00:00:00 GMT+0900 (한국 표준시)",
       "schedules": [
         {
           "weekday": "TUE",
@@ -176,14 +161,11 @@
         }
       ],
       "invoice": {
-        "invoice_id": 22,
-        "method": "cash",
         "status": "paid",
+        "method": "card",
         "paid_at": "2026-10-01T17:20:00"
       },
-      "created_at": "2026-09-29T11:30:00",
-      "updated_at": "2026-10-03T09:00:00",
-      "id": "b2ca"
+      "id": "f60b"
     },
     {
       "course_id": 13,
@@ -194,10 +176,10 @@
         "phone": "010-3456-4567",
         "parent_phone": "010-7777-7777"
       },
-      "class_type": "PIANO",
+      "class_type": "DRUM",
       "start_date": "2026-10-05",
       "status": "paused",
-      "lesson_count": 10,
+      "lesson_count": 12,
       "schedules": [
         {
           "weekday": "FRI",
@@ -212,7 +194,7 @@
       },
       "created_at": "2026-10-01T10:00:00",
       "updated_at": "2026-10-10T10:00:00",
-      "id": "d027"
+      "id": "4cf5"
     },
     {
       "course_id": 14,
@@ -241,7 +223,7 @@
       },
       "created_at": "2026-10-05T09:00:00",
       "updated_at": "2026-10-07T09:00:00",
-      "id": "4e8e"
+      "id": "07c1"
     },
     {
       "course_id": 15,
@@ -252,10 +234,10 @@
         "phone": "010-5678-6789",
         "parent_phone": null
       },
-      "class_type": "VOCAL",
+      "class_type": "GUITAR",
       "start_date": "2026-10-02",
       "status": "ended",
-      "lesson_count": 6,
+      "lesson_count": 8,
       "schedules": [
         {
           "weekday": "THU",
@@ -270,18 +252,18 @@
       },
       "created_at": "2026-09-20T14:00:00",
       "updated_at": "2026-10-15T21:00:00",
-      "id": "e130"
+      "id": "278e"
     },
     {
       "course_id": 16,
       "student": {
-        "student_id": 6,
+        "student_id": 8,
         "name": "김도윤",
         "age_group": "preschool",
         "phone": "010-6789-7890",
         "parent_phone": "010-5555-5555"
       },
-      "class_type": "PIANO",
+      "class_type": "DRUM",
       "start_date": "2026-10-08",
       "status": "active",
       "lesson_count": 12,
@@ -303,7 +285,7 @@
       },
       "created_at": "2026-10-04T09:30:00",
       "updated_at": "2026-10-08T09:00:00",
-      "id": "f7bd"
+      "id": "36d7"
     },
     {
       "course_id": 17,
@@ -317,7 +299,7 @@
       "class_type": "GUITAR",
       "start_date": "2026-10-09",
       "status": "paused",
-      "lesson_count": 10,
+      "lesson_count": 12,
       "schedules": [
         {
           "weekday": "WED",
@@ -332,7 +314,7 @@
       },
       "created_at": "2026-10-02T10:00:00",
       "updated_at": "2026-10-12T10:00:00",
-      "id": "01a7"
+      "id": "e3ff"
     },
     {
       "course_id": 18,
@@ -343,7 +325,7 @@
         "phone": "010-8901-9012",
         "parent_phone": "010-3333-3333"
       },
-      "class_type": "VOCAL",
+      "class_type": "GUITAR",
       "start_date": "2026-10-11",
       "status": "active",
       "lesson_count": 8,
@@ -361,7 +343,7 @@
       },
       "created_at": "2026-10-06T11:00:00",
       "updated_at": "2026-10-11T09:00:00",
-      "id": "3b56"
+      "id": "3b32"
     },
     {
       "course_id": 19,
@@ -390,7 +372,7 @@
       },
       "created_at": "2026-10-07T09:00:00",
       "updated_at": "2026-10-12T09:00:00",
-      "id": "4d65"
+      "id": "7a3a"
     },
     {
       "course_id": 20,
@@ -419,7 +401,7 @@
       },
       "created_at": "2026-09-15T15:00:00",
       "updated_at": "2026-10-20T21:00:00",
-      "id": "0cac"
+      "id": "8ed7"
     },
     {
       "id": "74b1",

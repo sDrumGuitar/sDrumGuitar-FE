@@ -14,11 +14,14 @@ import {
 } from '@/shared/form';
 import { useEffect, useState } from 'react';
 import CourseScheduleTimeList from './CourseScheduleTimeList';
-import type { CourseSchedule } from '@/types/course';
+import type { Course, CourseSchedule } from '@/types/course';
 import NormalButton from '@/shared/button/NormalButton';
 import StudentSearchInput from './StudentSearchInput';
-import { createCourse } from '@/shared/api/courses';
+import { createCourse, updateCourse } from '@/shared/api/courses';
 import { useCourseModalStore } from '@/store/courseModalStore';
+import { useDateModalStore } from '@/store/dateModalStore';
+import CalendarModal from '@/shared/form/CalendarModal';
+import { formatKoreanDate } from '@/utils/formDate';
 
 interface CourseFormState {
   student: {
@@ -52,22 +55,38 @@ const INITIAL_FORM: CourseFormState = {
   },
 };
 
-interface CourseCreateFormProps {
+interface CourseFormProps {
   onDirtyChange: (dirty: boolean) => void;
   onSuccess: () => void;
 }
 
-export default function CourseCreateForm({
+const mapCourseToForm = (course: Course): CourseFormState => ({
+  student: {
+    student_id: course.student.student_id,
+    name: course.student.name,
+  },
+  class_type: course.class_type || '',
+  lesson_count: course.lesson_count,
+  start_date: course.start_date,
+  schedules: course.schedules ?? [],
+  invoice: {
+    status: course.invoice.status,
+    method: course.invoice.method || '',
+    paid_at: course.invoice.paid_at || '',
+  },
+});
+
+export default function CourseForm({
   onDirtyChange,
   onSuccess,
-}: CourseCreateFormProps) {
-  const { close } = useCourseModalStore();
-  const [form, setForm] = useState<CourseFormState>(INITIAL_FORM);
-  const isDirty = JSON.stringify(form) !== JSON.stringify(INITIAL_FORM);
-
-  useEffect(() => {
-    onDirtyChange(isDirty);
-  }, [isDirty, onDirtyChange]);
+}: CourseFormProps) {
+  const { mode, selectedCourse, setMode, close } = useCourseModalStore();
+  const initialState =
+    (mode === 'DETAIL' || mode === 'UPDATE') && selectedCourse
+      ? mapCourseToForm(selectedCourse)
+      : INITIAL_FORM;
+  const [form, setForm] = useState<CourseFormState>(initialState);
+  const [initialForm] = useState<CourseFormState>(initialState);
 
   const updateForm = <K extends keyof CourseFormState>(
     key: K,
@@ -79,14 +98,20 @@ export default function CourseCreateForm({
     }));
   };
 
+  const { isOpen, open } = useDateModalStore();
+
+  const isViewMode = mode === 'DETAIL';
+  const isDirty = JSON.stringify(form) !== JSON.stringify(initialForm);
+
+  useEffect(() => {
+    onDirtyChange(isDirty);
+  }, [isDirty, onDirtyChange]);
+
   const isBaseInfoValid =
-    // 수강생 정보
     form.student.name.trim() !== '' &&
-    // 수업 정보
     form.start_date.trim() !== '' &&
     form.lesson_count > 0 &&
     form.class_type !== undefined &&
-    // 수강 일정
     form.schedules.length > 0 &&
     form.schedules.every((s) => s.time.trim() !== '');
 
@@ -103,7 +128,7 @@ export default function CourseCreateForm({
     }
 
     try {
-      await createCourse({
+      const payload = {
         student: {
           student_id: form.student.student_id,
           name: form.student.name,
@@ -119,15 +144,21 @@ export default function CourseCreateForm({
             paid_at: form.invoice.paid_at,
           }),
         },
-      });
+      };
+
+      if (mode === 'CREATE') {
+        await createCourse(payload);
+      } else if (mode === 'UPDATE' && selectedCourse) {
+        await updateCourse(selectedCourse.id, payload);
+      }
 
       setForm(INITIAL_FORM);
       onDirtyChange(false);
       onSuccess();
       close();
     } catch (error) {
-      console.error('수강 등록 실패', error);
-      alert('수강 등록에 실패했습니다.');
+      console.error('수강 정보 저장 실패', error);
+      alert('수강 정보 저장에 실패했습니다.');
     }
   };
 
@@ -142,6 +173,7 @@ export default function CourseCreateForm({
               name: student.name,
             })
           }
+          disabled={isViewMode}
         />
       </FormField>
       <FormField label="클래스">
@@ -149,25 +181,46 @@ export default function CourseCreateForm({
           options={CLASS_TYPE_OPTIONS}
           value={form.class_type || ''}
           onChange={(v) => updateForm('class_type', v)}
+          disabled={isViewMode}
         />
       </FormField>
-
-      {/* 가족 할인 */}
 
       <FormField label="수업 횟수">
         <Select
           options={LESSON_COUNT}
           value={form.lesson_count.toString()}
           onChange={(v) => updateForm('lesson_count', Number(v))}
+          disabled={isViewMode}
         />
       </FormField>
 
       <FormField label="수강 시작 날짜">
-        <TextInput
-          type="date"
-          value={form.start_date}
-          onChange={(v) => updateForm('start_date', v)}
-        />
+        <div
+          className={`border rounded-sm py-1 px-2 flex justify-between
+        ${
+          isViewMode
+            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+            : 'border-primary text-primary'
+        }`}
+        >
+          <p>
+            {form.start_date
+              ? formatKoreanDate(form.start_date)
+              : '날짜를 선택해주세요.'}
+          </p>
+          <button
+            onClick={open}
+            disabled={isViewMode}
+            className={`${isViewMode && 'cursor-none'}`}
+          >
+            선택
+          </button>
+        </div>
+        {isOpen && (
+          <CalendarModal
+            onSelect={(date) => updateForm('start_date', date)}
+          />
+        )}
       </FormField>
 
       <FormField label="수강 요일">
@@ -179,7 +232,6 @@ export default function CourseCreateForm({
               const existing = form.schedules.find(
                 (s) => s.weekday === weekday,
               );
-
               return (
                 existing ?? {
                   weekday: weekday as CourseSchedule['weekday'],
@@ -187,15 +239,16 @@ export default function CourseCreateForm({
                 }
               );
             });
-
             updateForm('schedules', nextSchedules);
           }}
+          disabled={isViewMode}
         />
       </FormField>
 
       <CourseScheduleTimeList
         schedules={form.schedules}
         onChange={(next) => updateForm('schedules', next)}
+        disabled={isViewMode}
       />
 
       <FormField label="결제 여부">
@@ -208,6 +261,7 @@ export default function CourseCreateForm({
               status: v === 'paid' ? 'paid' : null,
             })
           }
+          disabled={isViewMode}
         />
       </FormField>
 
@@ -223,6 +277,7 @@ export default function CourseCreateForm({
                   method: v,
                 })
               }
+              disabled={isViewMode}
             />
           </FormField>
 
@@ -236,18 +291,22 @@ export default function CourseCreateForm({
                   paid_at: v,
                 })
               }
+              disabled={isViewMode}
             />
           </FormField>
         </>
       )}
 
-      <div className="w-full flex justify-end">
-        <NormalButton
-          onClick={handleSubmit}
-          // onClick={() => console.log(form)}
-          text="저장"
-          disabled={!canSubmit}
-        />
+      <div className="w-full flex justify-end gap-2">
+        {mode === 'DETAIL' ? (
+          <NormalButton onClick={() => setMode('UPDATE')} text="수정" />
+        ) : (
+          <NormalButton
+            onClick={handleSubmit}
+            text="저장"
+            disabled={!canSubmit || !isDirty}
+          />
+        )}
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import type { Student } from '@/types/student';
 import { useStudentModalStore } from '@/store/studentModalStore';
 import StudentModal from './components/modal/StudentModal';
 import ModalOpenButton from '@/shared/modal/ModalOpenButton';
+import { getAgeGroupLabel } from '@/utils/getAgeGroupLabel';
 import InvoiceListModal from './components/modal/InvoiceListModal';
 
 function StudentPage() {
@@ -17,27 +18,27 @@ function StudentPage() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadStudents();
   }, []);
 
   return (
     <div>
       <ModalOpenButton text="신규학생 추가" openModal={openCreate} />
-
       <TableSection<Student>
         dataList={students}
         headers={['이름', '구분', '전화번호', '부모님 전화번호']}
-        getRows={(list) =>
-          list.map((student) => [
+        getRows={(students) => {
+          if (!students || students.length === 0) return [];
+          return students.map((student) => [
             student?.name,
-            student?.age_group,
+            getAgeGroupLabel(student?.age_group),
             student?.phone,
             student?.parent_phone,
-          ])
-        }
+          ]);
+        }}
         onRowClick={(student) => openDetail(student)}
       />
-
       {isOpen && <StudentModal onSuccess={loadStudents} />}
 
       <InvoiceListModal />

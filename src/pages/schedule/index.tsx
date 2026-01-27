@@ -1,7 +1,9 @@
+import CalendarSection from './calendar/CalendarSection';
+
 function SchedulePage() {
   return (
     <div>
-      <p>Schedule Page</p>
+      <CalendarSection />
     </div>
   );
 }

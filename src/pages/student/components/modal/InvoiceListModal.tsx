@@ -2,7 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 import ModalWrapper from '@/shared/modal/ModalWrapper';
 import { useInvoiceModalStore } from '@/store/invoiceModalStore';
 import { api } from '@/shared/api/axios';
-import InvoiceCard from './InvoiceCard';
+import InvoiceCard from './invoiceCard/InvoiceCard';
+import LoadingText from '@/shared/text/LoadingText';
+import EmptyText from '@/shared/text/EmptyText';
 
 type InvoiceStatus = 'paid' | 'unpaid';
 type PaymentMethod = 'card' | 'cash' | null;
@@ -43,7 +45,7 @@ type InvoiceRow = {
 export default function InvoiceListModal() {
   const { isOpen, student, close } = useInvoiceModalStore();
   const [loading, setLoading] = useState(false);
-  const [items, setItems] = useState<InvoiceItem[]>([]);
+  const [invociesList, setInvociesList] = useState<InvoiceItem[]>([]);
 
   const title = useMemo(() => {
     const name = student?.name ?? '';
@@ -79,7 +81,7 @@ export default function InvoiceListModal() {
         total_amount: Number(inv.total_amount),
       }));
 
-      setItems(mapped);
+      setInvociesList(mapped);
     } catch (e) {
       console.error(e);
       alert('청구서 정보를 불러오는데 실패했습니다.');
@@ -100,10 +102,15 @@ export default function InvoiceListModal() {
     method: PaymentMethod;
     paid_at: string | null;
   }) => {
-    setItems((prev) =>
+    setInvociesList((prev) =>
       prev.map((p) =>
         p.invoice_id === next.invoice_id
-          ? { ...p, status: next.status, method: next.method, paid_at: next.paid_at }
+          ? {
+              ...p,
+              status: next.status,
+              method: next.method,
+              paid_at: next.paid_at,
+            }
           : p,
       ),
     );
@@ -115,38 +122,41 @@ export default function InvoiceListModal() {
     <ModalWrapper onClose={close}>
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-4">
-        <div className="text-xl font-semibold">{title}</div>
-        <button
-          className="text-sm text-gray-500 hover:text-gray-800"
-          onClick={close}
-        >
-          닫기
-        </button>
+        <h2 className="text-lg font-bold">{title}</h2>
+        <button onClick={close}>닫기</button>
       </div>
 
       {/* 본문 */}
       {loading ? (
-        <div className="text-sm text-gray-500">불러오는 중...</div>
-      ) : items.length === 0 ? (
-        <div className="text-sm text-gray-500">청구서가 없습니다.</div>
+        <LoadingText>불러오는 중...</LoadingText>
+      ) : invociesList.length === 0 ? (
+        <EmptyText>청구서가 없습니다.</EmptyText>
       ) : (
-        <div className="max-h-[70vh] overflow-y-auto space-y-4 pr-1">
-          {items.map((it) => (
-            <InvoiceCard
-              key={it.invoice_id}
-              invoiceId={it.invoice_id}
-              courseId={it.course_id}
-              issuedAt={it.issued_at}
-              paidAt={it.paid_at}
-              status={it.status}
-              method={it.method}
-              lessonCount={it.lesson_count}
-              familyDiscount={it.family_discount}
-              classType={it.class_type}
-              totalAmount={it.total_amount}
-              onPatched={handlePatched}
-            />
-          ))}
+        <div className="max-h-120 overflow-y-auto space-y-4 pr-1">
+          {invociesList.map((invoice) => {
+            const invoiceObject = {
+              invoiceId: invoice.invoice_id,
+              courseId: invoice.course_id,
+              issuedAt: invoice.issued_at,
+
+              paidAt: invoice.paid_at,
+              status: invoice.status,
+              method: invoice.method,
+
+              lessonCount: invoice.lesson_count,
+              familyDiscount: invoice.family_discount,
+              classType: invoice.class_type,
+              totalAmount: invoice.total_amount,
+            };
+
+            return (
+              <InvoiceCard
+                key={invoice.invoice_id}
+                invoice={invoiceObject}
+                onPatched={handlePatched}
+              />
+            );
+          })}
         </div>
       )}
     </ModalWrapper>

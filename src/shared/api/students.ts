@@ -46,6 +46,22 @@ export const getStudents = async ({
   }
 };
 
+interface GetStudentResponse {
+  student: Student | null;
+}
+
+export const getStudent = async (
+  student_id: number,
+): Promise<GetStudentResponse> => {
+  try {
+    const res = await api.get<Student>(`/students/${student_id}`);
+    return { student: res.data };
+  } catch (error) {
+    console.error('Failed to fetch student:', error);
+    return { student: null };
+  }
+};
+
 // ====================
 // POST : 신규 학생 등록하기
 // ====================

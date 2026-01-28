@@ -32,3 +32,13 @@ export interface CourseInvoice {
   status: 'paid' | null;
   paid_at: string;
 }
+
+export interface MockCourse extends Base {
+  class_type: 'DRUM' | 'GUITAR' | null;
+  id: number;
+  lesson_count: number;
+  status: 'active' | 'paused' | 'ended' | null;
+  start_date: string;
+  student_id: number;
+  schedules: CourseSchedule[];
+}

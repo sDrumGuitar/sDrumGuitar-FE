@@ -49,7 +49,7 @@ function CoursePage() {
                   )
                   .join(', ')
               : '',
-            course.invoice.status ? '결제' : '미결제',
+            course.invoice?.status ? '결제' : '미결제',
             course.invoice?.paid_at
               ? formatKoreanDate(course.invoice?.paid_at)
               : '-',

@@ -1,5 +1,6 @@
-import type { Course, CourseSchedule } from '@/types/course';
+import type { Course, CourseSchedule, MockCourse } from '@/types/course';
 import { api } from './axios';
+import { getStudent } from './students';
 
 // ====================
 // GET : 모든 수강 정보 불러오기
@@ -20,14 +21,38 @@ export const getCourses = async ({
   size,
 }: GetCoursesProps): Promise<GetCoursesResponse> => {
   try {
-    const res = await api.get<Course[]>('/courses', {
-      params: {
-        _page: page,
-        _limit: size,
-      },
-    });
+    const res = await api.get<MockCourse[]>('/courses', {});
 
-    const courses = Array.isArray(res.data) ? res.data : [];
+    const mockCourses = Array.isArray(res.data) ? res.data : [];
+    console.log(mockCourses);
+
+    const courses: Course[] = await Promise.all(
+      mockCourses.map(async (mockCourse) => {
+        const { student } = await getStudent(mockCourse.student_id);
+
+        if (!student) {
+          throw new Error(`Student not found: ${mockCourse.student_id}`);
+        }
+
+        return {
+          ...mockCourse,
+          student: {
+            student_id: student.id,
+            name: student.name,
+            age_group: student.age_group,
+            phone: student.phone,
+            parent_phone: student.parent_phone,
+          },
+
+          invoice: {
+            invoice_id: 1,
+            method: null,
+            status: null,
+            paid_at: '',
+          },
+        };
+      }),
+    );
 
     return {
       total_count: Number(res.headers['x-total-count'] ?? courses.length),

@@ -1,3 +1,4 @@
+import { useLessonModalStore } from '@/store/lessonModalStore';
 import type { Lesson } from '../../types';
 import { DateLabel } from './DateLabel';
 import LessonBarList from './LessonBarList';
@@ -7,23 +8,28 @@ interface CalendarCellProps {
   date: string;
   isCurrentMonth: boolean;
   lessons: Lesson[];
-  onClick: (date: string) => void;
 }
 
-function CalendarCell({
-  date,
-  isCurrentMonth,
-  lessons,
-  onClick,
-}: CalendarCellProps) {
+function CalendarCell({ date, isCurrentMonth, lessons }: CalendarCellProps) {
   const visibleLessons = lessons.slice(0, 2);
   const hasMore = lessons.length > 2;
+
+  const { open, setSelectedDate } = useLessonModalStore();
+
+  /**
+   * 날짜 선택 후, 전역 store에 저장하는 함수
+   * @param date 선택한 날짜
+   */
+  const onSelectedDate = (date: string) => {
+    setSelectedDate(date);
+    open();
+  };
 
   return (
     <div
       className={`h-40 border-r border-b p-1 cursor-pointer hover:bg-[#d5def5]
         ${!isCurrentMonth ? 'bg-gray-50 text-gray-400' : ''}`}
-      onClick={() => onClick(date)}
+      onClick={() => onSelectedDate(date)}
     >
       {/* 일자 */}
       <DateLabel date={date} />

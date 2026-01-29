@@ -46,11 +46,6 @@ function CalendarSection() {
     setCurrentYear(dayjs().year());
   };
 
-  const onSelectDate = (date: string) => {
-    console.log('Selected date:', date);
-    // TODO: 날짜별 수업 목록 모달 오픈
-  };
-
   return (
     <div>
       {/* 캘린더 헤더 (월 이동, 오늘 버튼) */}
@@ -63,11 +58,7 @@ function CalendarSection() {
       />
 
       {/* 캘린더 본문 */}
-      <CalendarGrid
-        dates={calendarDates}
-        dataMap={calendarData}
-        onSelectDate={onSelectDate}
-      />
+      <CalendarGrid dates={calendarDates} dataMap={calendarData} />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { LessonListHeader } from '@/constants/lesson';
-import { MockLessonMapByDate } from '@/mock/lesson';
+import { MockCalendarData } from '@/mock/lesson';
 import ModalWrapper from '@/shared/modal/ModalWrapper';
 import TableSection from '@/shared/modal/TableSection';
 import { useLessonModalStore } from '@/store/lessonModalStore';
@@ -17,7 +17,8 @@ export default function LessonListModal() {
       return;
     }
 
-    setLessons(MockLessonMapByDate[selectedDate] ?? []);
+    const day = MockCalendarData[selectedDate];
+    setLessons(day ? day.lessons : []);
   }, [selectedDate]);
   return (
     <ModalWrapper onClose={close}>

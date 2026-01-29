@@ -2,7 +2,7 @@ import { useLessonModalStore } from '@/store/lessonModalStore';
 import { WEEKDAY_LABELS } from '../constants';
 import type { CalendarDate, CalendarDay } from '../types';
 import CalendarCell from './CalendarCell/CalendarCell';
-import LessonListModal from './LessonListModal';
+import LessonListModal from './LessonListModal/LessonListModal';
 
 // 캘린더 본문
 interface CalendarGridProps {

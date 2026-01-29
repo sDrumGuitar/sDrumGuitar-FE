@@ -1,9 +1,4 @@
-export type Lesson = {
-  id: number;
-  studentName: string;
-  count: number; // 회차 (1회차, 2회차…)
-  color: 'green' | 'orange' | 'red';
-};
+import type { Lesson } from '@/types/lesson';
 
 export type CalendarDay = {
   date: string; // '2026-11-05'

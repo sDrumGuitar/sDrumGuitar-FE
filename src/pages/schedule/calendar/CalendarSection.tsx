@@ -4,6 +4,7 @@ import CalendarGrid from './body/CalendarGrid';
 import CalendarHeader from './header/CalendarHeader';
 import { getMonthDates } from './utils';
 import type { CalendarData } from './types';
+import { MockCalendarData } from '@/mock/lesson';
 
 /**
  * CalendarSection
@@ -21,7 +22,7 @@ function CalendarSection() {
   const calendarDates = getMonthDates(currentYear, currentMonth);
 
   // 날짜별 수업 데이터 (서버 데이터 연동 예정)
-  const calendarData: CalendarData = {};
+  const calendarData: CalendarData = MockCalendarData;
 
   const handlePrevMonth = () => {
     if (currentMonth === 0) {

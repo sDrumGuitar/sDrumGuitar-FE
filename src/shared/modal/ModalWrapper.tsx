@@ -10,7 +10,7 @@ function ModalWrapper({ children, onClose }: ModalWrapperProps) {
       onClick={onClose}
     >
       <div
-        className="bg-white p-6 rounded min-w-200 min-h-150"
+        className="bg-white p-6 rounded w-200 min-h-150"
         onClick={(e) => e.stopPropagation()}
       >
         {children}

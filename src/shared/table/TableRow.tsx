@@ -1,5 +1,5 @@
 interface TableRowProps {
-  columns: string[];
+  columns: React.ReactNode[];
   index: number;
   onClick?: (rowIndex: number) => void;
 }
@@ -10,7 +10,7 @@ function TableRow({ columns, index, onClick }: TableRowProps) {
   return (
     <tr
       onClick={() => onClick?.(index)}
-      className={`cursor-pointer text-gray-600 hover:text-primary hover:font-bold ${
+      className={`cursor-pointer text-gray-600 hover:text-primary ${
         isEven ? 'bg-primary-light' : ''
       }`}
     >

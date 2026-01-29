@@ -3,13 +3,13 @@ import TableRow from './TableRow';
 
 interface TableProps {
   headers: string[];
-  rows: string[][];
+  rows: React.ReactNode[][];
   onRowClick?: (rowIndex: number) => void;
 }
 
 function Table({ headers, rows, onRowClick }: TableProps) {
   return (
-    <table className="w-full table-fixed">
+    <table className="w-full">
       <thead>
         <TableHeader headers={headers} />
       </thead>

@@ -1,23 +1,22 @@
+import { useLessonModalStore } from '@/store/lessonModalStore';
 import { WEEKDAY_LABELS } from '../constants';
 import type { CalendarDate, CalendarDay } from '../types';
 import CalendarCell from './CalendarCell/CalendarCell';
+import LessonListModal from './LessonListModal/LessonListModal';
 
 // 캘린더 본문
 interface CalendarGridProps {
   dates: CalendarDate[];
   dataMap: Record<string, CalendarDay>;
-  onSelectDate: (date: string) => void;
 }
 
-function CalendarGrid({ dates, dataMap, onSelectDate }: CalendarGridProps) {
+function CalendarGrid({ dates, dataMap }: CalendarGridProps) {
+  const { isOpen } = useLessonModalStore();
   return (
     <div className="w-full mt-4">
       <CalendarHeader />
-      <CalendarBody
-        dates={dates}
-        dataMap={dataMap}
-        onSelectDate={onSelectDate}
-      />
+      <CalendarBody dates={dates} dataMap={dataMap} />
+      {isOpen && <LessonListModal />}
     </div>
   );
 }
@@ -44,10 +43,9 @@ const CalendarHeader = () => {
 interface CalendarBodyProps {
   dates: CalendarDate[];
   dataMap: Record<string, CalendarDay>;
-  onSelectDate: (date: string) => void;
 }
 
-const CalendarBody = ({ dates, dataMap, onSelectDate }: CalendarBodyProps) => {
+const CalendarBody = ({ dates, dataMap }: CalendarBodyProps) => {
   return (
     <div className="grid grid-cols-7 border-l">
       {dates.map(({ date, isCurrentMonth }) => (
@@ -56,7 +54,6 @@ const CalendarBody = ({ dates, dataMap, onSelectDate }: CalendarBodyProps) => {
           date={date}
           isCurrentMonth={isCurrentMonth}
           lessons={dataMap[date]?.lessons ?? []} // Access lessons property
-          onClick={onSelectDate}
         />
       ))}
     </div>

@@ -3,7 +3,7 @@ import Table from '@/shared/table/Table';
 interface TableSectionProps<T> {
   dataList: T[];
   headers: string[];
-  getRows: (dataList: T[]) => string[][];
+  getRows: (dataList: T[]) => React.ReactNode[][];
   onRowClick?: (item: T) => void;
 }
 

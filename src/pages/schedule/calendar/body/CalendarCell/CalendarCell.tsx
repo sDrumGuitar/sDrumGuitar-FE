@@ -1,7 +1,7 @@
 import { useLessonModalStore } from '@/store/lessonModalStore';
-import type { Lesson } from '../../types';
 import { DateLabel } from './DateLabel';
 import LessonBarList from './LessonBarList';
+import type { Lesson } from '@/types/lesson';
 
 // 캘린더 내 Cell
 interface CalendarCellProps {

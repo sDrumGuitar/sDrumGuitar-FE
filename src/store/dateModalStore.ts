@@ -26,6 +26,5 @@ export const useDateModalStore = create<DateModalState>((set) => ({
   close: () =>
     set({
       isOpen: false,
-      selectedDate: null,
     }),
 }));

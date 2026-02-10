@@ -2,12 +2,15 @@ import { MESSAGE_LIST_HEADER } from '@/constants/message';
 import { MockMessage } from '@/mock/message';
 import NormalButton from '@/shared/button/NormalButton';
 import TableSection from '@/shared/modal/TableSection';
+import { useMessageModalStore } from '@/store/messageModalStore';
 import type { Message } from '@/types/message';
 import { getMessageStatus } from '@/utils/getMessageStatus';
 import { useState } from 'react';
+import MessageDetailModal from './MessageDetailModal';
 
 function MessageHistoryPage() {
   const [messages, setMessages] = useState<Message[]>(MockMessage);
+  const { isOpen, open } = useMessageModalStore();
   return (
     <div>
       <TableSection
@@ -20,10 +23,11 @@ function MessageHistoryPage() {
             message.send_at,
             message.content,
             getMessageStatus(message.status),
-            <NormalButton text="상세" />,
+            <NormalButton text="상세" onClick={open} />,
           ]);
         }}
       />
+      {isOpen && <MessageDetailModal />}
     </div>
   );
 }

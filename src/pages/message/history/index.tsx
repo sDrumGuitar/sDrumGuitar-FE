@@ -9,25 +9,36 @@ import { useState } from 'react';
 import MessageDetailModal from './MessageDetailModal';
 
 function MessageHistoryPage() {
-  const [messages, setMessages] = useState<Message[]>(MockMessage);
+  const [messages] = useState<Message[]>(MockMessage);
+  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const { isOpen, open } = useMessageModalStore();
+
+  const handleOpenDetail = (message: Message) => {
+    setSelectedMessage(message);
+    open();
+  };
+
   return (
     <div>
       <TableSection
         dataList={messages}
         headers={MESSAGE_LIST_HEADER}
-        getRows={(messages) => {
-          if (!messages || messages.length === 0) return [];
-          return messages.map((message) => [
+        getRows={(messages) =>
+          messages.map((message) => [
             message.type,
             message.send_at,
             message.content,
             getMessageStatus(message.status),
-            <NormalButton text="상세" onClick={open} />,
-          ]);
-        }}
+            <NormalButton
+              text="상세"
+              onClick={() => handleOpenDetail(message)}
+            />,
+          ])
+        }
       />
-      {isOpen && <MessageDetailModal />}
+      {isOpen && selectedMessage && (
+        <MessageDetailModal message={selectedMessage} />
+      )}
     </div>
   );
 }

@@ -15,7 +15,6 @@ const LessonBar: React.FC<LessonBarProps> = ({ lesson }) => {
     lesson.attendance_status === null
       ? 'text-black' // 출석 체크 전
       : `text-white`;
-  console.log(bgColor);
   return (
     <div
       style={{ backgroundColor: bgColor }}

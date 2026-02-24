@@ -24,7 +24,6 @@ export const getCourses = async ({
     const res = await api.get<MockCourse[]>('/courses', {});
 
     const mockCourses = Array.isArray(res.data) ? res.data : [];
-    console.log(mockCourses);
 
     const courses: Course[] = await Promise.all(
       mockCourses.map(async (mockCourse) => {

@@ -16,7 +16,6 @@ import { useStudentModalStore } from '@/store/studentModalStore';
 import { formatPhoneNumber } from '@/shared/utils/phone';
 import { useInvoiceModalStore } from '@/store/invoiceModalStore';
 
-
 interface StudentFormState {
   name: string;
   ageGroup: Student['age_group'];
@@ -49,9 +48,8 @@ function StudentDetailView({
   onSuccess,
 }: StudentDetailViewProps) {
   const mappedStudent = mapStudentToForm(student);
-  const [originalForm, setOriginalForm] = useState<StudentFormState>(
-    mappedStudent,
-  );
+  const [originalForm, setOriginalForm] =
+    useState<StudentFormState>(mappedStudent);
   const [form, setForm] = useState<StudentFormState>(mappedStudent);
   const { mode, openUpdate, openDetail } = useStudentModalStore();
   const isEditMode = mode === 'UPDATE';
@@ -59,7 +57,8 @@ function StudentDetailView({
   // ✅ 추가
   const { open: openInvoiceModal } = useInvoiceModalStore();
 
-  const isDirty = isEditMode && JSON.stringify(form) !== JSON.stringify(originalForm);
+  const isDirty =
+    isEditMode && JSON.stringify(form) !== JSON.stringify(originalForm);
   const displayForm = isEditMode ? form : mappedStudent;
 
   useEffect(() => {
@@ -90,7 +89,6 @@ function StudentDetailView({
   };
 
   const handleSave = async () => {
-    console.log('PATCH 대상 student.id:', student.id);
     try {
       const updatedStudent = await updateStudent(student.id, {
         name: form.name,
@@ -175,12 +173,10 @@ function StudentDetailView({
             onClick={() => openInvoiceModal(student)}
           />
         ) : (
-          <div /> 
+          <div />
         )}
 
-          {!isEditMode && (
-            <NormalButton text="수정" onClick={handleStartEdit} />
-          )}
+        {!isEditMode && <NormalButton text="수정" onClick={handleStartEdit} />}
 
         {isEditMode && (
           <>

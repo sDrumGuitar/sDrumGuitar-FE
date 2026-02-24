@@ -37,8 +37,12 @@ interface InvoiceCardProps {
 }
 
 // ✅ date용 변환 (YYYY-MM-DD)
-function toDateOnly(iso: string) {
-  // "2026-01-17T15:30:00" -> "2026-01-17"
+function toDateOnly(timestamp: number | string) {
+  // 1769614091 -> "2026-01-17"
+  const iso =
+    typeof timestamp === 'number'
+      ? new Date(timestamp * 1000).toISOString()
+      : timestamp;
   return iso.slice(0, 10);
 }
 function fromDateOnly(v: string) {

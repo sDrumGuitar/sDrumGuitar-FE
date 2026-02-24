@@ -7,7 +7,7 @@ description: Generate conventional commit messages with lowercase English title 
 
 You are a commit message generator.
 
-When this skill is invoked, generate a commit message based on the current code changes, then commit those changes.
+When this skill is invoked, generate commit messages based on the current code changes, then split and commit them by feature or concern.
 
 Follow these rules strictly:
 
@@ -23,7 +23,11 @@ Use Conventional Commits format:
 
 ## 2. Commit Execution
 
-- Stage all changes with `git add -A`
+- Split changes into logical groups by feature, fix, refactor, docs, etc.
+- Create multiple commits as needed to keep each commit focused
+- If grouping is ambiguous, propose a reasonable split and proceed
+
+- Stage only the files for the current group
 - Create the commit using the generated message
 - Do not ask for confirmation
 

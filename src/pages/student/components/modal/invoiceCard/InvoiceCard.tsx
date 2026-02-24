@@ -16,9 +16,9 @@ interface InvoiceCardProps {
   invoice: {
     invoiceId: number;
     courseId: number;
-    issuedAt: string;
+    issuedAt: string | number;
 
-    paidAt: string | null;
+    paidAt: string | number | null;
     status: InvoiceStatus;
     method: PaymentMethod;
 
@@ -37,13 +37,29 @@ interface InvoiceCardProps {
 }
 
 // ✅ date용 변환 (YYYY-MM-DD)
-function toDateOnly(timestamp: number | string) {
-  // 1769614091 -> "2026-01-17"
-  const iso =
-    typeof timestamp === 'number'
-      ? new Date(timestamp * 1000).toISOString()
-      : timestamp;
-  return iso.slice(0, 10);
+function normalizeToDayjs(value: string | number | null | undefined) {
+  if (value === null || value === undefined || value === '') return null;
+
+  if (typeof value === 'number') {
+    return value < 1_000_000_000_000 ? dayjs.unix(value) : dayjs(value);
+  }
+
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  if (/^\d+$/.test(trimmed)) {
+    const numeric = Number(trimmed);
+    return numeric < 1_000_000_000_000
+      ? dayjs.unix(numeric)
+      : dayjs(numeric);
+  }
+
+  return dayjs(trimmed);
+}
+
+function toDateOnly(value: number | string) {
+  const parsed = normalizeToDayjs(value);
+  if (!parsed || !parsed.isValid()) return '';
+  return parsed.format('YYYY-MM-DD');
 }
 function fromDateOnly(v: string) {
   // "2026-01-17" -> "2026-01-17T00:00:00"
@@ -133,10 +149,16 @@ export default function InvoiceCard({ invoice, onPatched }: InvoiceCardProps) {
   };
 
   // GUI 표기용 값들
-  const paidAtText = invoice.paidAt
-    ? dayjs(invoice.paidAt).format('YYYY / MM / DD')
-    : '-';
-  const issuedAtText = dayjs(invoice.issuedAt).format('YYYY / MM / DD');
+  const paidAtText = (() => {
+    const parsed = normalizeToDayjs(invoice.paidAt);
+    return parsed && parsed.isValid() ? parsed.format('YYYY / MM / DD') : '-';
+  })();
+  const issuedAtText = (() => {
+    const parsed = normalizeToDayjs(invoice.issuedAt);
+    return parsed && parsed.isValid()
+      ? parsed.format('YYYY / MM / DD')
+      : '-';
+  })();
   const statusText = statusLabel(invoice.status);
   const methodText = methodLabel(invoice.method);
   const lessonCount = invoice.lessonCount.toString();

@@ -89,10 +89,21 @@ export function useAttendanceFlow({
     }
 
     startDate.setHours(Number(hour), Number(min), 0, 0);
+    const utcDate = new Date(
+      Date.UTC(
+        startDate.getFullYear(),
+        startDate.getMonth(),
+        startDate.getDate(),
+        startDate.getHours(),
+        startDate.getMinutes(),
+        0,
+        0,
+      ),
+    );
 
     try {
       await updateLessonAttendanceMakeUp(lessonId, {
-        makeup_start_at: startDate.toISOString(),
+        makeup_start_at: utcDate.toISOString(),
       });
       setStatus('makeup');
       setSavedStatus('makeup');

@@ -1,5 +1,5 @@
 import { CARRY_LESSON_LIST_HEADER } from '@/constants/lesson';
-import { MockCarryLessonData } from '@/mock/carryLesson';
+import { getRollOverLessons, type LessonItem } from '@/shared/api/lessons';
 import NormalButton from '@/shared/button/NormalButton';
 import CalendarModal from '@/shared/form/CalendarModal';
 import TimeModal from '@/shared/form/TimeModal';
@@ -9,7 +9,7 @@ import { useCarryModalStore } from '@/store/carryModalStore';
 import { useDateModalStore } from '@/store/dateModalStore';
 import { useTimeModalStore } from '@/store/timeModalStore';
 import { formatKoreanDate } from '@/utils/formDate';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // import AttendanceButtonList from './AttendanceButtonList';
 
 export default function CarryListModal() {
@@ -28,7 +28,20 @@ export default function CarryListModal() {
     selectedMin,
   } = useTimeModalStore();
 
-  const [lessons] = useState(MockCarryLessonData);
+  const [lessons, setLessons] = useState<LessonItem[]>([]);
+
+  useEffect(() => {
+    const fetchLessons = async () => {
+      try {
+        const response = await getRollOverLessons();
+        setLessons(response.lessons);
+      } catch (error) {
+        console.error('Failed to fetch roll-over lessons:', error);
+      }
+    };
+
+    fetchLessons();
+  }, []);
 
   const handleDateSelect = (date: string) => {
     setSelectedDate(date); // 날짜 저장
@@ -56,8 +69,8 @@ export default function CarryListModal() {
           return lessons.map((lesson) => [
             lesson.name,
             lesson.class_type,
-            lesson.start_at,
-            `${lesson.lesson_index}회차`,
+            formatKoreanDate(lesson.before_at),
+            // `${lesson.lesson_index}회차`,
             <NormalButton text="등록" onClick={openDate} />,
           ]);
         }}

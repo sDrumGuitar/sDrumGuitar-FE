@@ -10,7 +10,7 @@ export interface LessonItem {
   course_status: string;
   lesson_tag: string;
   attendance_status: string;
-  start_at: string;
+  before_at: string;
 }
 
 export interface LessonDay {
@@ -29,6 +29,9 @@ interface GetLessonsProps {
   month: number;
 }
 
+// ====================
+// GET : 월별 레슨 정보 불러오기
+// ====================
 export const getLessons = async ({
   year,
   month,
@@ -50,6 +53,27 @@ export const getLessons = async ({
 };
 
 // ====================
+// GET : 이월 레슨 정보 불러오기
+// ====================
+
+interface GetRolloverLessonsResponse {
+  total_count: number;
+  lessons: LessonItem[];
+}
+export const getRollOverLessons =
+  async (): Promise<GetRolloverLessonsResponse> => {
+    try {
+      const res =
+        await api.get<GetRolloverLessonsResponse>('/lessons/rollover');
+      console.log('Roll-over lessons fetched:', res.data);
+      return res.data;
+    } catch (error) {
+      console.error('Failed to fetch rolled-over lessons:', error);
+      return { total_count: 0, lessons: [] };
+    }
+  };
+
+// ====================
 // PATCH : 출결 상태 수정
 // ====================
 export interface UpdateLessonAttendancePayload {
@@ -61,5 +85,20 @@ export const updateLessonAttendance = async (
   payload: UpdateLessonAttendancePayload,
 ) => {
   const res = await api.patch(`/lessons/${lessonId}/attendance`, payload);
+  return res.data;
+};
+
+// ====================
+// POST : 레슨 이월 등록
+// ====================
+export interface CreateLessonRolloverPayload {
+  startAt: string;
+}
+
+export const createLessonRollover = async (
+  lessonId: number,
+  payload: CreateLessonRolloverPayload,
+) => {
+  const res = await api.post(`/lessons/${lessonId}/rollover`, payload);
   return res.data;
 };

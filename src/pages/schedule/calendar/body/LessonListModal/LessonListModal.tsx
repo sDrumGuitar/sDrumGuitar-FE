@@ -51,7 +51,7 @@ export default function LessonListModal({
             lesson.paid_at ? String(lesson.paid_at) : '-',
             <AttendanceButtonList
               attendanceStatus={lesson.attendance_status}
-              lessonId={lesson.lesson_index}
+              lessonId={lesson.id}
               lessonTag={lesson.lesson_tag}
               onAttendanceUpdated={onAttendanceUpdated}
               onRefreshLessons={onRefreshLessons}

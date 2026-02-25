@@ -1,4 +1,5 @@
 export interface Lesson {
+  id: number;
   name: string;
   class_type: string;
   lesson_index: number;

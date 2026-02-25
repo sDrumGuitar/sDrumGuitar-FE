@@ -36,7 +36,7 @@ function CalendarSection() {
         next[date] = {
           ...day,
           lessons: day.lessons.map((lesson) =>
-            lesson.lesson_index === lessonId
+            lesson.id === lessonId
               ? { ...lesson, attendance_status: attendanceStatus }
               : lesson,
           ),
@@ -52,6 +52,7 @@ function CalendarSection() {
       year: currentYear,
       month: currentMonth + 1,
     });
+    console.log(response);
 
     const data: CalendarData = response.days.reduce((acc, day) => {
       acc[day.date] = {
@@ -62,7 +63,8 @@ function CalendarSection() {
             getClassTypeLabel(
               lesson.class_type as Parameters<typeof getClassTypeLabel>[0],
             ) || lesson.class_type,
-          lesson_index: lesson.lesson_id,
+          lesson_index: lesson.lesson_index,
+          id: lesson.lesson_id,
           paid_at: '',
           lesson_tag: lesson.lesson_tag,
           attendance_status:

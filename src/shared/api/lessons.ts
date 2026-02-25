@@ -12,6 +12,7 @@ export interface LessonItem {
   attendance_status: string;
   before_at: string;
   start_at: string;
+  lesson_index: number;
 }
 
 export interface LessonDay {

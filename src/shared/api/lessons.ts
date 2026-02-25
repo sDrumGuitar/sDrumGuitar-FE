@@ -48,3 +48,18 @@ export const getLessons = async ({
     return { year, month, days: [] };
   }
 };
+
+// ====================
+// PATCH : 출결 상태 수정
+// ====================
+export interface UpdateLessonAttendancePayload {
+  attendance_status: string;
+}
+
+export const updateLessonAttendance = async (
+  lessonId: number,
+  payload: UpdateLessonAttendancePayload,
+) => {
+  const res = await api.patch(`/lessons/${lessonId}/attendance`, payload);
+  return res.data;
+};

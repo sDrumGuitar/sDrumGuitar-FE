@@ -25,6 +25,28 @@ function CalendarSection() {
   // 날짜별 수업 데이터 (서버 데이터 연동 예정)
   const [calendarData, setCalendarData] = useState<CalendarData>({});
 
+  const handleAttendanceUpdated = (
+    lessonId: number,
+    attendanceStatus: string | null,
+  ) => {
+    setCalendarData((prev) => {
+      const next: CalendarData = {};
+
+      Object.entries(prev).forEach(([date, day]) => {
+        next[date] = {
+          ...day,
+          lessons: day.lessons.map((lesson) =>
+            lesson.lesson_index === lessonId
+              ? { ...lesson, attendance_status: attendanceStatus }
+              : lesson,
+          ),
+        };
+      });
+
+      return next;
+    });
+  };
+
   useEffect(() => {
     const fetchLessons = async () => {
       const response = await getLessons({
@@ -93,7 +115,11 @@ function CalendarSection() {
       />
 
       {/* 캘린더 본문 */}
-      <CalendarGrid dates={calendarDates} dataMap={calendarData} />
+      <CalendarGrid
+        dates={calendarDates}
+        dataMap={calendarData}
+        onAttendanceUpdated={handleAttendanceUpdated}
+      />
     </div>
   );
 }

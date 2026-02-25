@@ -9,9 +9,16 @@ import type { CalendarData } from '../../types';
 
 interface LessonListModalProps {
   dataMap: CalendarData;
+  onAttendanceUpdated: (
+    lessonId: number,
+    attendanceStatus: string | null,
+  ) => void;
 }
 
-export default function LessonListModal({ dataMap }: LessonListModalProps) {
+export default function LessonListModal({
+  dataMap,
+  onAttendanceUpdated,
+}: LessonListModalProps) {
   const { close, selectedDate } = useLessonModalStore();
   const [lessons, setLessons] = useState<Lesson[]>([]);
 
@@ -42,6 +49,8 @@ export default function LessonListModal({ dataMap }: LessonListModalProps) {
             lesson.paid_at ? String(lesson.paid_at) : '-',
             <AttendanceButtonList
               attendanceStatus={lesson.attendance_status}
+              lessonId={lesson.lesson_index}
+              onAttendanceUpdated={onAttendanceUpdated}
             />,
           ]);
         }}

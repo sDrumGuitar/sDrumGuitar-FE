@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ATTENDANCE_TYPE } from './types';
 import { ATTENDANCE_COLORS } from '@/constants/lesson';
 import NormalButton from '@/shared/button/NormalButton';
@@ -6,15 +6,24 @@ import { useDateModalStore } from '@/store/dateModalStore';
 import { useTimeModalStore } from '@/store/timeModalStore';
 import CalendarModal from '@/shared/form/CalendarModal';
 import TimeModal from '@/shared/form/TimeModal';
+import { updateLessonAttendance } from '@/shared/api/lessons';
 
 interface AttendanceButtonListProps {
   attendanceStatus: string | null;
+  lessonId: number;
+  onAttendanceUpdated: (
+    lessonId: number,
+    attendanceStatus: string | null,
+  ) => void;
 }
 
 export default function AttendanceButtonList({
   attendanceStatus,
+  lessonId,
+  onAttendanceUpdated,
 }: AttendanceButtonListProps) {
   const [status, setStatus] = useState(attendanceStatus);
+  const [savedStatus, setSavedStatus] = useState(attendanceStatus);
 
   const {
     isOpen: isOpenDate,
@@ -23,9 +32,30 @@ export default function AttendanceButtonList({
   } = useDateModalStore();
   const { isOpen: isOpenTime, open: openTime } = useTimeModalStore();
 
-  const handleSaveStatus = () => {
+  useEffect(() => {
+    setStatus(attendanceStatus);
+    setSavedStatus(attendanceStatus);
+  }, [attendanceStatus]);
+
+  const handleSaveStatus = async () => {
+    if (savedStatus === status) return;
+
     if (status === 'makeup') {
       openDate();
+      return;
+    }
+
+    if (!lessonId) return;
+
+    try {
+      await updateLessonAttendance(lessonId, {
+        attendance_status: status ?? 'absent',
+      });
+      setSavedStatus(status);
+      onAttendanceUpdated(lessonId, status);
+      alert('출결 상태가 저장되었습니다.');
+    } catch (error) {
+      console.error('Failed to update attendance:', error);
     }
   };
 
@@ -60,7 +90,7 @@ export default function AttendanceButtonList({
       <NormalButton
         text="저장"
         onClick={handleSaveStatus}
-        disabled={attendanceStatus === status}
+        disabled={savedStatus === status}
       />
       {isOpenDate && <CalendarModal onSelect={handleDateSelect} />}
       {isOpenTime && <TimeModal />}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import ModalWrapper from '@/shared/modal/ModalWrapper';
 import { useInvoiceModalStore } from '@/store/invoiceModalStore';
-import { api, api2 } from '@/shared/api/axios';
+import { api2 } from '@/shared/api/axios';
 import LoadingText from '@/shared/text/LoadingText';
 import EmptyText from '@/shared/text/EmptyText';
 import InvoiceListModalHeader from './InvoiceListModalHeader';

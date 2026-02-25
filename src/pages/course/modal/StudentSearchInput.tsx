@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { TextInput } from '@/shared/form';
+import NormalButton from '@/shared/button/NormalButton';
 import { searchStudents, type StudentSearchItem } from '@/shared/api/students';
 
 interface StudentSearchInputProps {
@@ -17,40 +18,50 @@ export default function StudentSearchInput({
   const [results, setResults] = useState<StudentSearchItem[]>([]);
   const [open, setOpen] = useState(false);
   const [isUserTyping, setIsUserTyping] = useState(false);
+  const [notFound, setNotFound] = useState(false);
 
   const displayValue = isUserTyping ? draft : value;
 
-  useEffect(() => {
-    if (disabled || !isUserTyping || draft.trim().length < 2) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+  const handleSearch = async () => {
+    if (disabled) return;
+
+    const keyword = (isUserTyping ? draft : value).trim();
+    if (!keyword) {
       setResults([]);
       setOpen(false);
+      setNotFound(false);
       return;
     }
 
-    const fetch = async () => {
-      const data = await searchStudents(draft);
-      const filtered = data.filter((student) => student.name.includes(draft));
-      setResults(filtered);
-      setOpen(true);
-    };
-
-    fetch();
-  }, [draft, disabled, isUserTyping]);
+    const { students, notFound: isNotFound } = await searchStudents(keyword);
+    setResults(students);
+    setNotFound(isNotFound);
+    setOpen(students.length > 0);
+  };
 
   return (
     <div className="relative">
-      <TextInput
-        type="text"
-        value={displayValue}
-        placeholder="이름으로 검색"
-        onChange={(v) => {
-          setDraft(v);
-          setIsUserTyping(true);
-          setOpen(true);
-        }}
-        disabled={disabled}
-      />
+      <div className="flex items-center gap-2">
+        <TextInput
+          type="text"
+          value={displayValue}
+          placeholder="이름으로 검색"
+          onChange={(v) => {
+            setDraft(v);
+            setIsUserTyping(true);
+            setResults([]);
+            setOpen(false);
+            setNotFound(false);
+          }}
+          disabled={disabled}
+        />
+        <NormalButton
+          text="검색"
+          onClick={handleSearch}
+          disabled={disabled}
+          className="min-w-[64px]"
+        />
+      </div>
 
       {open && !disabled && results.length > 0 && (
         <ul className="absolute z-10 w-full bg-white border rounded shadow">
@@ -72,6 +83,11 @@ export default function StudentSearchInput({
             </li>
           ))}
         </ul>
+      )}
+      {!disabled && notFound && (
+        <div className="mt-2 text-sm text-gray-500">
+          검색된 학생이 없습니다.
+        </div>
       )}
     </div>
   );

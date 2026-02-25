@@ -114,10 +114,33 @@ export interface StudentSearchItem {
   phone?: string;
 }
 
-export const searchStudents = async (keyword: string) => {
-  const response = await api.get<StudentSearchItem[]>('/students', {
-    params: { keyword },
-  });
+export const searchStudents = async (name: string) => {
+  const trimmed = name.trim();
+  if (!trimmed) {
+    return { students: [], notFound: false };
+  }
 
-  return response.data;
+  try {
+    const response = await api.get<StudentSearchItem[]>(
+      '/students/studentsInfo',
+      {
+        params: { name: trimmed },
+      },
+    );
+
+    return { students: response.data, notFound: false };
+  } catch (error) {
+    if (
+      typeof error === 'object' &&
+      error !== null &&
+      'response' in error
+    ) {
+      const response = (error as { response?: { status?: number } }).response;
+      if (response?.status === 404) {
+        return { students: [], notFound: true };
+      }
+    }
+    console.error('Failed to search students:', error);
+    return { students: [], notFound: false };
+  }
 };

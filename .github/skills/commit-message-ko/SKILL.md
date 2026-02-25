@@ -30,6 +30,9 @@ Use Conventional Commits format:
 - Stage only the files for the current group
 - Create the commit using the generated message
 - Do not ask for confirmation
+- IMPORTANT: When running `git commit`, do not embed literal `\n` in `-m` strings.
+  - Use multiple `-m` flags (one per line) so the body renders with real newlines.
+  - Example: `git commit -m "feat: title" -m "첫 번째 문장." -m "두 번째 문장."`
 
 ---
 

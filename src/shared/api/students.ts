@@ -20,14 +20,10 @@ export const getStudents = async ({
   size,
 }: GetStudentsProps): Promise<GetStudentsResponse> => {
   try {
-    const res = await api.get<Student[]>('/students', {
-      // params: {
-      //   _page: page,
-      //   _limit: size,
-      // },
+    const res = await api.get<GetStudentsResponse>('/students', {
+      params: { page, size },
     });
-
-    const students = Array.isArray(res.data) ? res.data : [];
+    const students = Array.isArray(res.data.students) ? res.data.students : [];
 
     return {
       total_count: Number(res.headers['x-total-count'] ?? students.length),

@@ -13,11 +13,13 @@ interface LessonListModalProps {
     lessonId: number,
     attendanceStatus: string | null,
   ) => void;
+  onRefreshLessons: () => Promise<void>;
 }
 
 export default function LessonListModal({
   dataMap,
   onAttendanceUpdated,
+  onRefreshLessons,
 }: LessonListModalProps) {
   const { close, selectedDate } = useLessonModalStore();
   const [lessons, setLessons] = useState<Lesson[]>([]);
@@ -51,6 +53,7 @@ export default function LessonListModal({
               attendanceStatus={lesson.attendance_status}
               lessonId={lesson.lesson_index}
               onAttendanceUpdated={onAttendanceUpdated}
+              onRefreshLessons={onRefreshLessons}
             />,
           ]);
         }}

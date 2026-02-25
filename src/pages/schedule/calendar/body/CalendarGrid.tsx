@@ -12,12 +12,14 @@ interface CalendarGridProps {
     lessonId: number,
     attendanceStatus: string | null,
   ) => void;
+  onRefreshLessons: () => Promise<void>;
 }
 
 function CalendarGrid({
   dates,
   dataMap,
   onAttendanceUpdated,
+  onRefreshLessons,
 }: CalendarGridProps) {
   const { isOpen } = useLessonModalStore();
   return (
@@ -28,6 +30,7 @@ function CalendarGrid({
         <LessonListModal
           dataMap={dataMap}
           onAttendanceUpdated={onAttendanceUpdated}
+          onRefreshLessons={onRefreshLessons}
         />
       )}
     </div>

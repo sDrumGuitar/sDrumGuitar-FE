@@ -7,6 +7,7 @@ interface CalendarHeaderProps {
   onPrevMonth: () => void;
   onNextMonth: () => void;
   onToday: () => void;
+  onRefreshLessons: () => Promise<void>;
 }
 
 function CalendarHeader({
@@ -15,6 +16,7 @@ function CalendarHeader({
   onPrevMonth,
   onNextMonth,
   onToday,
+  onRefreshLessons,
 }: CalendarHeaderProps) {
   return (
     <div className="flex justify-between items-center">
@@ -25,7 +27,7 @@ function CalendarHeader({
         onNextMonth={onNextMonth}
         onToday={onToday}
       />
-      <CarryListSection />
+      <CarryListSection onRefreshLessons={onRefreshLessons} />
     </div>
   );
 }

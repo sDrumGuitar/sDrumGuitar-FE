@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import CalendarGrid from './body/CalendarGrid';
 import CalendarHeader from './header/CalendarHeader';
@@ -47,38 +47,38 @@ function CalendarSection() {
     });
   };
 
+  const fetchLessons = useCallback(async () => {
+    const response = await getLessons({
+      year: currentYear,
+      month: currentMonth + 1,
+    });
+
+    const data: CalendarData = response.days.reduce((acc, day) => {
+      acc[day.date] = {
+        date: day.date,
+        lessons: day.lessons.map((lesson) => ({
+          name: lesson.name,
+          class_type:
+            getClassTypeLabel(
+              lesson.class_type as Parameters<typeof getClassTypeLabel>[0],
+            ) || lesson.class_type,
+          lesson_index: lesson.lesson_id,
+          paid_at: '',
+          attendance_status:
+            lesson.attendance_status === 'notyet'
+              ? null
+              : lesson.attendance_status,
+        })),
+      };
+      return acc;
+    }, {} as CalendarData);
+
+    setCalendarData(data);
+  }, [currentMonth, currentYear]);
+
   useEffect(() => {
-    const fetchLessons = async () => {
-      const response = await getLessons({
-        year: currentYear,
-        month: currentMonth + 1,
-      });
-
-      const data: CalendarData = response.days.reduce((acc, day) => {
-        acc[day.date] = {
-          date: day.date,
-          lessons: day.lessons.map((lesson) => ({
-            name: lesson.name,
-            class_type:
-              getClassTypeLabel(
-                lesson.class_type as Parameters<typeof getClassTypeLabel>[0],
-              ) || lesson.class_type,
-            lesson_index: lesson.lesson_id,
-            paid_at: '',
-            attendance_status:
-              lesson.attendance_status === 'notyet'
-                ? null
-                : lesson.attendance_status,
-          })),
-        };
-        return acc;
-      }, {} as CalendarData);
-
-      setCalendarData(data);
-    };
-
     fetchLessons();
-  }, [currentYear, currentMonth]);
+  }, [fetchLessons]);
 
   const handlePrevMonth = () => {
     if (currentMonth === 0) {
@@ -112,6 +112,7 @@ function CalendarSection() {
         onPrevMonth={handlePrevMonth}
         onNextMonth={handleNextMonth}
         onToday={handleToday}
+        onRefreshLessons={fetchLessons}
       />
 
       {/* 캘린더 본문 */}
@@ -119,6 +120,7 @@ function CalendarSection() {
         dates={calendarDates}
         dataMap={calendarData}
         onAttendanceUpdated={handleAttendanceUpdated}
+        onRefreshLessons={fetchLessons}
       />
     </div>
   );

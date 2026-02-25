@@ -10,12 +10,14 @@ interface AttendanceButtonListProps {
     lessonId: number,
     attendanceStatus: string | null,
   ) => void;
+  onRefreshLessons: () => Promise<void>;
 }
 
 export default function AttendanceButtonList({
   attendanceStatus,
   lessonId,
   onAttendanceUpdated,
+  onRefreshLessons,
 }: AttendanceButtonListProps) {
   // 출석 상태 관리 훅
   const {
@@ -31,6 +33,7 @@ export default function AttendanceButtonList({
     attendanceStatus,
     lessonId,
     onAttendanceUpdated,
+    onRefreshLessons,
   });
 
   return (

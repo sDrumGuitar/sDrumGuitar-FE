@@ -13,6 +13,7 @@ interface UseAttendanceFlowParams {
     lessonId: number,
     attendanceStatus: string | null,
   ) => void;
+  onRefreshLessons?: () => Promise<void>;
 }
 
 // 출결 상태 저장과 보강 일정 등록 플로우를 묶어 관리하는 훅
@@ -20,6 +21,7 @@ export function useAttendanceFlow({
   attendanceStatus,
   lessonId,
   onAttendanceUpdated,
+  onRefreshLessons,
 }: UseAttendanceFlowParams) {
   // 현재 선택된 출결 상태
   const [status, setStatus] = useState(attendanceStatus);
@@ -95,6 +97,7 @@ export function useAttendanceFlow({
       setStatus('makeup');
       setSavedStatus('makeup');
       onAttendanceUpdated(lessonId, 'makeup');
+      await onRefreshLessons?.();
       alert('보강 일정이 저장되었습니다.');
     } catch (error) {
       console.error('Failed to update makeup schedule:', error);

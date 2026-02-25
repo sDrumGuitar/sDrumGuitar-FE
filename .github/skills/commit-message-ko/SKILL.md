@@ -24,15 +24,17 @@ Use Conventional Commits format:
 ## 2. Commit Execution
 
 - Split changes into logical groups by feature, fix, refactor, docs, etc.
+- If changes span multiple concerns (e.g., UI refactor + API change + data refresh), you MUST split them into separate commits.
+- When splitting is ambiguous, prefer MORE granular commits and proceed without asking.
+- Each commit MUST be buildable and self-consistent (no missing props or unused APIs in that commit).
 - Create multiple commits as needed to keep each commit focused
-- If grouping is ambiguous, propose a reasonable split and proceed
 
 - Stage only the files for the current group
 - Create the commit using the generated message
 - Do not ask for confirmation
-- IMPORTANT: When running `git commit`, do not embed literal `\n` in `-m` strings.
+- IMPORTANT: When running `git commit`, do not embed literal `\\n` in `-m` strings.
   - Use multiple `-m` flags (one per line) so the body renders with real newlines.
-  - Example: `git commit -m "feat: title" -m "첫 번째 문장." -m "두 번째 문장."`
+  - Example: `git commit -m "feat: title" -m "첫 번째 문장." -m "두 번째 문장."
 
 ---
 

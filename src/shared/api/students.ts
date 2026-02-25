@@ -121,20 +121,41 @@ export const searchStudents = async (name: string) => {
   }
 
   try {
-    const response = await api.get<StudentSearchItem[]>(
-      '/students/studentsInfo',
+    const response = await api.get<
       {
-        params: { name: trimmed },
-      },
-    );
+        studentId?: number | string;
+        studentID?: number | string;
+        student_id?: number | string;
+        id?: number | string;
+        name?: string;
+        phone?: string;
+      }[]
+    >('/students/studentsInfo', {
+      params: { name: trimmed },
+    });
 
-    return { students: response.data, notFound: false };
+    const students = response.data.flatMap((student): StudentSearchItem[] => {
+      const rawId =
+        student.studentId ??
+        student.studentID ??
+        student.student_id ??
+        student.id;
+      const id = Number(rawId);
+      if (!Number.isFinite(id)) {
+        return [];
+      }
+      return [
+        {
+          id,
+          name: student.name ?? '',
+          phone: student.phone,
+        },
+      ];
+    });
+
+    return { students, notFound: false };
   } catch (error) {
-    if (
-      typeof error === 'object' &&
-      error !== null &&
-      'response' in error
-    ) {
+    if (typeof error === 'object' && error !== null && 'response' in error) {
       const response = (error as { response?: { status?: number } }).response;
       if (response?.status === 404) {
         return { students: [], notFound: true };

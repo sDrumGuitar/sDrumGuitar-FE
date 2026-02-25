@@ -22,9 +22,9 @@ export const getCourses = async ({
 }: GetCoursesProps): Promise<GetCoursesResponse> => {
   try {
     const res = await api.get<MockCourse[]>('/courses', {});
+    console.log(res);
 
     const mockCourses = Array.isArray(res.data) ? res.data : [];
-    console.log(mockCourses);
 
     const courses: Course[] = await Promise.all(
       mockCourses.map(async (mockCourse) => {
@@ -72,18 +72,16 @@ export const getCourses = async ({
 };
 
 interface CreateCoursePayload {
-  student: {
-    student_id: number;
-    name: string;
-  };
+  student_id: number;
   class_type: string;
+  family_discount: boolean;
   lesson_count: number;
   start_date: string;
   schedules: CourseSchedule[];
   invoice: {
-    status: 'paid' | null;
-    method?: string;
-    paid_at?: string;
+    status: 'PAID' | 'UNPAID';
+    method: 'CARD' | 'CASH' | null;
+    paid_at: string | null;
   };
 }
 // ====================

@@ -8,15 +8,31 @@ import LessonListModal from './LessonListModal/LessonListModal';
 interface CalendarGridProps {
   dates: CalendarDate[];
   dataMap: Record<string, CalendarDay>;
+  onAttendanceUpdated: (
+    lessonId: number,
+    attendanceStatus: string | null,
+  ) => void;
+  onRefreshLessons: () => Promise<void>;
 }
 
-function CalendarGrid({ dates, dataMap }: CalendarGridProps) {
+function CalendarGrid({
+  dates,
+  dataMap,
+  onAttendanceUpdated,
+  onRefreshLessons,
+}: CalendarGridProps) {
   const { isOpen } = useLessonModalStore();
   return (
     <div className="w-full mt-4">
       <CalendarHeader />
       <CalendarBody dates={dates} dataMap={dataMap} />
-      {isOpen && <LessonListModal />}
+      {isOpen && (
+        <LessonListModal
+          dataMap={dataMap}
+          onAttendanceUpdated={onAttendanceUpdated}
+          onRefreshLessons={onRefreshLessons}
+        />
+      )}
     </div>
   );
 }

@@ -20,14 +20,10 @@ export const getStudents = async ({
   size,
 }: GetStudentsProps): Promise<GetStudentsResponse> => {
   try {
-    const res = await api.get<Student[]>('/students', {
-      // params: {
-      //   _page: page,
-      //   _limit: size,
-      // },
+    const res = await api.get<GetStudentsResponse>('/students', {
+      params: { page, size },
     });
-
-    const students = Array.isArray(res.data) ? res.data : [];
+    const students = Array.isArray(res.data.students) ? res.data.students : [];
 
     return {
       total_count: Number(res.headers['x-total-count'] ?? students.length),
@@ -118,10 +114,54 @@ export interface StudentSearchItem {
   phone?: string;
 }
 
-export const searchStudents = async (keyword: string) => {
-  const response = await api.get<StudentSearchItem[]>('/students', {
-    params: { keyword },
-  });
+export const searchStudents = async (name: string) => {
+  const trimmed = name.trim();
+  if (!trimmed) {
+    return { students: [], notFound: false };
+  }
 
-  return response.data;
+  try {
+    const response = await api.get<
+      {
+        studentId?: number | string;
+        studentID?: number | string;
+        student_id?: number | string;
+        id?: number | string;
+        name?: string;
+        phone?: string;
+      }[]
+    >('/students/studentsInfo', {
+      params: { name: trimmed },
+    });
+
+    const students = response.data.flatMap((student): StudentSearchItem[] => {
+      const rawId =
+        student.studentId ??
+        student.studentID ??
+        student.student_id ??
+        student.id;
+      const id = Number(rawId);
+      if (!Number.isFinite(id)) {
+        return [];
+      }
+      return [
+        {
+          id,
+          name: student.name ?? '',
+          phone: student.phone,
+        },
+      ];
+    });
+
+    return { students, notFound: false };
+  } catch (error) {
+    if (typeof error === 'object' && error !== null && 'response' in error) {
+      const response = (error as { response?: { status?: number } }).response;
+      if (response?.status === 404) {
+        return { students: [], notFound: true };
+      }
+    }
+    console.error('Failed to search students:', error);
+    return { students: [], notFound: false };
+  }
 };

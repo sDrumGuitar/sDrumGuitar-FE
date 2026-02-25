@@ -2,7 +2,11 @@ import { useTimeModalStore } from '@/store/timeModalStore';
 import ModalWrapper from '../modal/ModalWrapper';
 import NormalButton from '../button/NormalButton';
 
-function TimeModal() {
+interface TimeModalProps {
+  onSave?: (hour: string, min: string) => void | Promise<void>;
+}
+
+function TimeModal({ onSave }: TimeModalProps) {
   const { close, selectedHour, selectedMin, setSelectedHour, setSelectedMin } =
     useTimeModalStore();
 
@@ -13,12 +17,18 @@ function TimeModal() {
       isSelected ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-400'
     }`;
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (selectedHour === null || selectedMin === null) {
       alert('값을 모두 선택해주세요,.');
       return;
     }
-    close();
+    try {
+      await onSave?.(selectedHour, selectedMin);
+      close();
+    } catch (error) {
+      console.error('Failed to save time selection:', error);
+      alert('등록에 실패했습니다.');
+    }
   };
   return (
     <ModalWrapper onClose={close}>

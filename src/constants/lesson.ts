@@ -17,6 +17,6 @@ export const CARRY_LESSON_LIST_HEADER = [
   '이름',
   '클래스',
   '기존 날짜',
-  '회차 정보',
+  // '회차 정보',
   '등록하기',
 ];

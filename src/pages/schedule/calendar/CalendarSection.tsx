@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import CalendarGrid from './body/CalendarGrid';
 import CalendarHeader from './header/CalendarHeader';
 import { getMonthDates } from './utils';
 import type { CalendarData } from './types';
-import { MockCalendarData } from '@/mock/lesson';
+import { getLessons } from '@/shared/api/lessons';
+import { getClassTypeLabel } from '@/utils/getClassTypeLabel';
 
 /**
  * CalendarSection
@@ -22,7 +23,65 @@ function CalendarSection() {
   const calendarDates = getMonthDates(currentYear, currentMonth);
 
   // 날짜별 수업 데이터 (서버 데이터 연동 예정)
-  const calendarData: CalendarData = MockCalendarData;
+  const [calendarData, setCalendarData] = useState<CalendarData>({});
+
+  const handleAttendanceUpdated = (
+    lessonId: number,
+    attendanceStatus: string | null,
+  ) => {
+    setCalendarData((prev) => {
+      const next: CalendarData = {};
+
+      Object.entries(prev).forEach(([date, day]) => {
+        next[date] = {
+          ...day,
+          lessons: day.lessons.map((lesson) =>
+            lesson.id === lessonId
+              ? { ...lesson, attendance_status: attendanceStatus }
+              : lesson,
+          ),
+        };
+      });
+
+      return next;
+    });
+  };
+
+  const fetchLessons = useCallback(async () => {
+    const response = await getLessons({
+      year: currentYear,
+      month: currentMonth + 1,
+    });
+    console.log(response);
+
+    const data: CalendarData = response.days.reduce((acc, day) => {
+      acc[day.date] = {
+        date: day.date,
+        lessons: day.lessons.map((lesson) => ({
+          name: lesson.name,
+          class_type:
+            getClassTypeLabel(
+              lesson.class_type as Parameters<typeof getClassTypeLabel>[0],
+            ) || lesson.class_type,
+          lesson_index: lesson.lesson_index,
+          id: lesson.lesson_id,
+          paid_at: '',
+          lesson_tag: lesson.lesson_tag,
+          attendance_status:
+            lesson.attendance_status === 'notyet'
+              ? null
+              : lesson.attendance_status,
+        })),
+      };
+      return acc;
+    }, {} as CalendarData);
+
+    setCalendarData(data);
+  }, [currentMonth, currentYear]);
+
+  useEffect(() => {
+    fetchLessons();
+  }, [fetchLessons]);
 
   const handlePrevMonth = () => {
     if (currentMonth === 0) {
@@ -56,10 +115,16 @@ function CalendarSection() {
         onPrevMonth={handlePrevMonth}
         onNextMonth={handleNextMonth}
         onToday={handleToday}
+        onRefreshLessons={fetchLessons}
       />
 
       {/* 캘린더 본문 */}
-      <CalendarGrid dates={calendarDates} dataMap={calendarData} />
+      <CalendarGrid
+        dates={calendarDates}
+        dataMap={calendarData}
+        onAttendanceUpdated={handleAttendanceUpdated}
+        onRefreshLessons={fetchLessons}
+      />
     </div>
   );
 }

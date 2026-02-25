@@ -4,9 +4,9 @@ export const FAMILY_DISCOUNT_OPTIONS = [
 ];
 
 export const AGE_GROUP_OPTIONS = [
-  { label: '유치부', value: 'preschool' },
-  { label: '초등부', value: 'element' },
-  { label: '중등부', value: 'middle' },
-  { label: '고등부', value: 'high' },
-  { label: '성인', value: 'adult' },
+  { label: '유치부', value: 'PRESCHOOL' },
+  { label: '초등부', value: 'ELEMENTARY' },
+  { label: '중등부', value: 'MIDDLE' },
+  { label: '고등부', value: 'HIGH' },
+  { label: '성인', value: 'ADULT' },
 ];

@@ -1,5 +1,9 @@
 import { CARRY_LESSON_LIST_HEADER } from '@/constants/lesson';
-import { MockCarryLessonData } from '@/mock/carryLesson';
+import {
+  createLessonRollover,
+  getRollOverLessons,
+  type LessonItem,
+} from '@/shared/api/lessons';
 import NormalButton from '@/shared/button/NormalButton';
 import CalendarModal from '@/shared/form/CalendarModal';
 import TimeModal from '@/shared/form/TimeModal';
@@ -9,10 +13,16 @@ import { useCarryModalStore } from '@/store/carryModalStore';
 import { useDateModalStore } from '@/store/dateModalStore';
 import { useTimeModalStore } from '@/store/timeModalStore';
 import { formatKoreanDate } from '@/utils/formDate';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // import AttendanceButtonList from './AttendanceButtonList';
 
-export default function CarryListModal() {
+interface CarryListModalProps {
+  onRefreshLessons: () => Promise<void>;
+}
+
+export default function CarryListModal({
+  onRefreshLessons,
+}: CarryListModalProps) {
   const { close } = useCarryModalStore();
   const {
     open: openDate,
@@ -28,11 +38,67 @@ export default function CarryListModal() {
     selectedMin,
   } = useTimeModalStore();
 
-  const [lessons] = useState(MockCarryLessonData);
+  const [lessons, setLessons] = useState<LessonItem[]>([]);
+  const [selectedLessonId, setSelectedLessonId] = useState<number | null>(null);
+
+  const fetchLessons = async () => {
+    try {
+      const response = await getRollOverLessons();
+      setLessons(response.lessons);
+    } catch (error) {
+      console.error('Failed to fetch roll-over lessons:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchLessons();
+  }, []);
 
   const handleDateSelect = (date: string) => {
     setSelectedDate(date); // 날짜 저장
     openTime(); // 시간 모달 열기
+  };
+
+  const handleRegisterClick = (lessonId: number) => {
+    setSelectedLessonId(lessonId);
+    openDate();
+  };
+
+  const handleTimeSave = async () => {
+    if (!selectedLessonId) {
+      alert('레슨을 선택해주세요.');
+      return;
+    }
+    if (!selectedDate || selectedHour === null || selectedMin === null) {
+      alert('날짜와 시간을 모두 선택해주세요.');
+      return;
+    }
+
+    const startDate = new Date(selectedDate);
+    if (Number.isNaN(startDate.getTime())) {
+      alert('선택한 날짜 형식이 올바르지 않습니다.');
+      return;
+    }
+
+    startDate.setHours(Number(selectedHour), Number(selectedMin), 0, 0);
+    const utcDate = new Date(
+      Date.UTC(
+        startDate.getFullYear(),
+        startDate.getMonth(),
+        startDate.getDate(),
+        startDate.getHours(),
+        startDate.getMinutes(),
+        0,
+        0,
+      ),
+    );
+    await createLessonRollover(selectedLessonId, {
+      start_at: utcDate.toISOString(),
+    });
+
+    setSelectedLessonId(null);
+    await fetchLessons();
+    await onRefreshLessons();
   };
 
   return (
@@ -56,14 +122,17 @@ export default function CarryListModal() {
           return lessons.map((lesson) => [
             lesson.name,
             lesson.class_type,
-            lesson.start_at,
-            `${lesson.lesson_index}회차`,
-            <NormalButton text="등록" onClick={openDate} />,
+            formatKoreanDate(lesson.start_at),
+            // `${lesson.lesson_index}회차`,
+            <NormalButton
+              text="등록"
+              onClick={() => handleRegisterClick(lesson.lesson_id)}
+            />,
           ]);
         }}
       />
       {isOpenDate && <CalendarModal onSelect={handleDateSelect} />}
-      {isOpenTime && <TimeModal />}
+      {isOpenTime && <TimeModal onSave={handleTimeSave} />}
     </ModalWrapper>
   );
 }

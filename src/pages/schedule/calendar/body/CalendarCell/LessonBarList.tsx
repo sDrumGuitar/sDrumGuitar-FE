@@ -7,6 +7,9 @@ interface LessonBarProps {
 }
 
 const LessonBar: React.FC<LessonBarProps> = ({ lesson }) => {
+  const isRolloverCompleted =
+    lesson.attendance_status === 'rollover' && lesson.lesson_tag === 'rollover';
+
   const bgColor =
     lesson.attendance_status === null
       ? 'bg-white border border-black' // 출석 체크 전
@@ -15,10 +18,18 @@ const LessonBar: React.FC<LessonBarProps> = ({ lesson }) => {
     lesson.attendance_status === null
       ? 'text-black' // 출석 체크 전
       : `text-white`;
+  const style = isRolloverCompleted
+    ? { backgroundColor: '#F3E8FF', borderColor: '#A855F7' }
+    : { backgroundColor: bgColor };
+
+  const className = isRolloverCompleted
+    ? 'text-xs px-1 py-0.5 rounded mb-0.5 truncate text-purple-700 border border-dashed'
+    : `text-xs px-1 py-0.5 rounded mb-0.5 truncate ${bgColor} ${textColor}`;
+
   return (
     <div
-      style={{ backgroundColor: bgColor }}
-      className={` text-xs px-1 py-0.5 rounded mb-0.5 truncate ${bgColor} ${textColor}`}
+      style={style}
+      className={className}
       title={`${lesson.name} (${lesson.lesson_index}회차)`}
     >
       {lesson.name}

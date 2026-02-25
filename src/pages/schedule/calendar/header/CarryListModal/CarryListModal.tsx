@@ -111,7 +111,7 @@ export default function CarryListModal({
           return lessons.map((lesson) => [
             lesson.name,
             lesson.class_type,
-            formatKoreanDate(lesson.before_at),
+            formatKoreanDate(lesson.start_at),
             // `${lesson.lesson_index}회차`,
             <NormalButton
               text="등록"

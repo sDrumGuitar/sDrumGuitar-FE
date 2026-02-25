@@ -31,6 +31,7 @@ export default function LessonListModal({
     }
 
     const day = dataMap[selectedDate];
+    console.log(day?.lessons);
     setLessons(day ? day.lessons : []);
   }, [dataMap, selectedDate]);
   return (
@@ -52,6 +53,7 @@ export default function LessonListModal({
             <AttendanceButtonList
               attendanceStatus={lesson.attendance_status}
               lessonId={lesson.lesson_index}
+              lessonTag={lesson.lesson_tag}
               onAttendanceUpdated={onAttendanceUpdated}
               onRefreshLessons={onRefreshLessons}
             />,

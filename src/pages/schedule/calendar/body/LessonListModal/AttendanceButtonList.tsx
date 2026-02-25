@@ -6,6 +6,7 @@ import { useAttendanceFlow } from './hooks/useAttendanceFlow';
 interface AttendanceButtonListProps {
   attendanceStatus: string | null;
   lessonId: number;
+  lessonTag: string;
   onAttendanceUpdated: (
     lessonId: number,
     attendanceStatus: string | null,
@@ -16,6 +17,7 @@ interface AttendanceButtonListProps {
 export default function AttendanceButtonList({
   attendanceStatus,
   lessonId,
+  lessonTag,
   onAttendanceUpdated,
   onRefreshLessons,
 }: AttendanceButtonListProps) {
@@ -36,13 +38,22 @@ export default function AttendanceButtonList({
     onRefreshLessons,
   });
 
+  const shouldDisableControls =
+    attendanceStatus === 'rollover' && lessonTag === 'rollover';
+
   return (
     <div className="flex justify-between">
-      <AttendanceStatusButtons status={status} onChange={setStatus} />
-      <AttendanceSaveButton
-        onClick={handleSaveStatus}
-        disabled={savedStatus === status}
+      <AttendanceStatusButtons
+        status={status}
+        onChange={setStatus}
+        disabled={shouldDisableControls}
       />
+      {!shouldDisableControls && (
+        <AttendanceSaveButton
+          onClick={handleSaveStatus}
+          disabled={savedStatus === status}
+        />
+      )}
       <AttendanceMakeupModals
         isOpenDate={isOpenDate}
         isOpenTime={isOpenTime}

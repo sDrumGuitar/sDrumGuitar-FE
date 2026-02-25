@@ -4,4 +4,5 @@ export interface Lesson {
   lesson_index: number;
   paid_at: string;
   attendance_status: string | null;
+  lesson_tag: string;
 }

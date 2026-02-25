@@ -64,6 +64,7 @@ function CalendarSection() {
             ) || lesson.class_type,
           lesson_index: lesson.lesson_id,
           paid_at: '',
+          lesson_tag: lesson.lesson_tag,
           attendance_status:
             lesson.attendance_status === 'notyet'
               ? null

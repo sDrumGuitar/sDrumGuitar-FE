@@ -4,11 +4,13 @@ import { ATTENDANCE_COLORS } from '@/constants/lesson';
 interface AttendanceStatusButtonsProps {
   status: string | null;
   onChange: (status: string) => void;
+  disabled?: boolean;
 }
 
 export default function AttendanceStatusButtons({
   status,
   onChange,
+  disabled = false,
 }: AttendanceStatusButtonsProps) {
   return (
     <div className="flex gap-2">
@@ -20,12 +22,15 @@ export default function AttendanceStatusButtons({
           <button
             key={String(key)}
             onClick={() => onChange(key)}
+            disabled={disabled}
             style={{
               borderColor: color,
               backgroundColor: isActive ? color : '#FFFFFF',
               color: isActive ? '#FFFFFF' : color,
             }}
-            className="px-3 border transition-colors rounded-2xl"
+            className={`px-3 border transition-colors rounded-2xl ${
+              disabled ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
           >
             {label}
           </button>

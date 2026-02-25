@@ -16,7 +16,7 @@ function CalendarGrid({ dates, dataMap }: CalendarGridProps) {
     <div className="w-full mt-4">
       <CalendarHeader />
       <CalendarBody dates={dates} dataMap={dataMap} />
-      {isOpen && <LessonListModal />}
+      {isOpen && <LessonListModal dataMap={dataMap} />}
     </div>
   );
 }

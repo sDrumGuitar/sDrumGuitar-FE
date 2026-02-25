@@ -1,13 +1,17 @@
 import { LessonListHeader } from '@/constants/lesson';
-import { MockCalendarData } from '@/mock/lesson';
 import ModalWrapper from '@/shared/modal/ModalWrapper';
 import TableSection from '@/shared/modal/TableSection';
 import { useLessonModalStore } from '@/store/lessonModalStore';
 import type { Lesson } from '@/types/lesson';
 import { useEffect, useState } from 'react';
 import AttendanceButtonList from './AttendanceButtonList';
+import type { CalendarData } from '../../types';
 
-export default function LessonListModal() {
+interface LessonListModalProps {
+  dataMap: CalendarData;
+}
+
+export default function LessonListModal({ dataMap }: LessonListModalProps) {
   const { close, selectedDate } = useLessonModalStore();
   const [lessons, setLessons] = useState<Lesson[]>([]);
 
@@ -17,9 +21,9 @@ export default function LessonListModal() {
       return;
     }
 
-    const day = MockCalendarData[selectedDate];
+    const day = dataMap[selectedDate];
     setLessons(day ? day.lessons : []);
-  }, [selectedDate]);
+  }, [dataMap, selectedDate]);
   return (
     <ModalWrapper onClose={close}>
       <div className="flex justify-between items-center mb-4">

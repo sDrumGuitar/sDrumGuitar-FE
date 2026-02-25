@@ -31,7 +31,6 @@ export default function LessonListModal({
     }
 
     const day = dataMap[selectedDate];
-    console.log(day?.lessons);
     setLessons(day ? day.lessons : []);
   }, [dataMap, selectedDate]);
   return (

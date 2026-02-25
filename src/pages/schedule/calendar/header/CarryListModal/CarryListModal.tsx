@@ -81,8 +81,19 @@ export default function CarryListModal({
     }
 
     startDate.setHours(Number(selectedHour), Number(selectedMin), 0, 0);
+    const utcDate = new Date(
+      Date.UTC(
+        startDate.getFullYear(),
+        startDate.getMonth(),
+        startDate.getDate(),
+        startDate.getHours(),
+        startDate.getMinutes(),
+        0,
+        0,
+      ),
+    );
     await createLessonRollover(selectedLessonId, {
-      start_at: startDate.toISOString(),
+      start_at: utcDate.toISOString(),
     });
 
     setSelectedLessonId(null);

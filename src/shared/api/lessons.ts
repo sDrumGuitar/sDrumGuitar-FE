@@ -11,6 +11,7 @@ export interface LessonItem {
   lesson_tag: string;
   attendance_status: string;
   before_at: string;
+  start_at: string;
 }
 
 export interface LessonDay {
@@ -74,7 +75,7 @@ export const getRollOverLessons =
   };
 
 // ====================
-// PATCH : 출결 상태 수정
+// PATCH : 출결 상태 수정 (출석, 결석, 이월)
 // ====================
 export interface UpdateLessonAttendancePayload {
   attendance_status: string;
@@ -89,10 +90,25 @@ export const updateLessonAttendance = async (
 };
 
 // ====================
+// PATCH : 출결 상태 수정 (보강)
+// ====================
+export interface UpdateLessonAttendanceMakeUpPayload {
+  makeup_start_at: string;
+}
+
+export const updateLessonAttendanceMakeUp = async (
+  lessonId: number,
+  payload: UpdateLessonAttendanceMakeUpPayload,
+) => {
+  const res = await api.patch(`/lessons/${lessonId}/makeup`, payload);
+  return res.data;
+};
+
+// ====================
 // POST : 레슨 이월 등록
 // ====================
 export interface CreateLessonRolloverPayload {
-  startAt: string;
+  start_at: string;
 }
 
 export const createLessonRollover = async (

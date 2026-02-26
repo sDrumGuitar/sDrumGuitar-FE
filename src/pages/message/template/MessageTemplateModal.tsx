@@ -122,60 +122,64 @@ function MessageTemplateModal() {
             </button>
           </div>
 
-          <div className="relative flex min-h-0 h-full flex-col gap-3 overflow-y-auto pr-1">
-            {templates.map((template) => {
-              const isSelected = selectedTemplateId === template.id;
-              return (
-                <div
-                  key={template.id}
-                  className={`relative flex items-center justify-between rounded-sm px-4 py-3 ${
-                    isSelected ? 'bg-emerald-400' : 'bg-gray-100'
-                  }`}
-                >
-                  <button
-                    onClick={() => handleSelectTemplate(template.id)}
-                    className="flex-1 text-left text-base text-gray-900"
-                  >
-                    {template.title}
-                  </button>
-
-                  <button
-                    data-template-menu-trigger
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      toggleMenu(template.id);
-                    }}
-                    className="ml-2 px-2 text-lg leading-none text-gray-700"
-                  >
-                    ...
-                  </button>
-
-                  {menuOpenId === template.id && (
+          <div className="flex min-h-0 h-full flex-col gap-4">
+            <div className="relative min-h-0 flex-1 overflow-y-auto pr-1">
+              <div className="flex flex-col gap-3">
+                {templates.map((template) => {
+                  const isSelected = selectedTemplateId === template.id;
+                  return (
                     <div
-                      data-template-menu-panel
-                      className="absolute right-0 top-12 z-20 w-20 rounded-md bg-white py-1 shadow-[0_4px_10px_rgba(0,0,0,0.25)]"
+                      key={template.id}
+                      className={`relative flex items-center justify-between rounded-sm px-4 py-3 ${
+                        isSelected ? 'bg-emerald-400' : 'bg-gray-100'
+                      }`}
                     >
                       <button
                         onClick={() => handleSelectTemplate(template.id)}
-                        className="w-full px-3 py-1 text-left text-sm text-gray-900 hover:bg-gray-100"
+                        className="flex-1 text-left text-base text-gray-900"
                       >
-                        수정
+                        {template.title}
                       </button>
+
                       <button
-                        onClick={() => deleteTemplate(template.id)}
-                        className="w-full px-3 py-1 text-left text-sm text-gray-900 hover:bg-gray-100"
+                        data-template-menu-trigger
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          toggleMenu(template.id);
+                        }}
+                        className="ml-2 px-2 text-lg leading-none text-gray-700"
                       >
-                        삭제
+                        ...
                       </button>
+
+                      {menuOpenId === template.id && (
+                        <div
+                          data-template-menu-panel
+                          className="absolute right-0 top-12 z-20 w-20 rounded-md bg-white py-1 shadow-[0_4px_10px_rgba(0,0,0,0.25)]"
+                        >
+                          <button
+                            onClick={() => handleSelectTemplate(template.id)}
+                            className="w-full px-3 py-1 text-left text-sm text-gray-900 hover:bg-gray-100"
+                          >
+                            수정
+                          </button>
+                          <button
+                            onClick={() => deleteTemplate(template.id)}
+                            className="w-full px-3 py-1 text-left text-sm text-gray-900 hover:bg-gray-100"
+                          >
+                            삭제
+                          </button>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              );
-            })}
+                  );
+                })}
+              </div>
+            </div>
 
             <button
               onClick={openCreateMode}
-              className="mt-auto h-11 rounded-sm border border-gray-300 bg-white text-sm text-gray-700 transition hover:bg-gray-50"
+              className="h-11 w-full rounded-sm bg-gray-200 text-base font-medium text-gray-900 transition hover:bg-gray-300"
             >
               새 템플릿
             </button>

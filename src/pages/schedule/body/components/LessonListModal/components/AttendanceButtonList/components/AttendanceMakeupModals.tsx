@@ -8,6 +8,7 @@ interface AttendanceMakeupModalsProps {
   onSaveTime: (hour: string, min: string) => void | Promise<void>;
 }
 
+// 보강과 이월 모달을 관리하는 컴포넌트
 export default function AttendanceMakeupModals({
   isOpenDate,
   isOpenTime,

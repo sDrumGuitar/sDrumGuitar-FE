@@ -5,6 +5,7 @@ interface AttendanceSaveButtonProps {
   onClick: () => void | Promise<void>;
 }
 
+// 출석 상태 저장 버튼 컴포넌트
 export default function AttendanceSaveButton({
   disabled,
   onClick,

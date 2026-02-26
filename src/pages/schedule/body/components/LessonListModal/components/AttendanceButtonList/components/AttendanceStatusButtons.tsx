@@ -1,5 +1,5 @@
-import { ATTENDANCE_TYPE } from '../types';
 import { ATTENDANCE_COLORS } from '@/constants/lesson';
+import { ATTENDANCE_TYPE } from '@/types/lesson';
 
 interface AttendanceStatusButtonsProps {
   status: string | null;
@@ -8,6 +8,7 @@ interface AttendanceStatusButtonsProps {
   disabledKeys?: string[];
 }
 
+// 출석 상태 버튼 컴포넌트 (출석, 결석, 보강, 이월)
 export default function AttendanceStatusButtons({
   status,
   onChange,

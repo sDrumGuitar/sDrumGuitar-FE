@@ -5,6 +5,7 @@ interface TableSectionProps<T> {
   headers: string[];
   getRows: (dataList: T[]) => React.ReactNode[][];
   onRowClick?: (item: T) => void;
+  getRowClassName?: (item: T, index: number) => string;
 }
 
 function TableSection<T>({
@@ -12,6 +13,7 @@ function TableSection<T>({
   headers,
   getRows,
   onRowClick,
+  getRowClassName,
 }: TableSectionProps<T>) {
   if (!dataList || dataList.length === 0) {
     return (
@@ -33,6 +35,11 @@ function TableSection<T>({
       headers={headers}
       rows={rows}
       onRowClick={onRowClick ? handleRowClick : undefined}
+      rowClassName={
+        getRowClassName
+          ? (rowIndex) => getRowClassName(dataList[rowIndex], rowIndex)
+          : undefined
+      }
     />
   );
 }

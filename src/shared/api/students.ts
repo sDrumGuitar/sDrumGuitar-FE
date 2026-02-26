@@ -66,15 +66,13 @@ export interface CreateStudentPayload {
   age_group: string;
   phone: string;
   parent_phone: string;
-  family_discount: boolean;
+  // family_discount: boolean;
   memo: string;
 }
 
 export const createStudent = async (payload: CreateStudentPayload) => {
   const res = await api.post('/students', {
     ...payload,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
   });
 
   return res.data;

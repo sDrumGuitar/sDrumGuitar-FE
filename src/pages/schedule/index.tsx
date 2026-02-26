@@ -2,22 +2,17 @@ import CalendarGrid from './body';
 import CalendarHeader from './header';
 import { useScheduleCalendar } from './hooks/useScheduleCalendar';
 
-/**
- * SchedulePage
- *
- * 월 단위 캘린더의 연/월 상태와 네비게이션을 관리하는 컨테이너 컴포넌트입니다.
- * 실제 날짜 셀 렌더링은 CalendarGrid에 위임합니다.
- */
+// 스케줄 관리 페이지 컴포넌트
 function SchedulePage() {
   const { calendarData, fetchLessons, handleAttendanceUpdated } =
-    useScheduleCalendar();
+    useScheduleCalendar(); // 캘린더 데이터와 관련 함수들을 커스텀 훅에서 가져옴
 
   return (
     <div>
-      {/* 캘린더 헤더 (월 이동, 오늘 버튼) */}
+      {/* 1. 캘린더 헤더 (월 이동, 오늘 버튼) */}
       <CalendarHeader onRefreshLessons={fetchLessons} />
 
-      {/* 캘린더 본문 */}
+      {/* 2. 캘린더 본문 */}
       <CalendarGrid
         dataMap={calendarData}
         onAttendanceUpdated={handleAttendanceUpdated}

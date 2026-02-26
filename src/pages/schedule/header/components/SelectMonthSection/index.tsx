@@ -5,7 +5,7 @@ import TodayButton from './components/TodayButton';
 // 월 선택과 오늘 버튼을 포함하는 헤더의 왼쪽 섹션 컴포넌트
 function SelectMonthSection({}) {
   const { currentYear, currentMonth, setPrevMonth, setNextMonth, setToday } =
-    useScheduleCalendarStore();
+    useScheduleCalendarStore(); // 스케줄 캘린더의 년/월 상태와 네비게이션 함수를 스토어에서 가져옴
 
   return (
     <div className="flex items-center gap-4">

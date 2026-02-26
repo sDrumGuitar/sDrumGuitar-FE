@@ -4,10 +4,17 @@ import { getLessons } from '@/shared/api/lessons';
 import { getClassTypeLabel } from '@/utils/getClassTypeLabel';
 import { useScheduleCalendarStore } from '@/store/scheduleCalendarStore';
 
+/*
+ * 캘린더 데이터를 관리하는 커스텀 훅
+ * - 현재 연도와 월에 해당하는 회차 데이터를 불러와서 상태로 관리
+ * - 출석 상태 업데이트 핸들러 제공
+ * - 회차 데이터 불러오기 함수 제공
+ */
 export const useScheduleCalendar = () => {
-  const { currentMonth, currentYear } = useScheduleCalendarStore();
-  const [calendarData, setCalendarData] = useState<CalendarData>({});
+  const { currentMonth, currentYear } = useScheduleCalendarStore(); // 캘린더 상태 (현재 연도, 월)
+  const [calendarData, setCalendarData] = useState<CalendarData>({}); // 캘린더 데이터 상태
 
+  // 출석 상태 업데이트 핸들러
   const handleAttendanceUpdated = (
     lessonId: number,
     attendanceStatus: string | null,
@@ -30,6 +37,7 @@ export const useScheduleCalendar = () => {
     });
   };
 
+  // 회차 데이터 불러오기
   const fetchLessons = useCallback(async () => {
     const response = await getLessons({
       year: currentYear,
@@ -62,10 +70,12 @@ export const useScheduleCalendar = () => {
     setCalendarData(data);
   }, [currentMonth, currentYear]);
 
+  // 컴포넌트 마운트 시 회차 데이터 불러오기
   useEffect(() => {
     fetchLessons();
   }, [fetchLessons]);
 
+  // 외부로 노출할 데이터와 함수
   return {
     calendarData,
     fetchLessons,

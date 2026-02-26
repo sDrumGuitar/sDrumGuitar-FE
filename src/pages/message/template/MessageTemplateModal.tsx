@@ -91,7 +91,7 @@ function MessageTemplateModal() {
 
   return (
     <ModalWrapper onClose={close}>
-      <div className="flex h-[620px] flex-col">
+      <div className="flex h-[620px] flex-col overflow-hidden">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-bold text-gray-900">문자 템플릿</h2>
           <button className="text-sm text-gray-500 hover:text-gray-800" onClick={close}>
@@ -99,8 +99,8 @@ function MessageTemplateModal() {
           </button>
         </div>
 
-        <div className="grid flex-1 grid-cols-[1fr_1.15fr] gap-6">
-          <div className="flex h-full flex-col gap-4">
+        <div className="grid min-h-0 flex-1 grid-cols-[1fr_1.15fr] gap-6">
+          <div className="flex min-h-0 h-full flex-col gap-4">
             <input
               value={form.title}
               onChange={(event) => setFormField('title', event.target.value)}
@@ -111,7 +111,7 @@ function MessageTemplateModal() {
               value={form.content}
               onChange={(event) => setFormField('content', event.target.value)}
               placeholder="문자 내용을 입력하세요."
-              className="h-full min-h-[420px] w-full resize-none rounded-sm bg-gray-100 px-4 py-3 text-base leading-6 outline-none focus:ring-1 focus:ring-gray-300"
+              className="h-full min-h-0 w-full resize-none rounded-sm bg-gray-100 px-4 py-3 text-base leading-6 outline-none focus:ring-1 focus:ring-gray-300"
             />
             <button
               onClick={handleSubmit}
@@ -122,7 +122,7 @@ function MessageTemplateModal() {
             </button>
           </div>
 
-          <div className="relative flex h-full flex-col gap-3 overflow-y-auto pr-1">
+          <div className="relative flex min-h-0 h-full flex-col gap-3 overflow-y-auto pr-1">
             {templates.map((template) => {
               const isSelected = selectedTemplateId === template.id;
               return (

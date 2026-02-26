@@ -1,12 +1,13 @@
 import { useLessonModalStore } from '@/store/lessonModalStore';
 import { WEEKDAY_LABELS } from '@/constants/schedule';
-import type { CalendarDate, CalendarDay } from '@/types/schedule';
+import type { CalendarDay, CalendarDate } from '@/types/schedule';
+import { useScheduleCalendarStore } from '@/store/scheduleCalendarStore';
+import { getMonthDates } from '@/utils/getMonthDates';
 import CalendarCell from './CalendarCell/CalendarCell';
 import LessonListModal from './LessonListModal/LessonListModal';
 
 // 캘린더 본문
 interface CalendarGridProps {
-  dates: CalendarDate[];
   dataMap: Record<string, CalendarDay>;
   onAttendanceUpdated: (
     lessonId: number,
@@ -16,12 +17,13 @@ interface CalendarGridProps {
 }
 
 function CalendarGrid({
-  dates,
   dataMap,
   onAttendanceUpdated,
   onRefreshLessons,
 }: CalendarGridProps) {
   const { isOpen } = useLessonModalStore();
+  const { currentYear, currentMonth } = useScheduleCalendarStore();
+  const dates = getMonthDates(currentYear, currentMonth);
   return (
     <div className="w-full mt-4">
       <CalendarHeader />

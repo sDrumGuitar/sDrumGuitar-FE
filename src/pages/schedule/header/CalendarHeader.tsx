@@ -1,31 +1,22 @@
 import SelectMonthSection from './SelectMonthSection';
 import CarryListSection from './CarryListSection';
+import { useScheduleCalendarStore } from '@/store/scheduleCalendarStore';
 
 interface CalendarHeaderProps {
-  year: number;
-  month: number;
-  onPrevMonth: () => void;
-  onNextMonth: () => void;
-  onToday: () => void;
   onRefreshLessons: () => Promise<void>;
 }
 
-function CalendarHeader({
-  year,
-  month,
-  onPrevMonth,
-  onNextMonth,
-  onToday,
-  onRefreshLessons,
-}: CalendarHeaderProps) {
+function CalendarHeader({ onRefreshLessons }: CalendarHeaderProps) {
+  const { currentYear, currentMonth, setPrevMonth, setNextMonth, setToday } =
+    useScheduleCalendarStore();
   return (
     <div className="flex justify-between items-center">
       <SelectMonthSection
-        year={year}
-        month={month}
-        onPrevMonth={onPrevMonth}
-        onNextMonth={onNextMonth}
-        onToday={onToday}
+        year={currentYear}
+        month={currentMonth}
+        onPrevMonth={setPrevMonth}
+        onNextMonth={setNextMonth}
+        onToday={setToday}
       />
       <CarryListSection onRefreshLessons={onRefreshLessons} />
     </div>

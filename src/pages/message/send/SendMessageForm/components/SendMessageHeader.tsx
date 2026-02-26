@@ -19,11 +19,7 @@ function SendMessageHeader({
           {selectedStudentName} · {selectedStudentGroup}
         </p>
       </div>
-      <NormalButton
-        text="템플릿 불러오기"
-        className="bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:text-gray-900"
-        onClick={onOpenTemplate}
-      />
+      <NormalButton text="템플릿 불러오기" onClick={onOpenTemplate} />
     </div>
   );
 }

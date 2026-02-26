@@ -1,4 +1,4 @@
-import type { CalendarData } from '@/pages/schedule/calendar/types';
+import type { CalendarData } from '@/types/schedule';
 
 export const MockCalendarData: CalendarData = {
   '2026-02-01': {

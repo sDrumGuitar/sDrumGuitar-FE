@@ -4,13 +4,9 @@ import {
   TextInput,
   Select,
   NumberInput,
-  RadioGroup,
   Textarea,
 } from '@/shared/form/index';
-import {
-  AGE_GROUP_OPTIONS,
-  FAMILY_DISCOUNT_OPTIONS,
-} from '@/constants/student';
+import { AGE_GROUP_OPTIONS } from '@/constants/student';
 import NormalButton from '@/shared/button/NormalButton';
 import { createStudent } from '@/shared/api/students';
 import { useStudentModalStore } from '@/store/studentModalStore';

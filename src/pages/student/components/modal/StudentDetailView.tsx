@@ -90,7 +90,7 @@ function StudentDetailView({
 
   const handleSave = async () => {
     try {
-      const updatedStudent = await updateStudent(student.id, {
+      const updatedStudent = await updateStudent(student.student_id, {
         name: form.name,
         age_group: form.ageGroup,
         phone: form.phone,

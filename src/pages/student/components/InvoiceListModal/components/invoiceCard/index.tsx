@@ -5,9 +5,9 @@ import Select from '@/shared/form/Select';
 import TextInput from '@/shared/form/TextInput';
 import type { PatchInvoicePayload } from '@/types/invoice';
 import { patchInvoice } from '@/shared/api/invoices';
-import InvoiceCardHeader from './invoiceCardHeader';
+import InvoiceCardHeader from './components/invoiceCardHeader';
 import { METHOD_OPTIONS, STATUS_OPTIONS } from '@/constants/invoice';
-import InvoiceCell from './InvoiceCell';
+import InvoiceCell from './components/InvoiceCell';
 
 type InvoiceStatus = 'paid' | 'unpaid';
 type PaymentMethod = 'card' | 'cash' | null;
@@ -48,9 +48,7 @@ function normalizeToDayjs(value: string | number | null | undefined) {
   if (!trimmed) return null;
   if (/^\d+$/.test(trimmed)) {
     const numeric = Number(trimmed);
-    return numeric < 1_000_000_000_000
-      ? dayjs.unix(numeric)
-      : dayjs(numeric);
+    return numeric < 1_000_000_000_000 ? dayjs.unix(numeric) : dayjs(numeric);
   }
 
   return dayjs(trimmed);
@@ -155,9 +153,7 @@ export default function InvoiceCard({ invoice, onPatched }: InvoiceCardProps) {
   })();
   const issuedAtText = (() => {
     const parsed = normalizeToDayjs(invoice.issuedAt);
-    return parsed && parsed.isValid()
-      ? parsed.format('YYYY / MM / DD')
-      : '-';
+    return parsed && parsed.isValid() ? parsed.format('YYYY / MM / DD') : '-';
   })();
   const statusText = statusLabel(invoice.status);
   const methodText = methodLabel(invoice.method);

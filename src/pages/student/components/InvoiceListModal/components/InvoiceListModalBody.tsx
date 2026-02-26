@@ -3,7 +3,7 @@ import type {
   PaymentMethod,
   StudentInvoiceItem,
 } from '@/types/invoice';
-import InvoiceCard from '../invoiceCard/InvoiceCard';
+import InvoiceCard from './invoiceCard';
 
 interface InvoiceListModalBodyProps {
   invociesList: StudentInvoiceItem[];

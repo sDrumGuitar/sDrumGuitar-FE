@@ -4,8 +4,8 @@ import { useInvoiceModalStore } from '@/store/invoiceModalStore';
 import { getStudentInvoices } from '@/shared/api/invoices';
 import LoadingText from '@/shared/text/LoadingText';
 import EmptyText from '@/shared/text/EmptyText';
-import InvoiceListModalHeader from './InvoiceListModalHeader';
-import InvoiceListModalBody from './InvoiceListModalBody';
+import InvoiceListModalHeader from './components/InvoiceListModalHeader';
+import InvoiceListModalBody from './components/InvoiceListModalBody';
 import type {
   InvoiceStatus,
   PaymentMethod,

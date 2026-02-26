@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Commit Message (KO)'
+  short_description: 'Conventional commit 메시지를 한글 본문으로 생성'
+  default_prompt: 'Use $commit-message-ko to generate a conventional commit message for my current changes.'

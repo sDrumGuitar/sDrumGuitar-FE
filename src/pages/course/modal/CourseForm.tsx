@@ -18,6 +18,7 @@ import type { Course, CourseSchedule } from '@/types/course';
 import NormalButton from '@/shared/button/NormalButton';
 import StudentSearchInput from './StudentSearchInput';
 import { createCourse, updateCourse } from '@/shared/api/courses';
+import { getStudent } from '@/shared/api/students';
 import { useCourseModalStore } from '@/store/courseModalStore';
 import { useDateModalStore } from '@/store/dateModalStore';
 import CalendarModal from '@/shared/form/CalendarModal';
@@ -28,6 +29,7 @@ interface CourseFormState {
     student_id: number;
     name: string;
   };
+  family_discount: boolean;
   class_type: string;
   lesson_count: number;
   start_date: string;
@@ -44,6 +46,7 @@ const INITIAL_FORM: CourseFormState = {
     student_id: 1,
     name: '',
   },
+  family_discount: false,
   class_type: '',
   lesson_count: 0,
   start_date: '',
@@ -65,6 +68,7 @@ const mapCourseToForm = (course: Course): CourseFormState => ({
     student_id: course.student.student_id,
     name: course.student.name,
   },
+  family_discount: false,
   class_type: course.class_type || '',
   lesson_count: course.lesson_count,
   start_date: course.start_date,
@@ -128,23 +132,46 @@ export default function CourseForm({
     }
 
     try {
+      const formatDateOnly = (value: string) => {
+        const parsed = new Date(value);
+        if (Number.isNaN(parsed.getTime())) return value;
+        const yyyy = parsed.getFullYear();
+        const mm = String(parsed.getMonth() + 1).padStart(2, '0');
+        const dd = String(parsed.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+      };
+
+      const invoiceStatus: 'PAID' | 'UNPAID' =
+        form.invoice.status === 'paid' ? 'PAID' : 'UNPAID';
+      const invoiceMethod: 'CARD' | 'CASH' | null =
+        form.invoice.status === 'paid'
+          ? form.invoice.method === 'card'
+            ? 'CARD'
+            : form.invoice.method === 'cash'
+              ? 'CASH'
+              : null
+          : null;
+      const invoicePaidAt: string | null =
+        form.invoice.status === 'paid'
+          ? form.invoice.paid_at.includes('T')
+            ? form.invoice.paid_at
+            : `${formatDateOnly(form.invoice.paid_at)}T00:00:00`
+          : null;
+
       const payload = {
-        student: {
-          student_id: form.student.student_id,
-          name: form.student.name,
-        },
+        student_id: form.student.student_id,
         class_type: form.class_type,
+        family_discount: form.family_discount,
         lesson_count: form.lesson_count,
-        start_date: form.start_date,
+        start_date: formatDateOnly(form.start_date),
         schedules: form.schedules,
         invoice: {
-          status: form.invoice.status,
-          ...(form.invoice.status === 'paid' && {
-            method: form.invoice.method,
-            paid_at: form.invoice.paid_at,
-          }),
+          status: invoiceStatus,
+          method: invoiceMethod,
+          paid_at: invoicePaidAt,
         },
       };
+      console.log(payload);
 
       if (mode === 'CREATE') {
         await createCourse(payload);
@@ -167,12 +194,14 @@ export default function CourseForm({
       <FormField label="수강생">
         <StudentSearchInput
           value={form.student.name}
-          onSelect={(student) =>
+          onSelect={async (student) => {
             updateForm('student', {
               student_id: student.id,
               name: student.name,
-            })
-          }
+            });
+            const { student: detail } = await getStudent(student.id);
+            updateForm('family_discount', Boolean(detail?.family_discount));
+          }}
           disabled={isViewMode}
         />
       </FormField>
@@ -217,9 +246,7 @@ export default function CourseForm({
           </button>
         </div>
         {isOpen && (
-          <CalendarModal
-            onSelect={(date) => updateForm('start_date', date)}
-          />
+          <CalendarModal onSelect={(date) => updateForm('start_date', date)} />
         )}
       </FormField>
 

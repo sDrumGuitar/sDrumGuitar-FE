@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import ModalWrapper from '@/shared/modal/ModalWrapper';
 import { useInvoiceModalStore } from '@/store/invoiceModalStore';
-import { api } from '@/shared/api/axios';
+import { api2 } from '@/shared/api/axios';
 import LoadingText from '@/shared/text/LoadingText';
 import EmptyText from '@/shared/text/EmptyText';
 import InvoiceListModalHeader from './InvoiceListModalHeader';
@@ -54,12 +54,12 @@ export default function InvoiceListModal() {
     try {
       setLoading(true);
 
-      const res = await api.get<InvoiceRow[]>('/invoices', {
-        params: {
-          student_id: student.id,
-          _sort: 'issued_at',
-          _order: 'desc',
-        },
+      const res = await api2.get<InvoiceRow[]>('/invoices', {
+        // params: {
+        //   student_id: student.id,
+        //   _sort: 'issued_at',
+        //   _order: 'desc',
+        // },
       });
 
       const mapped: InvoiceItem[] = res.data.map((inv) => ({

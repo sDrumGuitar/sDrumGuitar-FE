@@ -4,13 +4,9 @@ import {
   TextInput,
   Select,
   NumberInput,
-  RadioGroup,
   Textarea,
 } from '@/shared/form/index';
-import {
-  AGE_GROUP_OPTIONS,
-  FAMILY_DISCOUNT_OPTIONS,
-} from '@/constants/student';
+import { AGE_GROUP_OPTIONS } from '@/constants/student';
 import NormalButton from '@/shared/button/NormalButton';
 import { createStudent } from '@/shared/api/students';
 import { useStudentModalStore } from '@/store/studentModalStore';
@@ -21,7 +17,7 @@ interface StudentFormState {
   ageGroup: string;
   phone: string;
   parentPhone: string;
-  familyDiscount: boolean | null;
+  // familyDiscount: boolean | null;
   memo: string;
 }
 
@@ -30,7 +26,7 @@ const INITIAL_FORM: StudentFormState = {
   ageGroup: '',
   phone: '',
   parentPhone: '',
-  familyDiscount: null,
+  // familyDiscount: null,
   memo: '',
 };
 
@@ -65,8 +61,8 @@ function StudentCreateForm({
       form.name.trim() !== '' &&
       form.ageGroup.trim() !== '' &&
       form.phone.trim() !== '' &&
-      form.parentPhone.trim() !== '' &&
-      form.familyDiscount !== null
+      form.parentPhone.trim() !== ''
+      // && form.familyDiscount !== null
     );
   };
 
@@ -85,7 +81,7 @@ function StudentCreateForm({
         age_group: form.ageGroup,
         phone: form.phone,
         parent_phone: form.parentPhone,
-        family_discount: Boolean(form.familyDiscount),
+        // family_discount: Boolean(form.familyDiscount),
         memo: form.memo,
       });
 
@@ -135,7 +131,7 @@ function StudentCreateForm({
         />
       </FormField>
 
-      <FormField label="가족 할인">
+      {/* <FormField label="가족 할인">
         <RadioGroup
           options={FAMILY_DISCOUNT_OPTIONS}
           value={
@@ -145,7 +141,7 @@ function StudentCreateForm({
           }
           onChange={(v) => updateForm('familyDiscount', v === 'true')}
         />
-      </FormField>
+      </FormField> */}
 
       <FormField label="메모">
         <Textarea value={form.memo} onChange={(v) => updateForm('memo', v)} />

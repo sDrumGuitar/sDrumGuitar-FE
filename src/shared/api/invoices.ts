@@ -1,4 +1,4 @@
-import { api } from '@/shared/api/axios';
+import { api, api2 } from '@/shared/api/axios';
 import type { Student } from '@/types/student';
 import type {
   Invoice,
@@ -15,12 +15,12 @@ export const getStudentInvoices = async (
   const student = studentRes.data;
 
   // 2) invoices 필터링 + 최신순 정렬
-  const invoiceRes = await api.get<Invoice[]>('/invoices', {
-    params: {
-      student_id: studentId,
-      _sort: 'issued_at',
-      _order: 'desc',
-    },
+  const invoiceRes = await api2.get<Invoice[]>('/invoices', {
+    // params: {
+    //   student_id: studentId,
+    //   _sort: 'issued_at',
+    //   _order: 'desc',
+    // },
   });
 
   return {
@@ -62,7 +62,7 @@ export const patchInvoice = async (
     };
   }
 
-  const res = await api.patch(`/invoices/${invoiceId}`, {
+  const res = await api2.put(`/invoices/${invoiceId}`, {
     ...payload,
     updated_at: new Date().toISOString(),
   });

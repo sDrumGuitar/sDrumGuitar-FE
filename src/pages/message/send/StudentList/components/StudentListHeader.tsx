@@ -27,13 +27,11 @@ function StudentListHeader({
           <NormalButton
             text="전체 선택"
             onClick={onSelectAll}
-            className="bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:text-gray-900"
             disabled={totalCount === 0}
           />
           <NormalButton
             text="전체 취소"
             onClick={onClearAll}
-            className="bg-black text-gray-700 border border-gray-200 hover:bg-gray-50 hover:text-gray-900"
             disabled={selectedCount === 0}
           />
         </div>

@@ -5,7 +5,7 @@ import { useLessonModalStore } from '@/store/lessonModalStore';
 import type { Lesson } from '@/types/lesson';
 import { useEffect, useState } from 'react';
 import AttendanceButtonList from './AttendanceButtonList';
-import type { CalendarData } from '../../types';
+import type { CalendarData } from '@/types/schedule';
 
 interface LessonListModalProps {
   dataMap: CalendarData;

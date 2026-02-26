@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import type { CalendarDate } from './types';
+import type { CalendarDate } from '@/types/schedule';
 
 export function getMonthDates(year: number, month: number): CalendarDate[] {
   const dates: CalendarDate[] = [];

@@ -1,6 +1,6 @@
 import { useLessonModalStore } from '@/store/lessonModalStore';
-import { WEEKDAY_LABELS } from '../constants';
-import type { CalendarDate, CalendarDay } from '../types';
+import { WEEKDAY_LABELS } from '@/constants/schedule';
+import type { CalendarDate, CalendarDay } from '@/types/schedule';
 import CalendarCell from './CalendarCell/CalendarCell';
 import LessonListModal from './LessonListModal/LessonListModal';
 

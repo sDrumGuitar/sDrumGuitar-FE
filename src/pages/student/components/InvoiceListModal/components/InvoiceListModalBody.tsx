@@ -14,12 +14,15 @@ interface InvoiceListModalBodyProps {
     paid_at: string | null;
   }) => void;
 }
+
+// 청구서 목록을 렌더링하는 모달 본문 컴포넌트
 export default function InvoiceListModalBody({
   invociesList,
   handlePatched,
 }: InvoiceListModalBodyProps) {
   return (
     <div className="max-h-120 overflow-y-auto space-y-4 pr-1">
+      {/* 1. 청구서 카드 목록 */}
       {invociesList.map((invoice) => {
         const invoiceObject = {
           invoiceId: invoice.invoice_id,

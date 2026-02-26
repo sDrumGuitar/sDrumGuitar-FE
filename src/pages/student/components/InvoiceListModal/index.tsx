@@ -12,11 +12,13 @@ import type {
   StudentInvoiceItem,
 } from '@/types/invoice';
 
+// 학생 청구서 목록 모달 컴포넌트
 export default function InvoiceListModal() {
-  const { isOpen, student, close } = useInvoiceModalStore();
-  const [loading, setLoading] = useState(false);
-  const [invociesList, setInvociesList] = useState<StudentInvoiceItem[]>([]);
+  const { isOpen, student, close } = useInvoiceModalStore(); // 모달 상태 및 학생 정보 관리
+  const [loading, setLoading] = useState(false); // 로딩 상태 관리
+  const [invociesList, setInvociesList] = useState<StudentInvoiceItem[]>([]); // 청구서 목록 상태 관리
 
+  // 학생의 청구서 목록을 API에서 불러오는 함수
   const load = async () => {
     if (!student) return;
 
@@ -33,11 +35,13 @@ export default function InvoiceListModal() {
     }
   };
 
+  // 모달이 열릴 때마다 청구서 목록 불러오기
   useEffect(() => {
     if (isOpen) load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
+  // 청구서 정보가 변경되었을 때 목록을 업데이트하는 함수
   const handlePatched = (next: {
     invoice_id: number;
     status: InvoiceStatus;
@@ -58,14 +62,16 @@ export default function InvoiceListModal() {
     );
   };
 
+  // 모달이 열려있지 않거나 학생 정보가 없으면 아무것도 렌더링하지 않음
   if (!isOpen || !student) return null;
 
+  // 모달 렌더링
   return (
     <ModalWrapper onClose={close}>
-      {/* 헤더 */}
+      {/* 1. 헤더 */}
       <InvoiceListModalHeader />
 
-      {/* 본문 */}
+      {/* 2. 본문 */}
       {loading ? (
         <LoadingText>불러오는 중...</LoadingText>
       ) : invociesList.length === 0 ? (

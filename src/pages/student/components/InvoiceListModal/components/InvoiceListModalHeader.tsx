@@ -1,6 +1,7 @@
 import { useInvoiceModalStore } from '@/store/invoiceModalStore';
 import { useMemo } from 'react';
 
+// 학생 청구서 목록 모달의 헤더 컴포넌트
 export default function InvoiceListModalHeader() {
   const { close, student } = useInvoiceModalStore();
 

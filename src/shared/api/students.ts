@@ -66,7 +66,7 @@ export interface CreateStudentPayload {
   age_group: string;
   phone: string;
   parent_phone: string;
-  family_discount: boolean;
+  // family_discount: boolean;
   memo: string;
 }
 

@@ -1,9 +1,12 @@
-import type { InvoiceStatus, PaymentMethod } from '@/types/invoice';
+import type {
+  InvoiceStatus,
+  PaymentMethod,
+  StudentInvoiceItem,
+} from '@/types/invoice';
 import InvoiceCard from '../invoiceCard/InvoiceCard';
-import type { InvoiceItem } from './InvoiceListModal';
 
 interface InvoiceListModalBodyProps {
-  invociesList: InvoiceItem[];
+  invociesList: StudentInvoiceItem[];
   handlePatched: (next: {
     invoice_id: number;
     status: InvoiceStatus;
@@ -20,7 +23,7 @@ export default function InvoiceListModalBody({
       {invociesList.map((invoice) => {
         const invoiceObject = {
           invoiceId: invoice.invoice_id,
-          courseId: invoice.course_id,
+          enrollmentId: invoice.enrollment_id,
           issuedAt: invoice.issued_at,
 
           paidAt: invoice.paid_at,

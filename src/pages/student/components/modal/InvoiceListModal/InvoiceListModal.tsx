@@ -1,83 +1,29 @@
 import { useEffect, useState } from 'react';
 import ModalWrapper from '@/shared/modal/ModalWrapper';
 import { useInvoiceModalStore } from '@/store/invoiceModalStore';
-import { api2 } from '@/shared/api/axios';
+import { getStudentInvoices } from '@/shared/api/invoices';
 import LoadingText from '@/shared/text/LoadingText';
 import EmptyText from '@/shared/text/EmptyText';
 import InvoiceListModalHeader from './InvoiceListModalHeader';
 import InvoiceListModalBody from './InvoiceListModalBody';
-
-type InvoiceStatus = 'paid' | 'unpaid';
-type PaymentMethod = 'card' | 'cash' | null;
-type ClassType = 'DRUM' | 'GUITAR' | 'PIANO' | 'VOCAL';
-
-export type InvoiceItem = {
-  invoice_id: number;
-  course_id: number;
-  issued_at: string;
-
-  paid_at: string | null;
-  status: InvoiceStatus;
-  method: PaymentMethod;
-
-  lesson_count: number;
-  family_discount: boolean;
-  class_type: ClassType;
-  total_amount: number;
-};
-
-// json-server invoices 컬렉션 row (db.json에 맞춰서)
-type InvoiceRow = {
-  id: number | string;
-  course_id: number | string;
-  student_id: number | string;
-  issued_at: string;
-
-  paid_at: string | null;
-  status: InvoiceStatus;
-  method: PaymentMethod;
-
-  lesson_count: number | string;
-  family_discount: boolean;
-  class_type: ClassType;
-  total_amount: number | string;
-};
+import type {
+  InvoiceStatus,
+  PaymentMethod,
+  StudentInvoiceItem,
+} from '@/types/invoice';
 
 export default function InvoiceListModal() {
   const { isOpen, student, close } = useInvoiceModalStore();
   const [loading, setLoading] = useState(false);
-  const [invociesList, setInvociesList] = useState<InvoiceItem[]>([]);
+  const [invociesList, setInvociesList] = useState<StudentInvoiceItem[]>([]);
 
   const load = async () => {
     if (!student) return;
 
     try {
       setLoading(true);
-
-      const res = await api2.get<InvoiceRow[]>('/invoices', {
-        // params: {
-        //   student_id: student.id,
-        //   _sort: 'issued_at',
-        //   _order: 'desc',
-        // },
-      });
-
-      const mapped: InvoiceItem[] = res.data.map((inv) => ({
-        invoice_id: Number(inv.id),
-        course_id: Number(inv.course_id),
-        issued_at: inv.issued_at,
-
-        paid_at: inv.paid_at,
-        status: inv.status,
-        method: inv.method,
-
-        lesson_count: Number(inv.lesson_count),
-        family_discount: Boolean(inv.family_discount),
-        class_type: inv.class_type,
-        total_amount: Number(inv.total_amount),
-      }));
-
-      setInvociesList(mapped);
+      const res = await getStudentInvoices(student.student_id);
+      setInvociesList(res.items);
     } catch (e) {
       console.error(e);
       alert('청구서 정보를 불러오는데 실패했습니다.');

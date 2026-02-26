@@ -15,7 +15,7 @@ type PaymentMethod = 'card' | 'cash' | null;
 interface InvoiceCardProps {
   invoice: {
     invoiceId: number;
-    courseId: number;
+    enrollmentId: number;
     issuedAt: string | number;
 
     paidAt: string | number | null;

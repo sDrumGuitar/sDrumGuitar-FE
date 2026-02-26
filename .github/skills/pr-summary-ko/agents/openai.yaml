@@ -1,0 +1,7 @@
+interface:
+  display_name: "PR Summary (KO)"
+  short_description: "커밋 목록·PR 캡처를 요약해 한국어 PR 본문 생성"
+  default_prompt: "Use $pr-summary-ko to draft a Korean PR summary from the commit list or PR screenshot."
+
+policy:
+  allow_implicit_invocation: true

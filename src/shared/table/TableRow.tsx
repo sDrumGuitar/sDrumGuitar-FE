@@ -2,17 +2,20 @@ interface TableRowProps {
   columns: React.ReactNode[];
   index: number;
   onClick?: (rowIndex: number) => void;
+  className?: string;
 }
 
-function TableRow({ columns, index, onClick }: TableRowProps) {
+function TableRow({ columns, index, onClick, className }: TableRowProps) {
   const isEven = index % 2 === 0;
+  const isClickable = Boolean(onClick);
+  const isSelected = className?.includes('row-selected');
 
   return (
     <tr
       onClick={() => onClick?.(index)}
-      className={`cursor-pointer text-gray-600 hover:text-primary ${
-        isEven ? 'bg-primary-light' : ''
-      }`}
+      className={`text-gray-600 ${
+        isClickable ? 'cursor-pointer hover:text-primary' : ''
+      } ${!isSelected && isEven ? 'bg-gray-50' : ''} ${className ?? ''}`}
     >
       {columns.map((data, idx) => (
         <TD key={idx}>{data}</TD>

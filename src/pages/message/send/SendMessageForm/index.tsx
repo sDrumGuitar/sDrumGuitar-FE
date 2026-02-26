@@ -1,10 +1,32 @@
 import { useState } from 'react';
 import NormalButton from '@/shared/button/NormalButton';
+import { useMessageSendStore } from '@/store/messageSendStore';
+import { getAgeGroupLabel } from '@/utils/getAgeGroupLabel';
 
 function SendMessageForm() {
   const [content, setContent] = useState('');
-  const selectedStudentName = '선택된 학생 없음';
-  const selectedStudentGroup = '구분 없음';
+  const { selectedStudents } = useMessageSendStore();
+  const selectedStudentName =
+    selectedStudents.length === 0
+      ? '선택된 학생 없음'
+      : selectedStudents.length === 1
+        ? selectedStudents[0].name
+        : `${selectedStudents[0].name} 외 ${selectedStudents.length - 1}명`;
+  const selectedStudentGroup =
+    selectedStudents.length === 0
+      ? '구분 없음'
+      : selectedStudents.length === 1
+        ? getAgeGroupLabel(selectedStudents[0].age_group)
+        : '구분 혼합';
+
+  const handleSubmit = (mode: 'send' | 'reserve') => {
+    const payload = {
+      mode,
+      content,
+      students: selectedStudents,
+    };
+    console.log(payload);
+  };
 
   return (
     <div className="w-full">
@@ -34,8 +56,9 @@ function SendMessageForm() {
           <NormalButton
             text="예약하기"
             className="bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900"
+            onClick={() => handleSubmit('reserve')}
           />
-          <NormalButton text="전송하기" />
+          <NormalButton text="전송하기" onClick={() => handleSubmit('send')} />
         </div>
       </div>
     </div>

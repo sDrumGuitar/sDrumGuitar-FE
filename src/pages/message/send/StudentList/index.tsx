@@ -1,11 +1,14 @@
 import { api } from '@/shared/api/axios';
 import TableSection from '@/shared/modal/TableSection';
+import { useMessageSendStore } from '@/store/messageSendStore';
 import type { Student } from '@/types/student';
 import { getAgeGroupLabel } from '@/utils/getAgeGroupLabel';
 import { useEffect, useState } from 'react';
 
 function StudentList() {
   const [students, setStudents] = useState<Student[]>([]);
+  const { toggleStudent, isSelected, selectedStudents } =
+    useMessageSendStore();
 
   useEffect(() => {
     // 학생 데이터 불러오기 (예시)
@@ -34,7 +37,7 @@ function StudentList() {
             </p>
           </div>
           <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
-            총 {students.length}명
+            선택 {selectedStudents.length} / 총 {students.length}명
           </span>
         </div>
         <div className="overflow-x-auto">
@@ -50,6 +53,12 @@ function StudentList() {
                 student?.parent_phone,
               ]);
             }}
+            onRowClick={(student) => toggleStudent(student)}
+            getRowClassName={(student) =>
+              isSelected(student)
+                ? 'row-selected bg-primary/10 text-primary font-semibold'
+                : ''
+            }
           />
         </div>
       </div>

@@ -4,6 +4,7 @@ import type { Student } from '@/types/student';
 interface MessageSendState {
   selectedStudents: Student[];
   toggleStudent: (student: Student) => void;
+  setSelectedStudents: (students: Student[]) => void;
   clearStudents: () => void;
   isSelected: (student: Student) => boolean;
 }
@@ -36,6 +37,10 @@ export const useMessageSendStore = create<MessageSendState>((set, get) => ({
       return {
         selectedStudents: [...state.selectedStudents, student],
       };
+    }),
+  setSelectedStudents: (students) =>
+    set({
+      selectedStudents: students,
     }),
   clearStudents: () =>
     set({

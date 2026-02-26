@@ -23,6 +23,7 @@ interface StudentFormFieldsProps {
   ) => void;
 }
 
+// 학생 폼 필드 컴포넌트 - 학생 상세 보기 및 생성/수정 폼에서 공통으로 사용
 export default function StudentFormFields({
   form,
   disabled = false,
@@ -45,7 +46,9 @@ export default function StudentFormFields({
           options={AGE_GROUP_OPTIONS}
           value={form.ageGroup}
           disabled={disabled}
-          onChange={(v) => onChange('ageGroup', v as StudentFormState['ageGroup'])}
+          onChange={(v) =>
+            onChange('ageGroup', v as StudentFormState['ageGroup'])
+          }
         />
       </FormField>
 

@@ -1,5 +1,5 @@
-import SelectMonthSection from './SelectMonthSection';
-import CarryListSection from './CarryListSection';
+import CarryListSection from './components/CarryListSection';
+import SelectMonthSection from './components/SelectMonthSection';
 import { useScheduleCalendarStore } from '@/store/scheduleCalendarStore';
 
 interface CalendarHeaderProps {

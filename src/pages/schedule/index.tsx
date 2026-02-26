@@ -1,5 +1,5 @@
-import CalendarGrid from './body/CalendarGrid';
-import CalendarHeader from './header/CalendarHeader';
+import CalendarGrid from './body';
+import CalendarHeader from './header';
 import { useScheduleCalendar } from './hooks/useScheduleCalendar';
 
 /**
@@ -15,9 +15,7 @@ function SchedulePage() {
   return (
     <div>
       {/* 캘린더 헤더 (월 이동, 오늘 버튼) */}
-      <CalendarHeader
-        onRefreshLessons={fetchLessons}
-      />
+      <CalendarHeader onRefreshLessons={fetchLessons} />
 
       {/* 캘린더 본문 */}
       <CalendarGrid

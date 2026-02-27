@@ -1,6 +1,6 @@
 import ModalOpenButton from '@/shared/modal/ModalOpenButton';
-import { useMessageTemplateModalStore } from '@/store/messageTemplateModalStore';
-import { useMessageTemplateStore } from '@/store/messageTemplateStore';
+import { useMessageTemplateModalStore } from '@/store/message/messageTemplateModalStore';
+import { useMessageTemplateStore } from '@/store/message/messageTemplateStore';
 import MessageTemplateModal from './components/MessageTemplateModal';
 
 // 문자 템플릿 관리 페이지 컴포넌트

@@ -1,4 +1,4 @@
-import { useMessageTemplateStore } from '@/store/messageTemplateStore';
+import { useMessageTemplateStore } from '@/store/message/messageTemplateStore';
 
 const getIsDirty = (
   mode: 'CREATE' | 'UPDATE',

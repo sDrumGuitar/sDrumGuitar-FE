@@ -1,5 +1,5 @@
 import ModalWrapper from '@/shared/modal/ModalWrapper';
-import { useMessageModalStore } from '@/store/messageModalStore';
+import { useMessageModalStore } from '@/store/message/messageModalStore';
 import type { Message } from '@/types/message';
 
 interface MessageDetailModalProps {

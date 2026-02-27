@@ -2,7 +2,7 @@ import { MESSAGE_LIST_HEADER } from '@/constants/message';
 import { MockMessage } from '@/mock/message';
 import NormalButton from '@/shared/button/NormalButton';
 import TableSection from '@/shared/modal/TableSection';
-import { useMessageModalStore } from '@/store/messageModalStore';
+import { useMessageModalStore } from '@/store/message/messageModalStore';
 import type { Message } from '@/types/message';
 import { getMessageStatus } from '@/utils/message/getMessageStatus';
 import { useState } from 'react';

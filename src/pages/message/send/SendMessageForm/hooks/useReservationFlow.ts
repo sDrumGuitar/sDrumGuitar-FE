@@ -1,5 +1,5 @@
-import { useDateModalStore } from '@/store/dateModalStore';
-import { useTimeModalStore } from '@/store/timeModalStore';
+import { useDateModalStore } from '@/store/date/dateModalStore';
+import { useTimeModalStore } from '@/store/date/timeModalStore';
 import type { Student } from '@/types/student';
 
 interface ReservationPayloadInput {

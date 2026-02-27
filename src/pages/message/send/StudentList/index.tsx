@@ -1,4 +1,4 @@
-import { useMessageSendStore } from '@/store/messageSendStore';
+import { useMessageSendStore } from '@/store/message/messageSendStore';
 import StudentListHeader from './components/StudentListHeader';
 import StudentListTable from './components/StudentListTable';
 import { useStudents } from './hooks/useStudents';

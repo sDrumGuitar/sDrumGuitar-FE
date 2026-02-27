@@ -1,4 +1,4 @@
-import { useMessageTemplateStore } from '@/store/messageTemplateStore';
+import { useMessageTemplateStore } from '@/store/message/messageTemplateStore';
 
 const getCanSubmit = (form: { title: string; content: string }) =>
   Boolean(form.title.trim() && form.content.trim());

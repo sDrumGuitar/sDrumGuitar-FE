@@ -32,6 +32,7 @@ export default function AttendanceButtonList({
     handleSaveStatus,
     handleDateSelect,
     handleTimeSave,
+    isSubmitting,
   } = useAttendanceFlow({
     attendanceStatus,
     lessonId,
@@ -67,6 +68,7 @@ export default function AttendanceButtonList({
           <AttendanceSaveButton
             onClick={handleSaveStatus}
             disabled={savedStatus === status}
+            isLoading={isSubmitting}
           />
         )}
 

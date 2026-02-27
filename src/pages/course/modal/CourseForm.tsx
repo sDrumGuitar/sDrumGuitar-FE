@@ -25,6 +25,7 @@ import {
   PAYMENT_METHOD_OPTIONS,
   PAYMENT_STATUS_OPTIONS,
 } from '@/constants/invoice';
+import { useToastStore } from '@/store/feedback/toastStore';
 
 interface CourseFormState {
   student: {
@@ -87,12 +88,14 @@ export default function CourseForm({
   onSuccess,
 }: CourseFormProps) {
   const { mode, selectedCourse, setMode, close } = useCourseModalStore();
+  const { addToast } = useToastStore();
   const initialState =
     (mode === 'DETAIL' || mode === 'UPDATE') && selectedCourse
       ? mapCourseToForm(selectedCourse)
       : INITIAL_FORM;
   const [form, setForm] = useState<CourseFormState>(initialState);
   const [initialForm] = useState<CourseFormState>(initialState);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const updateForm = <K extends keyof CourseFormState>(
     key: K,
@@ -129,10 +132,11 @@ export default function CourseForm({
 
   const handleSubmit = async () => {
     if (!canSubmit) {
-      alert('필수 항목을 모두 입력해주세요.');
+      addToast('error', '필수 항목을 모두 입력해주세요.');
       return;
     }
 
+    setIsSubmitting(true);
     try {
       const formatDateOnly = (value: string) => {
         const parsed = new Date(value);
@@ -176,8 +180,10 @@ export default function CourseForm({
 
       if (mode === 'CREATE') {
         await createCourse(payload);
+        addToast('success', '수강 정보가 성공적으로 생성되었습니다.');
       } else if (mode === 'UPDATE' && selectedCourse) {
         await updateCourse(selectedCourse.id, payload);
+        addToast('success', '수강 정보가 성공적으로 수정되었습니다.');
       }
 
       setForm(INITIAL_FORM);
@@ -186,7 +192,9 @@ export default function CourseForm({
       close();
     } catch (error) {
       console.error('수강 정보 저장 실패', error);
-      alert('수강 정보 저장에 실패했습니다.');
+      addToast('error', '수강 정보 저장에 실패했습니다.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -333,6 +341,7 @@ export default function CourseForm({
             onClick={handleSubmit}
             text="저장"
             disabled={!canSubmit || !isDirty}
+            isLoading={isSubmitting}
           />
         )}
       </div>

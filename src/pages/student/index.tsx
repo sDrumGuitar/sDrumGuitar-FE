@@ -5,7 +5,7 @@ import type { Student } from '@/types/student';
 import { useStudentModalStore } from '@/store/studentModalStore';
 import StudentModal from './components/StudentDetailModal';
 import ModalOpenButton from '@/shared/modal/ModalOpenButton';
-import { getAgeGroupLabel } from '@/utils/getAgeGroupLabel';
+import { getAgeGroupLabel } from '@/utils/student/getAgeGroupLabel';
 import InvoiceListModal from './components/InvoiceListModal';
 
 // 학생 관리 페이지 컴포넌트

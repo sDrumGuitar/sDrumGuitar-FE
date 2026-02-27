@@ -1,6 +1,6 @@
 import TableSection from '@/shared/modal/TableSection';
 import type { Student } from '@/types/student';
-import { getAgeGroupLabel } from '@/utils/getAgeGroupLabel';
+import { getAgeGroupLabel } from '@/utils/student/getAgeGroupLabel';
 
 interface StudentListTableProps {
   students: Student[];

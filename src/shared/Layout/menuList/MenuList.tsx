@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
-import { MENU_LIST } from './menu.constants';
-import { ParentMenu, ChildMenu } from './MenuItem';
+import { MENU_LIST } from '@/constants/menu';
+import { ChildMenu, ParentMenu } from './MenuItem';
 
 export const MenuList = () => {
   const { pathname } = useLocation();

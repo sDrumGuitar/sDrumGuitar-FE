@@ -2,8 +2,8 @@ import type { Student } from '@/types/student';
 import { useEffect, useState } from 'react';
 import NormalButton from '@/shared/button/NormalButton';
 import { updateStudent } from '@/shared/api/students';
-import { useStudentModalStore } from '@/store/studentModalStore';
-import { useInvoiceModalStore } from '@/store/invoiceModalStore';
+import { useStudentModalStore } from '@/store/student/studentModalStore';
+import { useInvoiceModalStore } from '@/store/invoice/invoiceModalStore';
 import StudentFormFields from './shared/StudentFormFields';
 import {
   type StudentFormState,

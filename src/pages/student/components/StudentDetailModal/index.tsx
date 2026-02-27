@@ -1,4 +1,4 @@
-import { useStudentModalStore } from '@/store/studentModalStore';
+import { useStudentModalStore } from '@/store/student/studentModalStore';
 import ModalWrapper from '@/shared/modal/ModalWrapper';
 import StudentCreateForm from './components/StudentCreateForm';
 import StudentDetailView from './components/StudentDetailView';

@@ -1,4 +1,4 @@
-import { useInvoiceModalStore } from '@/store/invoiceModalStore';
+import { useInvoiceModalStore } from '@/store/invoice/invoiceModalStore';
 import { useMemo } from 'react';
 
 // 학생 청구서 목록 모달의 헤더 컴포넌트

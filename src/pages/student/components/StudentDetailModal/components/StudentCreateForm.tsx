@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import NormalButton from '@/shared/button/NormalButton';
 import { createStudent } from '@/shared/api/students';
-import { useStudentModalStore } from '@/store/studentModalStore';
+import { useStudentModalStore } from '@/store/student/studentModalStore';
 import StudentFormFields from './shared/StudentFormFields';
 import {
   INITIAL_FORM,

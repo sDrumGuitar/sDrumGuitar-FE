@@ -12,7 +12,7 @@ export const useSendAction = ({ content, students }: SendActionInput) => {
       content,
       students,
     };
-    console.log(payload);
+    return payload;
   };
 
   return { handleSend };

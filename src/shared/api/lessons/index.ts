@@ -50,7 +50,6 @@ export const getRollOverLessons =
     try {
       const res =
         await api.get<GetRolloverLessonsResponse>('/lessons/rollover');
-      console.log('Roll-over lessons fetched:', res.data);
       return res.data;
     } catch (error) {
       console.error('Failed to fetch rolled-over lessons:', error);

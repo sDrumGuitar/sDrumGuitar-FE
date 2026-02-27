@@ -21,7 +21,10 @@ import { useCourseModalStore } from '@/store/course/courseModalStore';
 import { useDateModalStore } from '@/store/date/dateModalStore';
 import CalendarModal from '@/shared/form/CalendarModal';
 import { formatToKoreanDate } from '@/utils/date/formatKoreanDate';
-import { PAYMENT_METHOD_OPTIONS, PAYMENT_STATUS_OPTIONS } from '@/constants/invoice';
+import {
+  PAYMENT_METHOD_OPTIONS,
+  PAYMENT_STATUS_OPTIONS,
+} from '@/constants/invoice';
 
 interface CourseFormState {
   student: {
@@ -170,7 +173,6 @@ export default function CourseForm({
           paid_at: invoicePaidAt,
         },
       };
-      console.log(payload);
 
       if (mode === 'CREATE') {
         await createCourse(payload);

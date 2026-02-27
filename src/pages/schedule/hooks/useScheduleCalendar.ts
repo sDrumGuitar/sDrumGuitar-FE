@@ -43,7 +43,6 @@ export const useScheduleCalendar = () => {
       year: currentYear,
       month: currentMonth + 1,
     });
-    console.log(response);
 
     const data: CalendarData = response.days.reduce((acc, day) => {
       acc[day.date] = {

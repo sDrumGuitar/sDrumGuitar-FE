@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import ModalWrapper from '@/shared/modal/ModalWrapper';
-import { useInvoiceModalStore } from '@/store/invoiceModalStore';
+import { useInvoiceModalStore } from '@/store/invoice/invoiceModalStore';
 import { getStudentInvoices } from '@/shared/api/invoices';
 import LoadingText from '@/shared/text/LoadingText';
 import EmptyText from '@/shared/text/EmptyText';

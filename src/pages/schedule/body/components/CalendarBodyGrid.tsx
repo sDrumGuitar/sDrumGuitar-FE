@@ -1,5 +1,5 @@
 import type { CalendarDay } from '@/types/schedule';
-import { useScheduleCalendarStore } from '@/store/scheduleCalendarStore';
+import { useScheduleCalendarStore } from '@/store/schedule/scheduleCalendarStore';
 import { generateCalendarDates } from '@/utils/date/generateCalendarDates';
 import CalendarCell from './CalendarCell';
 

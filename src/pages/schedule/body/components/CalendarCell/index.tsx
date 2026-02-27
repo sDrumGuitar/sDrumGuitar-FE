@@ -1,8 +1,8 @@
-import { useLessonModalStore } from '@/store/lessonModalStore';
 import { DateLabel } from './components/DateLabel';
 import LessonBarList from './components/LessonBarList';
 import type { Lesson } from '@/types/lesson';
 import { MAX_VISIBLE_LESSONS } from '@/constants/lesson';
+import { useLessonModalStore } from '@/store/schedule/lessonModalStore';
 
 interface CalendarCellProps {
   date: string;

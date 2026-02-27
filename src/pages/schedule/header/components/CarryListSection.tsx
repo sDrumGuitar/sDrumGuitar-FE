@@ -1,5 +1,5 @@
 import NormalButton from '@/shared/button/NormalButton';
-import { useCarryModalStore } from '@/store/carryModalStore';
+import { useCarryModalStore } from '@/store/schedule/carryModalStore';
 import CarryListModal from './CarryListSection/components/CarryListModal';
 
 interface CarryListSectionProps {

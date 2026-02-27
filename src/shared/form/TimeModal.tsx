@@ -1,4 +1,6 @@
-import { useTimeModalStore } from '@/store/timeModalStore';
+import { useTimeModalStore } from '@/store/date/timeModalStore';
+import { useToastStore } from '@/store/feedback/toastStore';
+import { useState } from 'react';
 import ModalWrapper from '../modal/ModalWrapper';
 import NormalButton from '../button/NormalButton';
 
@@ -9,6 +11,8 @@ interface TimeModalProps {
 function TimeModal({ onSave }: TimeModalProps) {
   const { close, selectedHour, selectedMin, setSelectedHour, setSelectedMin } =
     useTimeModalStore();
+  const { addToast } = useToastStore();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const baseButtonStyle = 'w-10 h-10 rounded-4xl transition-colors';
 
@@ -19,15 +23,18 @@ function TimeModal({ onSave }: TimeModalProps) {
 
   const handleSave = async () => {
     if (selectedHour === null || selectedMin === null) {
-      alert('값을 모두 선택해주세요,.');
+      addToast('warning', '시간을 모두 선택해주세요.');
       return;
     }
+    setIsSubmitting(true);
     try {
       await onSave?.(selectedHour, selectedMin);
       close();
     } catch (error) {
       console.error('Failed to save time selection:', error);
-      alert('등록에 실패했습니다.');
+      addToast('error', '저장에 실패했습니다.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
   return (
@@ -84,7 +91,11 @@ function TimeModal({ onSave }: TimeModalProps) {
 
           {/* <span>{formatToKoreanDate(originSelectedDate?.toString() || '')}</span> */}
         </p>
-        <NormalButton text="저장" onClick={handleSave} />
+        <NormalButton
+          text="저장"
+          onClick={handleSave}
+          isLoading={isSubmitting}
+        />
       </div>
     </ModalWrapper>
   );

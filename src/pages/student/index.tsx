@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import TableSection from '../../shared/modal/TableSection';
 import { getStudents } from '@/shared/api/students';
 import type { Student } from '@/types/student';
-import { useStudentModalStore } from '@/store/studentModalStore';
+import { useStudentModalStore } from '@/store/student/studentModalStore';
 import StudentModal from './components/StudentDetailModal';
 import ModalOpenButton from '@/shared/modal/ModalOpenButton';
 import { getAgeGroupLabel } from '@/utils/student/getAgeGroupLabel';

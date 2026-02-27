@@ -1,4 +1,4 @@
-import { useScheduleCalendarStore } from '@/store/scheduleCalendarStore';
+import { useScheduleCalendarStore } from '@/store/schedule/scheduleCalendarStore';
 import SelectMonth from './components/SelectMonth';
 import TodayButton from './components/TodayButton';
 

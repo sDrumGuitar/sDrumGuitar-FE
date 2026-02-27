@@ -1,3 +1,4 @@
+// 수강 목록 헤더
 export const LessonListHeader = [
   '이름',
   '클래스',
@@ -6,6 +7,7 @@ export const LessonListHeader = [
   '출결',
 ];
 
+// 출결 색상
 export const ATTENDANCE_COLORS = new Map([
   ['attended', '#38A169'],
   ['absent', '#F76868'],
@@ -13,6 +15,7 @@ export const ATTENDANCE_COLORS = new Map([
   ['rollover', '#805AD5'],
 ]);
 
+// 이월 수업 목록 헤더
 export const CARRY_LESSON_LIST_HEADER = [
   '이름',
   '클래스',

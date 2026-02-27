@@ -1,6 +1,7 @@
 import NormalButton from '@/shared/button/NormalButton';
-import { useCarryModalStore } from '@/store/carryModalStore';
+
 import CarryListModal from './components/CarryListModal';
+import { useCarryModalStore } from '@/store/schedule/carryModalStore';
 
 interface CarryListSectionProps {
   onRefreshLessons: () => Promise<void>;

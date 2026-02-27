@@ -1,11 +1,11 @@
 import CalendarModal from '@/shared/form/CalendarModal';
 import TimeModal from '@/shared/form/TimeModal';
 import ModalWrapper from '@/shared/modal/ModalWrapper';
-import { useCarryModalStore } from '@/store/carryModalStore';
 import CarryListModalHeader from './components/CarryListModalHeader';
 import CarryListTable from './components/CarryListTable';
 import { useCarryList } from './hooks/useCarryList';
 import { useCarryRegister } from './hooks/useCarryRegister';
+import { useCarryModalStore } from '@/store/schedule/carryModalStore';
 
 interface CarryListModalProps {
   onRefreshLessons: () => Promise<void>;

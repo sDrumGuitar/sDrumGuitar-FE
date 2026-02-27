@@ -1,5 +1,5 @@
 import ModalWrapper from '@/shared/modal/ModalWrapper';
-import { useMessageTemplateModalStore } from '@/store/messageTemplateModalStore';
+import { useMessageTemplateModalStore } from '@/store/message/messageTemplateModalStore';
 import MessageTemplateForm from '@/pages/message/template/components/MessageTemplateModal/components/MessageTemplateForm';
 import MessageTemplateHeader from '@/pages/message/template/components/MessageTemplateModal/components/MessageTemplateHeader';
 import MessageTemplateList from '@/pages/message/template/components/MessageTemplateModal/components/MessageTemplateList';

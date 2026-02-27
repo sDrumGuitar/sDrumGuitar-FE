@@ -1,4 +1,4 @@
-import { useLessonModalStore } from '@/store/lessonModalStore';
+import { useLessonModalStore } from '@/store/schedule/lessonModalStore';
 
 // 회차 정보 모달의 헤더 컴포넌트
 function LessonListModalHeader() {

@@ -1,7 +1,7 @@
 import FormField from '@/shared/form/FormField';
 import Select from '@/shared/form/Select';
 import TextInput from '@/shared/form/TextInput';
-import { METHOD_OPTIONS, STATUS_OPTIONS } from '@/constants/invoice';
+import { PAYMENT_METHOD_OPTIONS, PAYMENT_STATUS_OPTIONS } from '@/constants/invoice';
 import type { InvoiceStatus, PaymentMethod } from '../types';
 
 interface InvoiceEditFormProps {
@@ -31,7 +31,7 @@ export default function InvoiceEditForm({
         {/* 1-1. 납부 상태 */}
         <FormField label="납부 상태">
           <Select
-            options={STATUS_OPTIONS}
+            options={PAYMENT_STATUS_OPTIONS}
             value={status}
             onChange={(v) => {
               const next = v as InvoiceStatus;
@@ -47,7 +47,7 @@ export default function InvoiceEditForm({
         {/* 1-2. 납부 방법 */}
         <FormField label="납부 방법">
           <Select
-            options={METHOD_OPTIONS}
+            options={PAYMENT_METHOD_OPTIONS}
             value={method ?? ''}
             disabled={status === 'unpaid'}
             onChange={(v) => setMethod(v ? (v as PaymentMethod) : null)}

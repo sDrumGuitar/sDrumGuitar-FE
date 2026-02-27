@@ -23,8 +23,17 @@
   background-color: #fff;
 }
 
-/* 모든 요소의 기본 여백 제거 → 브라우저별 기본 margin/padding 차이를 제거하여 레이아웃을 예측 가능하게 만듦 */
-* {
-  /* padding: 0; */
-  /* margin: 0; */
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out forwards;
 }

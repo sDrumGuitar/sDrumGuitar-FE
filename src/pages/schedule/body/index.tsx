@@ -1,4 +1,4 @@
-import { useLessonModalStore } from '@/store/lessonModalStore';
+import { useLessonModalStore } from '@/store/schedule/lessonModalStore';
 import type { CalendarDay } from '@/types/schedule';
 import CalendarWeekHeader from './components/CalendarWeekHeader';
 import CalendarBodyGrid from './components/CalendarBodyGrid';

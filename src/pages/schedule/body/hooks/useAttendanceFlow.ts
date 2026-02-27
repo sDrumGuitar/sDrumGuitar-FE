@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useDateModalStore } from '@/store/dateModalStore';
-import { useTimeModalStore } from '@/store/timeModalStore';
+import { useDateModalStore } from '@/store/date/dateModalStore';
+import { useTimeModalStore } from '@/store/date/timeModalStore';
 import {
   updateLessonAttendance,
   updateLessonAttendanceMakeUp,
 } from '@/shared/api/lessons';
+import { useToastStore } from '@/store/feedback/toastStore';
 
 interface UseAttendanceFlowParams {
   attendanceStatus: string | null;
@@ -35,6 +36,8 @@ export function useAttendanceFlow({
     setSelectedDate,
   } = useDateModalStore();
   const { isOpen: isOpenTime, open: openTime } = useTimeModalStore();
+  const { addToast } = useToastStore();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setStatus(attendanceStatus);
@@ -62,9 +65,12 @@ export function useAttendanceFlow({
       });
       setSavedStatus(status);
       onAttendanceUpdated(lessonId, status);
-      alert('출결 상태가 저장되었습니다.');
+      addToast('success', '출결 상태가 성공적으로 저장되었습니다.');
     } catch (error) {
       console.error('Failed to update attendance:', error);
+      addToast('error', '출결 상태 저장에 실패했습니다.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -78,13 +84,13 @@ export function useAttendanceFlow({
   const handleTimeSave = async (hour: string, min: string) => {
     if (!lessonId) return;
     if (!selectedDate) {
-      alert('날짜를 먼저 선택해주세요.');
+      addToast('warning', '날짜를 먼저 선택해주세요.');
       return;
     }
 
     const startDate = new Date(selectedDate);
     if (Number.isNaN(startDate.getTime())) {
-      alert('선택한 날짜 형식이 올바르지 않습니다.');
+      addToast('error', '선택한 날짜 형식이 올바르지 않습니다.');
       return;
     }
 
@@ -101,6 +107,7 @@ export function useAttendanceFlow({
       ),
     );
 
+    setIsSubmitting(true);
     try {
       await updateLessonAttendanceMakeUp(lessonId, {
         makeup_start_at: utcDate.toISOString(),
@@ -109,10 +116,12 @@ export function useAttendanceFlow({
       setSavedStatus('makeup');
       onAttendanceUpdated(lessonId, 'makeup');
       await onRefreshLessons?.();
-      alert('보강 일정이 저장되었습니다.');
+      addToast('success', '보강 일정이 성공적으로 저장되었습니다.');
     } catch (error) {
       console.error('Failed to update makeup schedule:', error);
-      alert('보강 일정 저장에 실패했습니다.');
+      addToast('error', '보강 일정 저장에 실패했습니다.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -122,6 +131,7 @@ export function useAttendanceFlow({
     setStatus,
     isOpenDate,
     isOpenTime,
+    isSubmitting,
     handleSaveStatus,
     handleDateSelect,
     handleTimeSave,

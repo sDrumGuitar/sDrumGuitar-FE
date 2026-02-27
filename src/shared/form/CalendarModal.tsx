@@ -3,7 +3,7 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './CalendarModal.css';
 import { formatToKoreanDate } from '@/utils/date/formatKoreanDate';
-import { useDateModalStore } from '@/store/dateModalStore';
+import { useDateModalStore } from '@/store/date/dateModalStore';
 import ModalWrapper from '../modal/ModalWrapper';
 import NormalButton from '../button/NormalButton';
 

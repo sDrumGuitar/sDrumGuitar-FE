@@ -1,4 +1,4 @@
-import { useTimeModalStore } from '@/store/timeModalStore';
+import { useTimeModalStore } from '@/store/date/timeModalStore';
 import ModalWrapper from '../modal/ModalWrapper';
 import NormalButton from '../button/NormalButton';
 

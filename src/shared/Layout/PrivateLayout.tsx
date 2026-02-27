@@ -1,4 +1,4 @@
-import ToastContainer from '../feedback/ToastContainer';
+import ToastContainer from '../toast/ToastContainer';
 import OutletLayout from './OutletLayout';
 import PrivateSidebar from './PrivateSidebar';
 

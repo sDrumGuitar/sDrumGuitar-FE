@@ -1,3 +1,5 @@
+import TD from "./TD";
+
 interface TableRowProps {
   columns: React.ReactNode[];
   index: number;
@@ -5,6 +7,7 @@ interface TableRowProps {
   className?: string;
 }
 
+// 테이블 로우 컴포넌트
 function TableRow({ columns, index, onClick, className }: TableRowProps) {
   const isEven = index % 2 === 0;
   const isClickable = Boolean(onClick);
@@ -24,12 +27,6 @@ function TableRow({ columns, index, onClick, className }: TableRowProps) {
   );
 }
 
-interface TDProps {
-  children: React.ReactNode;
-}
 
-const TD = ({ children }: TDProps) => {
-  return <td className="text-center py-2">{children}</td>;
-};
 
 export default TableRow;

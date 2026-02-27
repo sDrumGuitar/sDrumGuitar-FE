@@ -8,12 +8,16 @@ interface TableProps {
   rowClassName?: (rowIndex: number) => string;
 }
 
+// 테이블 컴포넌트
 function Table({ headers, rows, onRowClick, rowClassName }: TableProps) {
   return (
     <table className="w-full">
+      {/* 1. 테이블 헤더 */}
       <thead>
         <TableHeader headers={headers} />
       </thead>
+
+      {/* 2. 테이블 바디 */}
       <tbody>
         {rows.map((row, index) => (
           <TableRow

@@ -19,8 +19,8 @@ import NormalButton from '@/shared/button/NormalButton';
 import StudentSearchInput from './StudentSearchInput';
 import { createCourse, updateCourse } from '@/shared/api/courses';
 import { getStudent } from '@/shared/api/students';
-import { useCourseModalStore } from '@/store/courseModalStore';
-import { useDateModalStore } from '@/store/dateModalStore';
+import { useCourseModalStore } from '@/store/course/courseModalStore';
+import { useDateModalStore } from '@/store/date/dateModalStore';
 import CalendarModal from '@/shared/form/CalendarModal';
 import { formatToKoreanDate } from '@/utils/date/formatKoreanDate';
 

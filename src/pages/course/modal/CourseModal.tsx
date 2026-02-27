@@ -1,4 +1,4 @@
-import { useCourseModalStore } from '@/store/courseModalStore';
+import { useCourseModalStore } from '@/store/course/courseModalStore';
 import ModalWrapper from '@/shared/modal/ModalWrapper';
 import CourseForm from './CourseForm';
 import { useState } from 'react';

@@ -1,5 +1,6 @@
 import ModalOpenButton from '@/shared/modal/ModalOpenButton';
-import { useCourseModalStore } from '@/store/courseModalStore';
+import { useCourseModalStore } from '@/store/course/courseModalStore';
+
 import TableSection from '../../shared/modal/TableSection';
 import type { Course } from '@/types/course';
 import { useEffect, useState } from 'react';

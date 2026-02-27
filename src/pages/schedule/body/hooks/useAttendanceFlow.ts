@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useDateModalStore } from '@/store/dateModalStore';
-import { useTimeModalStore } from '@/store/timeModalStore';
+import { useDateModalStore } from '@/store/date/dateModalStore';
+import { useTimeModalStore } from '@/store/date/timeModalStore';
+import { useLessonModalStore } from '@/store/schedule/lessonModalStore';
 import {
   updateLessonAttendance,
   updateLessonAttendanceMakeUp,

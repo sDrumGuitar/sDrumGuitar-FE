@@ -1,7 +1,8 @@
 import { LessonListHeader } from '@/constants/lesson';
 import ModalWrapper from '@/shared/modal/ModalWrapper';
 import TableSection from '@/shared/modal/TableSection';
-import { useLessonModalStore } from '@/store/lessonModalStore';
+
+import { useLessonModalStore } from '@/store/schedule/lessonModalStore';
 import type { Lesson } from '@/types/lesson';
 import { useEffect, useState } from 'react';
 import AttendanceButtonList from './components/AttendanceButtonList';

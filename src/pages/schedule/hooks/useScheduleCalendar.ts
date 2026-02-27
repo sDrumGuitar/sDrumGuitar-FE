@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import type { CalendarData } from '@/types/schedule';
 import { getLessons } from '@/shared/api/lessons';
 import { getClassTypeLabel } from '@/utils/course/getClassTypeLabel';
-import { useScheduleCalendarStore } from '@/store/scheduleCalendarStore';
+import { useScheduleCalendarStore } from '@/store/schedule/scheduleCalendarStore';
 
 /*
  * 캘린더 데이터를 관리하는 커스텀 훅

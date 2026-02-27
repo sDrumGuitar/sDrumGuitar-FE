@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { createLessonRollover } from '@/shared/api/lessons';
-import { useDateModalStore } from '@/store/dateModalStore';
-import { useTimeModalStore } from '@/store/timeModalStore';
+import { useDateModalStore } from '@/store/date/dateModalStore';
+import { useTimeModalStore } from '@/store/date/timeModalStore';
 
 interface UseCarryRegisterOptions {
   onRefreshLessons: () => Promise<void>;

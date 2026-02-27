@@ -5,9 +5,9 @@ import type { Course } from '@/types/course';
 import { useEffect, useState } from 'react';
 
 import CourseModal from './modal/CourseModal';
-import { getWeekdayLabel } from '@/utils/getWeekdayLabel';
+import { getWeekdayLabel } from '@/utils/date/getWeekdayLabel';
 import { formatToKoreanDate } from '@/utils/date/formatKoreanDate';
-import { getClassTypeLabel } from '@/utils/getClassTypeLabel';
+import { getClassTypeLabel } from '@/utils/course/getClassTypeLabel';
 import { getCourses } from '@/shared/api/courses';
 
 function CoursePage() {

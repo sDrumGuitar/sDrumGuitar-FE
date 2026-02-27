@@ -10,7 +10,7 @@ import {
   AGE_GROUP_OPTIONS,
   FAMILY_DISCOUNT_OPTIONS,
 } from '@/constants/student';
-import { formatPhoneNumber } from '@/shared/utils/phone';
+import { formatPhoneNumber } from '@/utils/phone';
 import type { StudentFormState } from './studentFormTypes';
 
 interface StudentFormFieldsProps {

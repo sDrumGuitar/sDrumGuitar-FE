@@ -1,6 +1,6 @@
 import type { CalendarDay } from '@/types/schedule';
 import { useScheduleCalendarStore } from '@/store/scheduleCalendarStore';
-import { getMonthDates } from '@/utils/getMonthDates';
+import { generateCalendarDates } from '@/utils/date/generateCalendarDates';
 import CalendarCell from './CalendarCell';
 
 interface CalendarBodyGridProps {
@@ -11,7 +11,7 @@ interface CalendarBodyGridProps {
 const CalendarBodyGrid = ({ dataMap }: CalendarBodyGridProps) => {
   // 현재 년도와 월을 스토어에서 가져와 해당 월의 날짜 정보를 계산
   const { currentYear, currentMonth } = useScheduleCalendarStore();
-  const dates = getMonthDates(currentYear, currentMonth);
+  const dates = generateCalendarDates(currentYear, currentMonth);
 
   return (
     <div className="grid grid-cols-7 border-l">

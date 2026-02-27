@@ -82,7 +82,7 @@ function TimeModal({ onSave }: TimeModalProps) {
             {selectedMin && selectedMin}분
           </span>
 
-          {/* <span>{formatKoreanDate(originSelectedDate?.toString() || '')}</span> */}
+          {/* <span>{formatToKoreanDate(originSelectedDate?.toString() || '')}</span> */}
         </p>
         <NormalButton text="저장" onClick={handleSave} />
       </div>

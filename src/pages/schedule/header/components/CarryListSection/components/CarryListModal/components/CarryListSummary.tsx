@@ -1,4 +1,4 @@
-import { formatKoreanDate } from '@/utils/formDate';
+import { formatToKoreanDate } from '@/utils/date/formatKoreanDate';
 
 interface CarryListSummaryProps {
   selectedDate: string | null;
@@ -14,7 +14,7 @@ const CarryListSummary = ({
 }: CarryListSummaryProps) => {
   return (
     <>
-      <p>선택한 날짜 : {selectedDate ? formatKoreanDate(selectedDate) : '-'}</p>
+      <p>선택한 날짜 : {selectedDate ? formatToKoreanDate(selectedDate) : '-'}</p>
       <p>
         선택한 시간/분 :{' '}
         {selectedHour !== null && selectedMin !== null

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { CalendarData } from '@/types/schedule';
 import { getLessons } from '@/shared/api/lessons';
-import { getClassTypeLabel } from '@/utils/getClassTypeLabel';
+import { getClassTypeLabel } from '@/utils/course/getClassTypeLabel';
 import { useScheduleCalendarStore } from '@/store/scheduleCalendarStore';
 
 /*

@@ -22,7 +22,7 @@ import { getStudent } from '@/shared/api/students';
 import { useCourseModalStore } from '@/store/courseModalStore';
 import { useDateModalStore } from '@/store/dateModalStore';
 import CalendarModal from '@/shared/form/CalendarModal';
-import { formatKoreanDate } from '@/utils/formDate';
+import { formatToKoreanDate } from '@/utils/date/formatKoreanDate';
 
 interface CourseFormState {
   student: {
@@ -234,7 +234,7 @@ export default function CourseForm({
         >
           <p>
             {form.start_date
-              ? formatKoreanDate(form.start_date)
+              ? formatToKoreanDate(form.start_date)
               : '날짜를 선택해주세요.'}
           </p>
           <button

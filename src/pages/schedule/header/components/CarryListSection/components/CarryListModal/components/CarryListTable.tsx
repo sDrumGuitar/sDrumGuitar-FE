@@ -1,7 +1,7 @@
 import NormalButton from '@/shared/button/NormalButton';
 import TableSection from '@/shared/modal/TableSection';
 import { CARRY_LESSON_LIST_HEADER } from '@/constants/lesson';
-import { formatKoreanDate } from '@/utils/formDate';
+import { formatToKoreanDate } from '@/utils/date/formatKoreanDate';
 import type { LessonItem } from '@/shared/api/lessons';
 
 interface CarryListTableProps {
@@ -20,7 +20,7 @@ const CarryListTable = ({ lessons, onRegister }: CarryListTableProps) => {
         return lessons.map((lesson) => [
           lesson.name,
           lesson.class_type,
-          formatKoreanDate(lesson.start_at),
+          formatToKoreanDate(lesson.start_at),
           <NormalButton
             text="등록"
             onClick={() => onRegister(lesson.lesson_id)}

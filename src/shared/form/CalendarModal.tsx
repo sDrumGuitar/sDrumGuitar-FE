@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './CalendarModal.css';
-import { formatKoreanDate } from '@/utils/formDate';
+import { formatToKoreanDate } from '@/utils/date/formatKoreanDate';
 import { useDateModalStore } from '@/store/dateModalStore';
 import ModalWrapper from '../modal/ModalWrapper';
 import NormalButton from '../button/NormalButton';
@@ -47,7 +47,7 @@ function CalendarModal({ onSelect }: CalendarModalProps) {
         <p>
           <span>선택된 날짜 : </span>
 
-          <span>{formatKoreanDate(originSelectedDate?.toString() || '')}</span>
+          <span>{formatToKoreanDate(originSelectedDate?.toString() || '')}</span>
         </p>
         <NormalButton onClick={choiceDate} text="저장" />
       </div>

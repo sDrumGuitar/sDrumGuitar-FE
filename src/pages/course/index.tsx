@@ -5,9 +5,9 @@ import type { Course } from '@/types/course';
 import { useEffect, useState } from 'react';
 
 import CourseModal from './modal/CourseModal';
-import { getWeekdayLabel } from '@/utils/getWeekdayLabel';
-import { formatKoreanDate } from '@/utils/formDate';
-import { getClassTypeLabel } from '@/utils/getClassTypeLabel';
+import { getWeekdayLabel } from '@/utils/date/getWeekdayLabel';
+import { formatToKoreanDate } from '@/utils/date/formatKoreanDate';
+import { getClassTypeLabel } from '@/utils/course/getClassTypeLabel';
 import { getCourses } from '@/shared/api/courses';
 
 function CoursePage() {
@@ -52,7 +52,7 @@ function CoursePage() {
               : '',
             course.invoice?.status ? '결제' : '미결제',
             course.invoice?.paid_at
-              ? formatKoreanDate(course.invoice?.paid_at)
+              ? formatToKoreanDate(course.invoice?.paid_at)
               : '-',
           ]);
         }}

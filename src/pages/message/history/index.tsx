@@ -4,7 +4,7 @@ import NormalButton from '@/shared/button/NormalButton';
 import TableSection from '@/shared/modal/TableSection';
 import { useMessageModalStore } from '@/store/messageModalStore';
 import type { Message } from '@/types/message';
-import { getMessageStatus } from '@/utils/getMessageStatus';
+import { getMessageStatus } from '@/utils/message/getMessageStatus';
 import { useState } from 'react';
 import MessageDetailModal from './MessageDetailModal';
 

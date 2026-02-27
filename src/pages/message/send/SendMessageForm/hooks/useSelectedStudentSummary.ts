@@ -1,5 +1,5 @@
 import { useMessageSendStore } from '@/store/messageSendStore';
-import { getAgeGroupLabel } from '@/utils/getAgeGroupLabel';
+import { getAgeGroupLabel } from '@/utils/student/getAgeGroupLabel';
 
 export const useSelectedStudentSummary = () => {
   const { selectedStudents } = useMessageSendStore();

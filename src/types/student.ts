@@ -1,7 +1,7 @@
 import type { Base } from './base';
 
 export interface Student extends Base {
-  id: number;
+  student_id: number;
   name: string;
   age_group: 'preschool' | 'element' | 'middle' | 'high' | 'adult';
   phone: string;

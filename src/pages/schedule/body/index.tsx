@@ -4,7 +4,6 @@ import CalendarWeekHeader from './components/CalendarWeekHeader';
 import CalendarBodyGrid from './components/CalendarBodyGrid';
 import LessonListModal from './components/LessonListModal';
 
-// 캘린더 본문
 interface CalendarGridProps {
   // 날짜별 수업 정보를 담은 맵
   dataMap: Record<string, CalendarDay>;
@@ -19,6 +18,7 @@ interface CalendarGridProps {
   onRefreshLessons: () => Promise<void>;
 }
 
+// 캘린더 그리드 컴포넌트 - 날짜 셀과 수업 목록 모달을 포함
 function CalendarGrid({
   dataMap,
   onAttendanceUpdated,

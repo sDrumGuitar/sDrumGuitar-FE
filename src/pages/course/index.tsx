@@ -3,11 +3,12 @@ import { useCourseModalStore } from '@/store/courseModalStore';
 import TableSection from '../../shared/modal/TableSection';
 import type { Course } from '@/types/course';
 import { useEffect, useState } from 'react';
-import { getCourses } from '@/shared/api/courses';
+
 import CourseModal from './modal/CourseModal';
 import { getWeekdayLabel } from '@/utils/getWeekdayLabel';
 import { formatKoreanDate } from '@/utils/formDate';
 import { getClassTypeLabel } from '@/utils/getClassTypeLabel';
+import { getCourses } from '@/shared/api/courses';
 
 function CoursePage() {
   const { isOpen, openCreate, openDetail } = useCourseModalStore();

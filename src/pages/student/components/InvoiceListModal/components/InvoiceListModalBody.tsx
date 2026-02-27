@@ -1,9 +1,12 @@
-import type { InvoiceStatus, PaymentMethod } from '@/types/invoice';
-import InvoiceCard from '../invoiceCard/InvoiceCard';
-import type { InvoiceItem } from './InvoiceListModal';
+import type {
+  InvoiceStatus,
+  PaymentMethod,
+  StudentInvoiceItem,
+} from '@/types/invoice';
+import InvoiceCard from './invoiceCard';
 
 interface InvoiceListModalBodyProps {
-  invociesList: InvoiceItem[];
+  invociesList: StudentInvoiceItem[];
   handlePatched: (next: {
     invoice_id: number;
     status: InvoiceStatus;
@@ -11,16 +14,19 @@ interface InvoiceListModalBodyProps {
     paid_at: string | null;
   }) => void;
 }
+
+// 청구서 목록을 렌더링하는 모달 본문 컴포넌트
 export default function InvoiceListModalBody({
   invociesList,
   handlePatched,
 }: InvoiceListModalBodyProps) {
   return (
     <div className="max-h-120 overflow-y-auto space-y-4 pr-1">
+      {/* 1. 청구서 카드 목록 */}
       {invociesList.map((invoice) => {
         const invoiceObject = {
           invoiceId: invoice.invoice_id,
-          courseId: invoice.course_id,
+          enrollmentId: invoice.enrollment_id,
           issuedAt: invoice.issued_at,
 
           paidAt: invoice.paid_at,

@@ -10,7 +10,8 @@ interface MessageSendState {
 }
 
 const getStudentKey = (student: Student) => {
-  if (typeof student.id === 'number') return `id:${student.id}`;
+  if (typeof student.student_id === 'number')
+    return `id:${student.student_id}`;
   return [
     `name:${student.name}`,
     `group:${student.age_group}`,

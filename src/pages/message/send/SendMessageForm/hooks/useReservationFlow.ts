@@ -37,9 +37,10 @@ export const useReservationFlow = ({
     selectedHour !== null &&
     selectedMin !== null;
 
-  const reservedAtLabel = hasReservedAt
-    ? `${formatDate(selectedDate)} ${pad2(selectedHour)}:${pad2(selectedMin)}`
-    : '';
+  const reservedAtLabel =
+    selectedDate && selectedHour !== null && selectedMin !== null
+      ? `${formatDate(selectedDate)} ${pad2(selectedHour)}:${pad2(selectedMin)}`
+      : '';
 
   const handleReserveClick = () => {
     openDate();

@@ -1,6 +1,10 @@
+import TH from "./TH";
+
 interface TableHeadersProps {
   headers: string[];
 }
+
+// 테이블 헤더 컴포넌트
 function TableHeader({ headers }: TableHeadersProps) {
   return (
     <tr>
@@ -10,9 +14,5 @@ function TableHeader({ headers }: TableHeadersProps) {
     </tr>
   );
 }
-
-const TH = ({ header }: { header: string }) => {
-  return <th className="text-lg py-2">{header}</th>;
-};
 
 export default TableHeader;

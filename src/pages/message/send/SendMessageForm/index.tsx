@@ -7,15 +7,21 @@ import { useMessageContent } from './hooks/useMessageContent';
 import { useReservationFlow } from './hooks/useReservationFlow';
 import { useSendAction } from './hooks/useSendAction';
 import { useSelectedStudentSummary } from './hooks/useSelectedStudentSummary';
+import { useMessageTemplateStore } from '@/store/message/messageTemplateStore';
+import { useState } from 'react';
 
 function SendMessageForm() {
   const { content, setContent, isContentValid } = useMessageContent();
+  const templates = useMessageTemplateStore((state) => state.templates);
+  const [selectedTemplateId, setSelectedTemplateId] = useState<number | ''>('');
   const { selectedStudents, selectedStudentName, selectedStudentGroup } =
     useSelectedStudentSummary();
   const isSubmitDisabled = selectedStudents.length === 0 || !isContentValid;
   const {
     isOpenDate,
     isOpenTime,
+    reservedAtLabel,
+    hasReservedAt,
     handleReserveClick,
     handleDateSelect,
     handleTimeSave,
@@ -27,13 +33,24 @@ function SendMessageForm() {
     content,
     students: selectedStudents,
   });
+  const handleApplyTemplate = () => {
+    if (!selectedTemplateId) return;
+    const selectedTemplate = templates.find(
+      (template) => template.id === selectedTemplateId,
+    );
+    if (!selectedTemplate) return;
+    setContent(selectedTemplate.content);
+  };
 
   return (
     <div className="w-full">
       <SendMessageHeader
         selectedStudentName={selectedStudentName}
         selectedStudentGroup={selectedStudentGroup}
-        onOpenTemplate={() => {}}
+        templates={templates}
+        selectedTemplateId={selectedTemplateId}
+        onSelectTemplate={setSelectedTemplateId}
+        onApplyTemplate={handleApplyTemplate}
       />
 
       <SendMessageEditor content={content} onChange={setContent} />
@@ -41,6 +58,8 @@ function SendMessageForm() {
       <SendMessageActions
         onReserve={handleReserveClick}
         onSend={handleSend}
+        reservedAtLabel={reservedAtLabel}
+        hasReservedAt={hasReservedAt}
         disabled={isSubmitDisabled}
       />
       {isOpenDate && <CalendarModal onSelect={handleDateSelect} />}

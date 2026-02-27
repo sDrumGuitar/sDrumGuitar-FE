@@ -24,6 +24,24 @@ export const useReservationFlow = ({
     selectedMin,
   } = useTimeModalStore();
 
+  const pad2 = (value: string | number) => String(value).padStart(2, '0');
+  const formatDate = (dateValue: string) => {
+    const date = new Date(dateValue);
+    if (Number.isNaN(date.getTime())) return dateValue;
+    const year = String(date.getFullYear()).slice(-2);
+    return `${year}.${pad2(date.getMonth() + 1)}.${pad2(date.getDate())}`;
+  };
+
+  const hasReservedAt =
+    Boolean(selectedDate) &&
+    selectedHour !== null &&
+    selectedMin !== null;
+
+  const reservedAtLabel =
+    selectedDate && selectedHour !== null && selectedMin !== null
+      ? `${formatDate(selectedDate)} ${pad2(selectedHour)}:${pad2(selectedMin)}`
+      : '';
+
   const handleReserveClick = () => {
     openDate();
   };
@@ -70,6 +88,8 @@ export const useReservationFlow = ({
   return {
     isOpenDate,
     isOpenTime,
+    reservedAtLabel,
+    hasReservedAt,
     handleReserveClick,
     handleDateSelect,
     handleTimeSave,

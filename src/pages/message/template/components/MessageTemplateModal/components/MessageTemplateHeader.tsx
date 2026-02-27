@@ -1,7 +1,7 @@
 import { useMessageTemplateStore } from '@/store/message/messageTemplateStore';
 
 interface MessageTemplateHeaderProps {
-  onClose?: () => void;
+  readonly onClose?: () => void;
 }
 
 // 문자 템플릿 관리 모달의 헤더 컴포넌트 - 제목과 닫기 버튼을 포함

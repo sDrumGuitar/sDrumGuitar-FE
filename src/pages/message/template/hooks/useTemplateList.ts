@@ -1,4 +1,5 @@
 import { useMessageTemplateStore } from '@/store/message/messageTemplateStore';
+import { useState } from 'react';
 import {
   canSubmitTemplateForm,
   isTemplateFormDirtyAgainstSelected,
@@ -27,6 +28,8 @@ export const useTemplateList = () => {
   );
   const addTemplate = useMessageTemplateStore((state) => state.addTemplate);
   const updateTemplate = useMessageTemplateStore((state) => state.updateTemplate);
+  const [switchConfirmOpen, setSwitchConfirmOpen] = useState(false);
+  const [pendingTemplateId, setPendingTemplateId] = useState<number | null>(null);
 
   // 현재 모드에 따라 생성/수정을 수행
   const handleSubmit = async () => {
@@ -54,20 +57,28 @@ export const useTemplateList = () => {
       return;
     }
 
-    const shouldSave = window.confirm(
-      '저장되지 않은 변경사항이 있습니다.\n저장 후 템플릿을 전환할까요?',
-    );
+    setPendingTemplateId(nextTemplateId);
+    setSwitchConfirmOpen(true);
+  };
 
-    if (shouldSave) {
-      const canSubmit = canSubmitTemplateForm(form);
-      if (!canSubmit) {
-        window.alert('제목과 내용을 모두 입력해야 저장할 수 있습니다.');
-        return;
-      }
-      await handleSubmit();
+  const handleConfirmSwitch = async () => {
+    if (pendingTemplateId === null) return;
+    const canSubmit = canSubmitTemplateForm(form);
+    if (!canSubmit) {
+      window.alert('제목과 내용을 모두 입력해야 저장할 수 있습니다.');
+      return;
     }
+    await handleSubmit();
+    selectTemplate(pendingTemplateId);
+    setPendingTemplateId(null);
+    setSwitchConfirmOpen(false);
+  };
 
-    selectTemplate(nextTemplateId);
+  const handleCancelSwitch = () => {
+    if (pendingTemplateId === null) return;
+    selectTemplate(pendingTemplateId);
+    setPendingTemplateId(null);
+    setSwitchConfirmOpen(false);
   };
 
   return {
@@ -79,5 +90,8 @@ export const useTemplateList = () => {
     onToggleMenu: toggleMenu,
     onDeleteTemplate: deleteTemplate,
     onOpenCreateMode: openCreateMode,
+    isSwitchConfirmOpen: switchConfirmOpen,
+    onConfirmSwitch: handleConfirmSwitch,
+    onCancelSwitch: handleCancelSwitch,
   };
 };

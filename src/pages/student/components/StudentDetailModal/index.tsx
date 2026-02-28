@@ -1,4 +1,5 @@
 import { useStudentModalStore } from '@/store/student/studentModalStore';
+import ConfirmModal from '@/shared/modal/ConfirmModal';
 import ModalWrapper from '@/shared/modal/ModalWrapper';
 import StudentCreateForm from './components/StudentCreateForm';
 import StudentDetailView from './components/StudentDetailView';
@@ -14,14 +15,13 @@ function StudentModal({ onSuccess }: StudentModalProps) {
   const { mode, selectedStudent, close } = useStudentModalStore();
   // 모달이 'CREATE' 모드인지 여부
   const [isDirty, setIsDirty] = useState(false);
+  const [isCloseConfirmOpen, setIsCloseConfirmOpen] = useState(false);
 
   // 모달 닫기 요청 핸들러
   const handleCloseRequest = () => {
     if ((mode === 'CREATE' || mode === 'UPDATE') && isDirty) {
-      const confirmed = window.confirm(
-        '작성 중인 내용이 사라집니다. 정말 닫으시겠습니까?',
-      );
-      if (!confirmed) return;
+      setIsCloseConfirmOpen(true);
+      return;
     }
 
     close();
@@ -50,6 +50,17 @@ function StudentModal({ onSuccess }: StudentModalProps) {
           onSuccess={onSuccess}
         />
       )}
+
+      <ConfirmModal
+        isOpen={isCloseConfirmOpen}
+        title="작성 중인 내용이 사라집니다."
+        description="정말 닫으시겠습니까?"
+        confirmText="닫기"
+        cancelText="취소"
+        isDanger
+        onConfirm={close}
+        onCancel={() => setIsCloseConfirmOpen(false)}
+      />
     </ModalWrapper>
   );
 }

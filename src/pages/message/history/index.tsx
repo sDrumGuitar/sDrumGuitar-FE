@@ -1,10 +1,11 @@
 import { MESSAGE_LIST_HEADER } from '@/constants/message';
 import { MockMessage } from '@/mock/message';
 import NormalButton from '@/shared/button/NormalButton';
+import MessageStatusBadge from '@/shared/message/MessageStatusBadge';
+import MessageTypeBadge from '@/shared/message/MessageTypeBadge';
 import TableSection from '@/shared/modal/TableSection';
 import { useMessageModalStore } from '@/store/message/messageModalStore';
 import type { Message } from '@/types/message';
-import { getMessageStatus } from '@/utils/message/getMessageStatus';
 import { useState } from 'react';
 import MessageDetailModal from './MessageDetailModal';
 
@@ -25,10 +26,10 @@ function MessageHistoryPage() {
         headers={MESSAGE_LIST_HEADER}
         getRows={(messages) =>
           messages.map((message) => [
-            message.type,
+            <MessageTypeBadge label={message.type} />,
             message.send_at,
             message.content,
-            getMessageStatus(message.status),
+            <MessageStatusBadge status={message.status} />,
             <NormalButton
               text="상세"
               onClick={() => handleOpenDetail(message)}

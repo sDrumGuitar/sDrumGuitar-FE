@@ -19,7 +19,7 @@ function SendMessageHeader({
   onApplyTemplate,
 }: SendMessageHeaderProps) {
   return (
-    <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+    <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between flex-wrap">
       <div>
         <p className="text-lg font-bold text-gray-900">메시지 작성</p>
         <p className="text-xs text-gray-500">

@@ -1,5 +1,8 @@
 import { api } from '@/shared/api/axios';
-import type { PatchInvoicePayload, StudentInvoiceResponse } from '@/types/invoice';
+import type {
+  PatchInvoicePayload,
+  StudentInvoiceResponse,
+} from '@/types/invoice';
 
 // ====================
 // GET : 학생 1명 청구서 목록
@@ -10,7 +13,18 @@ export const getStudentInvoices = async (
   const invoiceRes = await api.get<StudentInvoiceResponse>(
     `/invoices/${studentId}`,
   );
-  return invoiceRes.data;
+
+  return {
+    ...invoiceRes.data,
+    items: invoiceRes.data.items.map((item) => ({
+      ...item,
+      status:
+        item.status.toLocaleUpperCase() as StudentInvoiceResponse['items'][number]['status'],
+      method: item.method
+        ? (item.method.toLocaleUpperCase() as StudentInvoiceResponse['items'][number]['method'])
+        : null,
+    })),
+  };
 };
 
 // ====================
@@ -21,23 +35,25 @@ export const patchInvoice = async (
   payload: PatchInvoicePayload,
 ) => {
   // 서버(명세) validation을 프론트에서도 1차로 막아줌
-  if (payload.status === 'paid') {
+  if (payload.status === 'PAID') {
     if (!payload.method) throw new Error('method is required when paid');
     if (!payload.paid_at) throw new Error('paid_at is required when paid');
   }
 
-  if (payload.status === 'unpaid') {
-    payload = {
-      status: 'unpaid',
-      method: null,
-      paid_at: null,
-    };
-  }
+  const body =
+    payload.status === 'UNPAID'
+      ? {
+          status: 'UNPAID',
+          method: null,
+          paid_at: null,
+        }
+      : {
+          status: 'PAID',
+          method: payload.method,
+          paid_at: payload.paid_at,
+        };
 
-  const res = await api.put(`/invoices/${invoiceId}`, {
-    ...payload,
-    updated_at: new Date().toISOString(),
-  });
+  const res = await api.patch(`/invoices/${invoiceId}`, body);
 
   return res.data;
 };

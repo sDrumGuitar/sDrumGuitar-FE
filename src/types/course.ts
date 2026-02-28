@@ -28,7 +28,7 @@ export interface CourseSchedule {
 
 export interface CourseInvoice {
   invoice_id: number;
-  method: 'card' | 'cash' | null;
-  status: 'paid' | null;
+  method: 'CARD' | 'CASH' | null;
+  status: 'PAID' | 'UNPAID' | null;
   paid_at: string;
 }

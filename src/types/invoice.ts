@@ -1,5 +1,5 @@
-export type InvoiceStatus = 'paid' | 'unpaid';
-export type PaymentMethod = 'card' | 'cash' | null;
+export type InvoiceStatus = 'PAID' | 'UNPAID';
+export type PaymentMethod = 'CARD' | 'CASH' | null;
 
 export type ClassType = 'DRUM' | 'GUITAR' | 'PIANO' | 'VOCAL';
 

@@ -1,5 +1,5 @@
 import InvoiceCell from './InvoiceCell';
-import type { InvoiceStatus } from '../types';
+import type { InvoiceStatus } from '@/types/invoice';
 
 interface InvoiceCardDetailsProps {
   status: InvoiceStatus;
@@ -47,7 +47,7 @@ export default function InvoiceCardDetails({
           className={rightLabelW}
           cellName="납부 상태"
           value={statusText}
-          cellStyle={status === 'paid' ? 'text-green-600' : 'text-red-500'}
+          cellStyle={status === 'PAID' ? 'text-green-600' : 'text-red-500'}
         />
 
         {/* row 2 */}

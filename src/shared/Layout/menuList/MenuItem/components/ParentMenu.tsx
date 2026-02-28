@@ -16,11 +16,19 @@ export const ParentMenu = ({
 }) => (
   <NavLink
     to={href}
-    className={() => cx(parentBase, active ? parentActive : parentInactive)}
+    className={() =>
+      cx(
+        parentBase,
+        active ? parentActive : parentInactive,
+        active ? 'justify-start' : 'justify-center md:justify-start'
+      )
+    }
   >
-    <span className="flex items-center gap-3">
+    <span className="flex items-center gap-2 md:gap-3">
       {Icon && <Icon className="text-lg" />}
-      <span>{label}</span>
+      <span className={cx(active ? 'inline' : 'hidden', 'md:inline')}>
+        {label}
+      </span>
     </span>
   </NavLink>
 );

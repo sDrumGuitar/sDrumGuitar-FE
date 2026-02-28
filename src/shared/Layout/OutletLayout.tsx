@@ -22,7 +22,7 @@ function OutletLayout() {
     '페이지';
 
   return (
-    <div className="pt-10 px-10 w-full">
+    <div className="pt-6 px-4 md:pt-10 md:px-10 w-full">
       <p className="text-xl font-bold">{pageTitle}</p>
       <hr className="my-4 text-gray-500" />
       <Outlet />

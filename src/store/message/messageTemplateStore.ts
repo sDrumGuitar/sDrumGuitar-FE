@@ -125,8 +125,7 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
 
       if (!title || !content) return;
 
-      const type = form.type.trim();
-      if (!type) return;
+      const type = form.type;
 
       try {
         const createdTemplate = await createMessageTemplate({
@@ -156,8 +155,8 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
 
       const title = form.title.trim();
       const content = form.content.trim();
-      const type = form.type.trim();
-      if (!title || !content || !type) return;
+      const type = form.type;
+      if (!title || !content) return;
 
       const now = getNowString();
       const nextTemplates = templates.map((template) =>

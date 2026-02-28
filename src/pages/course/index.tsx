@@ -14,9 +14,11 @@ import Chip from '@/shared/chip/Chip';
 
 const formatToHourMinute = (time?: string) => {
   if (!time) return '';
-  const [hour, minute] = time.split(':');
-  if (!hour || !minute) return time;
-  return `${hour}:${minute}`;
+  const parts = time.split(':');
+  if (parts.length >= 2) {
+    return `${parts[0] || '00'}:${parts[1] || '00'}`;
+  }
+  return time;
 };
 
 const getClassTone = (classType: Course['class_type']) => {
@@ -25,13 +27,10 @@ const getClassTone = (classType: Course['class_type']) => {
   return 'slate';
 };
 
-const getInvoiceTone = (status: Course['invoice']['status']) => {
-  if (status === 'PAID') return 'emerald';
-  return 'amber';
-};
-
-const getInvoiceLabel = (status: Course['invoice']['status']) =>
-  status === 'PAID' ? '결제' : '미결제';
+const getInvoiceChipProps = (status: Course['invoice']['status']) =>
+  status === 'PAID'
+    ? ({ label: '결제', tone: 'emerald' } as const)
+    : ({ label: '미결제', tone: 'amber' } as const);
 
 function CoursePage() {
   const { isOpen, openCreate, openDetail } = useCourseModalStore();
@@ -80,10 +79,7 @@ function CoursePage() {
                   )
                   .join(', ')
               : '',
-            <Chip
-              label={getInvoiceLabel(course.invoice?.status)}
-              tone={getInvoiceTone(course.invoice?.status)}
-            />,
+            <Chip {...getInvoiceChipProps(course.invoice?.status)} />,
             course.invoice?.paid_at
               ? formatToKoreanDate(course.invoice?.paid_at)
               : '-',

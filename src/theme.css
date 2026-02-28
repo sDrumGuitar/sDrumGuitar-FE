@@ -11,6 +11,9 @@
   .bg-primary {
     @apply bg-(--color-primary);
   }
+  .hover\:bg-primary:hover {
+    @apply bg-(--color-primary);
+  }
   .bg-primary-light {
     @apply bg-(--color-primary-light);
   }

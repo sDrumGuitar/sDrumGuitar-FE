@@ -1,4 +1,4 @@
-import { MockMessageTemplate } from '@/mock/messageTemplate';
+import { getMessageTemplates } from '@/shared/api/message';
 import type { MessageTemplate } from '@/types/messageTemplate';
 import { create } from 'zustand';
 
@@ -16,6 +16,9 @@ interface MessageTemplateStore {
   mode: TemplateMode;
   form: MessageTemplateForm;
   menuOpenId: number | null;
+  isLoadingTemplates: boolean;
+  hasLoadedTemplates: boolean;
+  fetchTemplates: (options?: { page?: number; size?: number; force?: boolean }) => Promise<void>;
   selectTemplate: (id: number) => void;
   setFormField: (field: FormField, value: string) => void;
   openCreateMode: () => void;
@@ -26,7 +29,8 @@ interface MessageTemplateStore {
   deleteTemplate: (id: number) => void;
 }
 
-const STORAGE_KEY = 'message-template-list';
+const DEFAULT_PAGE = 1;
+const DEFAULT_SIZE = 10;
 
 const getNowString = () =>
   new Date().toISOString().slice(0, 19).replace('T', ' ');
@@ -36,39 +40,35 @@ const getEmptyForm = (): MessageTemplateForm => ({
   content: '',
 });
 
-const saveTemplates = (templates: MessageTemplate[]) => {
-  if (typeof window === 'undefined') return;
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(templates));
-};
-
-const getInitialTemplates = (): MessageTemplate[] => {
-  if (typeof window === 'undefined') return MockMessageTemplate;
-
-  const stored = window.localStorage.getItem(STORAGE_KEY);
-
-  if (!stored) {
-    saveTemplates(MockMessageTemplate);
-    return MockMessageTemplate;
-  }
-
-  try {
-    const parsed = JSON.parse(stored) as MessageTemplate[];
-    if (!Array.isArray(parsed)) return MockMessageTemplate;
-    return parsed;
-  } catch {
-    return MockMessageTemplate;
-  }
-};
-
-const initialTemplates = getInitialTemplates();
-
 export const useMessageTemplateStore = create<MessageTemplateStore>(
   (set, get) => ({
-    templates: initialTemplates,
+    templates: [],
     selectedTemplateId: null,
     mode: 'CREATE',
     form: getEmptyForm(),
     menuOpenId: null,
+    isLoadingTemplates: false,
+    hasLoadedTemplates: false,
+
+    fetchTemplates: async (options) => {
+      const { hasLoadedTemplates, isLoadingTemplates } = get();
+      const page = options?.page ?? DEFAULT_PAGE;
+      const size = options?.size ?? DEFAULT_SIZE;
+      const force = options?.force ?? false;
+      if (!force && (hasLoadedTemplates || isLoadingTemplates)) return;
+
+      set({ isLoadingTemplates: true });
+      const { templates } = await getMessageTemplates({ page, size });
+      set({
+        templates,
+        selectedTemplateId: null,
+        mode: 'CREATE',
+        form: getEmptyForm(),
+        menuOpenId: null,
+        isLoadingTemplates: false,
+        hasLoadedTemplates: true,
+      });
+    },
 
     selectTemplate: (id) => {
       const selectedTemplate = get().templates.find((template) => template.id === id);
@@ -131,8 +131,6 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
       };
       const nextTemplates = [newTemplate, ...templates];
 
-      saveTemplates(nextTemplates);
-
       set({
         templates: nextTemplates,
         selectedTemplateId: newTemplate.id,
@@ -164,7 +162,6 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
           : template,
       );
 
-      saveTemplates(nextTemplates);
       set({
         templates: nextTemplates,
       });
@@ -173,7 +170,6 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
     deleteTemplate: (id) => {
       const { templates, selectedTemplateId } = get();
       const nextTemplates = templates.filter((template) => template.id !== id);
-      saveTemplates(nextTemplates);
 
       if (!nextTemplates.length) {
         set({

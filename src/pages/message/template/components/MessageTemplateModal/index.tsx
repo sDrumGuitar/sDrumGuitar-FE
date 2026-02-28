@@ -1,9 +1,19 @@
 import MessageTemplateForm from '@/pages/message/template/components/MessageTemplateModal/components/MessageTemplateForm';
 import MessageTemplateHeader from '@/pages/message/template/components/MessageTemplateModal/components/MessageTemplateHeader';
 import MessageTemplateList from '@/pages/message/template/components/MessageTemplateModal/components/MessageTemplateList';
+import { useMessageTemplateStore } from '@/store/message/messageTemplateStore';
+import { useEffect } from 'react';
 
 // 문자 템플릿 관리 모달 컴포넌트
 function MessageTemplateModal() {
+  const fetchTemplates = useMessageTemplateStore(
+    (state) => state.fetchTemplates,
+  );
+
+  useEffect(() => {
+    fetchTemplates();
+  }, [fetchTemplates]);
+
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-6">
       <div className="flex h-155 flex-col overflow-hidden">

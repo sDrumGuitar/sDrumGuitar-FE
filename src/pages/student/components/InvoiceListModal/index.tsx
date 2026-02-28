@@ -25,6 +25,7 @@ export default function InvoiceListModal() {
     try {
       setLoading(true);
       const res = await getStudentInvoices(student.student_id);
+      console.log(res.items);
       setInvociesList(res.items);
     } catch (e) {
       console.error(e);

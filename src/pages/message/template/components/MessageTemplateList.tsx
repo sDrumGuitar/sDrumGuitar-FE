@@ -1,12 +1,13 @@
 import {
   MESSAGE_TEMPLATE_TYPE_LABELS,
-  MESSAGE_TEMPLATE_TYPE_STYLES,
+  MESSAGE_TEMPLATE_TYPE_TONES,
 } from '@/constants/messageTemplate';
 import { useTemplateList } from '@/pages/message/template/hooks/useTemplateList';
 import ConfirmModal from '@/shared/modal/ConfirmModal';
 import { useToastStore } from '@/store/feedback/toastStore';
 import { useState } from 'react';
 import { IoTrashOutline } from 'react-icons/io5';
+import Chip from '@/shared/chip/Chip';
 
 // 문자 템플릿 목록 컴포넌트 - 템플릿 선택, 메뉴 토글, 삭제, 생성 기능 포함
 function MessageTemplateList() {
@@ -77,14 +78,13 @@ function MessageTemplateList() {
                 }`}
               >
                 {/* 1-1. 템플릿 제목 */}
-                <div className="flex flex-1 items-center gap-2 text-left text-base text-gray-900">
+                <div className="flex flex-1 min-w-0 items-center gap-2 text-left text-base text-gray-900">
+                  <Chip
+                    label={MESSAGE_TEMPLATE_TYPE_LABELS[template.type]}
+                    tone={MESSAGE_TEMPLATE_TYPE_TONES[template.type]}
+                  />
                   <span
-                    className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${MESSAGE_TEMPLATE_TYPE_STYLES[template.type].border} ${MESSAGE_TEMPLATE_TYPE_STYLES[template.type].background} ${MESSAGE_TEMPLATE_TYPE_STYLES[template.type].text}`}
-                  >
-                    {MESSAGE_TEMPLATE_TYPE_LABELS[template.type]}
-                  </span>
-                  <span
-                    className={`${
+                    className={`flex-1 truncate ${
                       isSelected
                         ? 'text-primary font-semibold'
                         : 'text-gray-900'

@@ -14,7 +14,7 @@ function StudentListHeader({
   onClearAll,
 }: StudentListHeaderProps) {
   return (
-    <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+    <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between flex-wrap">
       <div>
         <p className="text-lg font-bold text-gray-900">학생 목록</p>
         <p className="text-xs text-gray-500">발송 대상을 선택할 수 있어요.</p>

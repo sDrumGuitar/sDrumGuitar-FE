@@ -59,6 +59,19 @@ export const MESSAGE_TEMPLATE_TYPE_STYLES: Record<
   },
 };
 
+export const MESSAGE_TEMPLATE_TYPE_TONES: Record<
+  MessageTemplateType,
+  'emerald' | 'amber' | 'rose' | 'sky' | 'indigo' | 'orange' | 'slate'
+> = {
+  ATTENDANCE: 'emerald',
+  LATE: 'amber',
+  ABSENT: 'rose',
+  MAKEUP: 'sky',
+  ROLLOVER: 'indigo',
+  INVOICE_UNPAID: 'orange',
+  CUSTOM: 'slate',
+};
+
 export const DEFAULT_MESSAGE_TEMPLATE_TYPE: MessageTemplateType =
   'ATTENDANCE';
 

@@ -1,10 +1,11 @@
 import {
   MESSAGE_TEMPLATE_TYPE_LABELS,
-  MESSAGE_TEMPLATE_TYPE_STYLES,
+  MESSAGE_TEMPLATE_TYPE_TONES,
   MESSAGE_TEMPLATE_TYPES,
 } from '@/constants/messageTemplate';
 import { useTemplateForm } from '@/pages/message/template/hooks/useTemplateForm';
 import { useEffect, useRef, useState } from 'react';
+import Chip from '@/shared/chip/Chip';
 
 // 문자 템플릿 폼 컴포넌트 - 제목과 내용 입력, 제출 버튼 포함
 function MessageTemplateForm() {
@@ -41,11 +42,10 @@ function MessageTemplateForm() {
               className="flex w-full items-center justify-between rounded-sm border border-transparent bg-gray-100 px-4 py-3 text-base text-gray-900 outline-none transition focus:ring-1 focus:ring-gray-300"
             >
               <span className="flex items-center gap-2 truncate">
-                <span
-                  className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${MESSAGE_TEMPLATE_TYPE_STYLES[form.type].background} ${MESSAGE_TEMPLATE_TYPE_STYLES[form.type].text} ${MESSAGE_TEMPLATE_TYPE_STYLES[form.type].border}`}
-                >
-                  {MESSAGE_TEMPLATE_TYPE_LABELS[form.type]}
-                </span>
+                <Chip
+                  label={MESSAGE_TEMPLATE_TYPE_LABELS[form.type]}
+                  tone={MESSAGE_TEMPLATE_TYPE_TONES[form.type]}
+                />
               </span>
               <span
                 className={`ml-3 text-xs text-gray-500 transition ${
@@ -76,11 +76,10 @@ function MessageTemplateForm() {
                           }`}
                         >
                           <span className="flex items-center gap-2">
-                            <span
-                              className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${MESSAGE_TEMPLATE_TYPE_STYLES[type].background} ${MESSAGE_TEMPLATE_TYPE_STYLES[type].text} ${MESSAGE_TEMPLATE_TYPE_STYLES[type].border}`}
-                            >
-                              {MESSAGE_TEMPLATE_TYPE_LABELS[type]}
-                            </span>
+                            <Chip
+                              label={MESSAGE_TEMPLATE_TYPE_LABELS[type]}
+                              tone={MESSAGE_TEMPLATE_TYPE_TONES[type]}
+                            />
                           </span>
                           {isSelected && (
                             <span className="text-xs text-primary">선택됨</span>

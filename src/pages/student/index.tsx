@@ -10,13 +10,21 @@ import InvoiceListModal from './components/InvoiceListModal';
 import Chip from '@/shared/chip/Chip';
 
 const getAgeGroupTone = (ageGroup: Student['age_group'] | null) => {
-  const normalized = ageGroup ? ageGroup.toUpperCase() : '';
-  if (normalized === 'PRESCHOOL') return 'amber';
-  if (normalized === 'ELEMENTARY') return 'sky';
-  if (normalized === 'MIDDLE') return 'indigo';
-  if (normalized === 'HIGH') return 'slate';
-  if (normalized === 'ADULT') return 'emerald';
-  return 'slate';
+  const normalized = ageGroup ? String(ageGroup).toUpperCase() : '';
+  switch (normalized) {
+    case 'PRESCHOOL':
+      return 'amber';
+    case 'ELEMENT':
+    case 'ELEMENTARY':
+      return 'sky';
+    case 'MIDDLE':
+      return 'indigo';
+    case 'ADULT':
+      return 'emerald';
+    case 'HIGH':
+    default:
+      return 'slate';
+  }
 };
 
 // 학생 관리 페이지 컴포넌트
@@ -49,19 +57,22 @@ function StudentPage() {
         headers={['이름', '구분', '전화번호', '부모님 전화번호']}
         getRows={(students) => {
           if (!students || students.length === 0) return [];
-          return students.map((student) => [
-            student?.name,
-            getAgeGroupLabel(student?.age_group) ? (
-              <Chip
-                label={getAgeGroupLabel(student?.age_group)}
-                tone={getAgeGroupTone(student?.age_group)}
-              />
-            ) : (
-              ''
-            ),
-            student?.phone,
-            student?.parent_phone,
-          ]);
+          return students.map((student) => {
+            const ageGroupLabel = getAgeGroupLabel(student?.age_group);
+            return [
+              student?.name,
+              ageGroupLabel ? (
+                <Chip
+                  label={ageGroupLabel}
+                  tone={getAgeGroupTone(student?.age_group)}
+                />
+              ) : (
+                ''
+              ),
+              student?.phone,
+              student?.parent_phone,
+            ];
+          });
         }}
         onRowClick={(student) => openDetail(student)}
       />

@@ -85,10 +85,6 @@ export default function useInvoiceCard(
       paid_at: paidAtDate ? fromDateOnly(paidAtDate) : null,
     };
 
-    if (status === 'UNPAID') {
-      payload = { status: 'UNPAID', method: null, paid_at: null };
-    }
-
     try {
       setLoading(true);
       await patchInvoice(invoice.invoiceId, payload);

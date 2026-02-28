@@ -5,6 +5,7 @@ import {
   isTemplateFormDirtyAgainstSelected,
   isTemplateFormDirtyForCreate,
 } from './templateFormUtils';
+import { useToastStore } from '@/store/feedback/toastStore';
 
 // 템플릿 목록과 선택 동작을 다루는 훅
 export const useTemplateList = () => {
@@ -22,14 +23,20 @@ export const useTemplateList = () => {
     (state) => state.selectTemplate,
   );
   const toggleMenu = useMessageTemplateStore((state) => state.toggleMenu);
-  const deleteTemplate = useMessageTemplateStore((state) => state.deleteTemplate);
+  const deleteTemplate = useMessageTemplateStore(
+    (state) => state.deleteTemplate,
+  );
   const openCreateMode = useMessageTemplateStore(
     (state) => state.openCreateMode,
   );
   const addTemplate = useMessageTemplateStore((state) => state.addTemplate);
-  const updateTemplate = useMessageTemplateStore((state) => state.updateTemplate);
+  const updateTemplate = useMessageTemplateStore(
+    (state) => state.updateTemplate,
+  );
   const [switchConfirmOpen, setSwitchConfirmOpen] = useState(false);
-  const [pendingTemplateId, setPendingTemplateId] = useState<number | null>(null);
+  const [pendingTemplateId, setPendingTemplateId] = useState<number | null>(
+    null,
+  );
 
   // 현재 모드에 따라 생성/수정을 수행
   const handleSubmit = async () => {
@@ -62,10 +69,11 @@ export const useTemplateList = () => {
   };
 
   const handleConfirmSwitch = async () => {
+    const { addToast } = useToastStore();
     if (pendingTemplateId === null) return;
     const canSubmit = canSubmitTemplateForm(form);
     if (!canSubmit) {
-      window.alert('제목과 내용을 모두 입력해야 저장할 수 있습니다.');
+      addToast('error', '제목과 내용을 모두 입력해야 저장할 수 있습니다.');
       return;
     }
     await handleSubmit();

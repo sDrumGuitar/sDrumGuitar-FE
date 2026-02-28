@@ -1,5 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 
+import Footer from './Footer';
+
 const PAGE_TITLE_MAP: Record<string, string> = {
   '/home': '홈',
   '/student': '학생 관리',
@@ -26,6 +28,7 @@ function OutletLayout() {
       <p className="text-xl font-bold">{pageTitle}</p>
       <hr className="my-4 text-gray-500" />
       <Outlet />
+      <Footer />
     </div>
   );
 }

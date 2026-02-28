@@ -10,6 +10,28 @@ import { getWeekdayLabel } from '@/utils/date/getWeekdayLabel';
 import { formatToKoreanDate } from '@/utils/date/formatKoreanDate';
 import { getClassTypeLabel } from '@/utils/course/getClassTypeLabel';
 import { getCourses } from '@/shared/api/courses';
+import Chip from '@/shared/chip/Chip';
+
+const formatToHourMinute = (time?: string) => {
+  if (!time) return '';
+  const [hour, minute] = time.split(':');
+  if (!hour || !minute) return time;
+  return `${hour}:${minute}`;
+};
+
+const getClassTone = (classType: Course['class_type']) => {
+  if (classType === 'DRUM') return 'violet';
+  if (classType === 'GUITAR') return 'emerald';
+  return 'slate';
+};
+
+const getInvoiceTone = (status: Course['invoice']['status']) => {
+  if (status === 'PAID') return 'emerald';
+  return 'amber';
+};
+
+const getInvoiceLabel = (status: Course['invoice']['status']) =>
+  status === 'PAID' ? '결제' : '미결제';
 
 function CoursePage() {
   const { isOpen, openCreate, openDetail } = useCourseModalStore();
@@ -41,17 +63,27 @@ function CoursePage() {
           if (!courses || courses.length === 0) return [];
           return courses.map((course) => [
             course.student?.name ?? '',
-            course.class_type ? getClassTypeLabel(course.class_type) : '',
-            String(course.lesson_count),
+            course.class_type ? (
+              <Chip
+                label={getClassTypeLabel(course.class_type)}
+                tone={getClassTone(course.class_type)}
+              />
+            ) : (
+              ''
+            ),
+            <Chip label={`${course.lesson_count}회`} tone="slate" />,
             course.schedules?.length
               ? course.schedules
                   .map(
                     (schedule) =>
-                      `${getWeekdayLabel(schedule.weekday)} ${schedule.time}`,
+                      `${getWeekdayLabel(schedule.weekday)} ${formatToHourMinute(schedule.time)}`,
                   )
                   .join(', ')
               : '',
-            course.invoice?.status ? '결제' : '미결제',
+            <Chip
+              label={getInvoiceLabel(course.invoice?.status)}
+              tone={getInvoiceTone(course.invoice?.status)}
+            />,
             course.invoice?.paid_at
               ? formatToKoreanDate(course.invoice?.paid_at)
               : '-',

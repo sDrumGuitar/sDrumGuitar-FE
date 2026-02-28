@@ -7,6 +7,17 @@ import StudentModal from './components/StudentDetailModal';
 import ModalOpenButton from '@/shared/modal/ModalOpenButton';
 import { getAgeGroupLabel } from '@/utils/student/getAgeGroupLabel';
 import InvoiceListModal from './components/InvoiceListModal';
+import Chip from '@/shared/chip/Chip';
+
+const getAgeGroupTone = (ageGroup: Student['age_group'] | null) => {
+  const normalized = ageGroup ? ageGroup.toUpperCase() : '';
+  if (normalized === 'PRESCHOOL') return 'amber';
+  if (normalized === 'ELEMENTARY') return 'sky';
+  if (normalized === 'MIDDLE') return 'indigo';
+  if (normalized === 'HIGH') return 'slate';
+  if (normalized === 'ADULT') return 'emerald';
+  return 'slate';
+};
 
 // 학생 관리 페이지 컴포넌트
 function StudentPage() {
@@ -40,7 +51,14 @@ function StudentPage() {
           if (!students || students.length === 0) return [];
           return students.map((student) => [
             student?.name,
-            getAgeGroupLabel(student?.age_group),
+            getAgeGroupLabel(student?.age_group) ? (
+              <Chip
+                label={getAgeGroupLabel(student?.age_group)}
+                tone={getAgeGroupTone(student?.age_group)}
+              />
+            ) : (
+              ''
+            ),
             student?.phone,
             student?.parent_phone,
           ]);

@@ -9,6 +9,21 @@ export interface MessageTemplateApiItem {
   updated_at: string;
 }
 
+export interface CreateMessageTemplatePayload {
+  type: string;
+  title: string;
+  content: string;
+}
+
+export interface CreateMessageTemplateApiResponse {
+  templateId: number;
+  type: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface GetMessageTemplatesApiResponse {
   total_count: number;
   page: number;

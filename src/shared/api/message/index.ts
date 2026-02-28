@@ -1,6 +1,8 @@
 import { api } from '@/shared/api/axios';
 import type { MessageTemplate } from '@/types/messageTemplate';
 import type {
+  CreateMessageTemplateApiResponse,
+  CreateMessageTemplatePayload,
   GetMessageTemplatesApiResponse,
   GetMessageTemplatesProps,
   GetMessageTemplatesResponse,
@@ -8,6 +10,7 @@ import type {
 } from './message.types';
 
 export type {
+  CreateMessageTemplatePayload,
   GetMessageTemplatesProps,
   GetMessageTemplatesResponse,
   MessageTemplateApiItem,
@@ -15,10 +18,22 @@ export type {
 
 const mapMessageTemplate = (template: MessageTemplateApiItem): MessageTemplate => ({
   id: template.template_id,
+  type: template.type,
   title: template.title,
   content: template.content,
   created_at: template.created_at,
   updated_at: template.updated_at,
+});
+
+const mapCreatedTemplate = (
+  template: CreateMessageTemplateApiResponse,
+): MessageTemplate => ({
+  id: template.templateId,
+  type: template.type,
+  title: template.title,
+  content: template.content,
+  created_at: template.createdAt,
+  updated_at: template.updatedAt,
 });
 
 // ====================
@@ -55,4 +70,17 @@ export const getMessageTemplates = async ({
       templates: [],
     };
   }
+};
+
+// ====================
+// POST : 메시지 템플릿 생성
+// ====================
+export const createMessageTemplate = async (
+  payload: CreateMessageTemplatePayload,
+): Promise<MessageTemplate> => {
+  const res = await api.post<CreateMessageTemplateApiResponse>(
+    '/messages/templates',
+    payload,
+  );
+  return mapCreatedTemplate(res.data);
 };

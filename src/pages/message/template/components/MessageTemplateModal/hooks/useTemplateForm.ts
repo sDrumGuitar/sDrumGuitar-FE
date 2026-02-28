@@ -1,7 +1,7 @@
 import { useMessageTemplateStore } from '@/store/message/messageTemplateStore';
 
-const getCanSubmit = (form: { title: string; content: string }) =>
-  Boolean(form.title.trim() && form.content.trim());
+const getCanSubmit = (form: { type: string; title: string; content: string }) =>
+  Boolean(form.type.trim() && form.title.trim() && form.content.trim());
 
 export const useTemplateForm = () => {
   const mode = useMessageTemplateStore((state) => state.mode);

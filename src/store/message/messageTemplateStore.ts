@@ -1,11 +1,16 @@
-import { getMessageTemplates } from '@/shared/api/message';
+import {
+  DEFAULT_MESSAGE_TEMPLATE_TYPE,
+  type MessageTemplateType,
+} from '@/constants/messageTemplate';
+import { createMessageTemplate, getMessageTemplates } from '@/shared/api/message';
 import type { MessageTemplate } from '@/types/messageTemplate';
 import { create } from 'zustand';
 
 type TemplateMode = 'CREATE' | 'UPDATE';
-type FormField = 'title' | 'content';
+type FormField = 'type' | 'title' | 'content';
 
 interface MessageTemplateForm {
+  type: MessageTemplateType;
   title: string;
   content: string;
 }
@@ -20,11 +25,11 @@ interface MessageTemplateStore {
   hasLoadedTemplates: boolean;
   fetchTemplates: (options?: { page?: number; size?: number; force?: boolean }) => Promise<void>;
   selectTemplate: (id: number) => void;
-  setFormField: (field: FormField, value: string) => void;
+  setFormField: (field: FormField, value: MessageTemplateForm[FormField]) => void;
   openCreateMode: () => void;
   toggleMenu: (id: number) => void;
   closeMenu: () => void;
-  addTemplate: () => void;
+  addTemplate: () => Promise<void>;
   updateTemplate: () => void;
   deleteTemplate: (id: number) => void;
 }
@@ -36,6 +41,7 @@ const getNowString = () =>
   new Date().toISOString().slice(0, 19).replace('T', ' ');
 
 const getEmptyForm = (): MessageTemplateForm => ({
+  type: DEFAULT_MESSAGE_TEMPLATE_TYPE,
   title: '',
   content: '',
 });
@@ -78,6 +84,7 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
         selectedTemplateId: selectedTemplate.id,
         mode: 'UPDATE',
         form: {
+          type: selectedTemplate.type ?? DEFAULT_MESSAGE_TEMPLATE_TYPE,
           title: selectedTemplate.title,
           content: selectedTemplate.content,
         },
@@ -111,35 +118,36 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
         menuOpenId: null,
       }),
 
-    addTemplate: () => {
+    addTemplate: async () => {
       const { form, templates } = get();
       const title = form.title.trim();
       const content = form.content.trim();
 
       if (!title || !content) return;
 
-      const nextId = templates.length
-        ? Math.max(...templates.map((template) => template.id)) + 1
-        : 1;
-      const now = getNowString();
-      const newTemplate: MessageTemplate = {
-        id: nextId,
-        title,
-        content,
-        created_at: now,
-        updated_at: now,
-      };
-      const nextTemplates = [newTemplate, ...templates];
+      const type = form.type.trim();
+      if (!type) return;
 
-      set({
-        templates: nextTemplates,
-        selectedTemplateId: newTemplate.id,
-        mode: 'UPDATE',
-        form: {
-          title: newTemplate.title,
-          content: newTemplate.content,
-        },
-      });
+      try {
+        const createdTemplate = await createMessageTemplate({
+          type,
+          title,
+          content,
+        });
+        const nextTemplates = [createdTemplate, ...templates];
+        set({
+          templates: nextTemplates,
+          selectedTemplateId: createdTemplate.id,
+          mode: 'UPDATE',
+          form: {
+            type: createdTemplate.type ?? DEFAULT_MESSAGE_TEMPLATE_TYPE,
+            title: createdTemplate.title,
+            content: createdTemplate.content,
+          },
+        });
+      } catch (error) {
+        console.error('Failed to create message template:', error);
+      }
     },
 
     updateTemplate: () => {
@@ -148,13 +156,15 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
 
       const title = form.title.trim();
       const content = form.content.trim();
-      if (!title || !content) return;
+      const type = form.type.trim();
+      if (!title || !content || !type) return;
 
       const now = getNowString();
       const nextTemplates = templates.map((template) =>
         template.id === selectedTemplateId
           ? {
               ...template,
+              type,
               title,
               content,
               updated_at: now,

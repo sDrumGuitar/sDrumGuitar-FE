@@ -1,13 +1,18 @@
+import { DEFAULT_MESSAGE_TEMPLATE_TYPE } from '@/constants/messageTemplate';
 import { useMessageTemplateStore } from '@/store/message/messageTemplateStore';
 
 const getIsDirty = (
   mode: 'CREATE' | 'UPDATE',
-  form: { title: string; content: string },
-  templates: { id: number; title: string; content: string }[],
+  form: { type: string; title: string; content: string },
+  templates: { id: number; type: string; title: string; content: string }[],
   selectedTemplateId: number | null,
 ) => {
   if (mode === 'CREATE') {
-    return form.title.trim().length > 0 || form.content.trim().length > 0;
+    return (
+      form.type.trim() !== DEFAULT_MESSAGE_TEMPLATE_TYPE ||
+      form.title.trim().length > 0 ||
+      form.content.trim().length > 0
+    );
   }
 
   if (!selectedTemplateId) return false;
@@ -17,16 +22,20 @@ const getIsDirty = (
   if (!selectedTemplate) return false;
 
   return (
+    selectedTemplate.type !== form.type ||
     selectedTemplate.title !== form.title ||
     selectedTemplate.content !== form.content
   );
 };
 
-const getCanSubmit = (form: { title: string; content: string }) =>
-  Boolean(form.title.trim() && form.content.trim());
+const getCanSubmit = (form: { type: string; title: string; content: string }) =>
+  Boolean(form.type.trim() && form.title.trim() && form.content.trim());
 
 export const useTemplateList = () => {
   const templates = useMessageTemplateStore((state) => state.templates);
+  const isLoadingTemplates = useMessageTemplateStore(
+    (state) => state.isLoadingTemplates,
+  );
   const selectedTemplateId = useMessageTemplateStore(
     (state) => state.selectedTemplateId,
   );
@@ -44,15 +53,15 @@ export const useTemplateList = () => {
   const addTemplate = useMessageTemplateStore((state) => state.addTemplate);
   const updateTemplate = useMessageTemplateStore((state) => state.updateTemplate);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (mode === 'CREATE') {
-      addTemplate();
+      await addTemplate();
       return;
     }
     updateTemplate();
   };
 
-  const handleSelectTemplate = (nextTemplateId: number) => {
+  const handleSelectTemplate = async (nextTemplateId: number) => {
     if (selectedTemplateId === nextTemplateId) return;
 
     const isDirty = getIsDirty(
@@ -76,7 +85,7 @@ export const useTemplateList = () => {
         window.alert('제목과 내용을 모두 입력해야 저장할 수 있습니다.');
         return;
       }
-      handleSubmit();
+      await handleSubmit();
     }
 
     selectTemplate(nextTemplateId);
@@ -84,6 +93,7 @@ export const useTemplateList = () => {
 
   return {
     templates,
+    isLoadingTemplates,
     selectedTemplateId,
     menuOpenId,
     onSelectTemplate: handleSelectTemplate,

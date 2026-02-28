@@ -8,11 +8,14 @@ import { useReservationFlow } from './hooks/useReservationFlow';
 import { useSendAction } from './hooks/useSendAction';
 import { useSelectedStudentSummary } from './hooks/useSelectedStudentSummary';
 import { useMessageTemplateStore } from '@/store/message/messageTemplateStore';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function SendMessageForm() {
   const { content, setContent, isContentValid } = useMessageContent();
   const templates = useMessageTemplateStore((state) => state.templates);
+  const fetchTemplates = useMessageTemplateStore(
+    (state) => state.fetchTemplates,
+  );
   const [selectedTemplateId, setSelectedTemplateId] = useState<number | ''>('');
   const { selectedStudents, selectedStudentName, selectedStudentGroup } =
     useSelectedStudentSummary();
@@ -41,6 +44,10 @@ function SendMessageForm() {
     if (!selectedTemplate) return;
     setContent(selectedTemplate.content);
   };
+
+  useEffect(() => {
+    fetchTemplates();
+  }, [fetchTemplates]);
 
   return (
     <div className="w-full">

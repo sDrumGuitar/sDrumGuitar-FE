@@ -294,7 +294,7 @@ export default function CourseForm({
           onChange={(v) =>
             updateForm('invoice', {
               ...form.invoice,
-              status: v === 'PAID' ? 'PAID' : 'UNPAID',
+              status: v as 'PAID' | 'UNPAID',
             })
           }
           disabled={isViewMode}

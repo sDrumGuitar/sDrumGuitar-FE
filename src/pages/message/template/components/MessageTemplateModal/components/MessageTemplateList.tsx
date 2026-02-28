@@ -41,8 +41,8 @@ function MessageTemplateList() {
   return (
     <div className="flex min-h-0 h-full flex-col gap-4">
       {/* 1. 템플릿 목록 */}
-      <div className="relative min-h-0 flex-1 overflow-y-auto pr-1">
-        <div className="flex flex-col gap-3">
+      <div className="relative min-h-0 flex-1 overflow-y-auto pr-1 pl-1 pb-1">
+        <div className="flex flex-col gap-3 py-1">
           {isLoadingTemplates && templates.length === 0 && (
             <div className="rounded-sm bg-gray-100 px-4 py-3 text-sm text-gray-500">
               템플릿을 불러오는 중입니다...
@@ -58,38 +58,38 @@ function MessageTemplateList() {
                     ? `template-${template.id}`
                     : `template-${index}`
                 }
+                role="button"
+                tabIndex={0}
+                onClick={() => onSelectTemplate(template.id)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    onSelectTemplate(template.id);
+                  }
+                }}
                 className={`relative flex items-center justify-between rounded-lg px-4 py-3 transition ${
                   isSelected
-                    ? 'border border-emerald-200 bg-emerald-50 shadow-[0_6px_16px_rgba(16,185,129,0.2)]'
+                    ? 'border border-primary bg-primary/10 shadow-[0_12px_28px_-16px_rgba(97,129,216,0.45)]'
                     : 'border border-transparent bg-gray-100'
                 }`}
               >
                 {/* 1-1. 템플릿 제목 */}
-                <button
-                  onClick={() => onSelectTemplate(template.id)}
-                  className="flex flex-1 items-center gap-2 text-left text-base text-gray-900"
-                >
+                <div className="flex flex-1 items-center gap-2 text-left text-base text-gray-900">
                   <span
-                    className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${
-                      isSelected
-                        ? 'border-emerald-400 bg-white/90 text-emerald-700'
-                        : MESSAGE_TEMPLATE_TYPE_STYLES[template.type].border
-                    } ${
-                      isSelected
-                        ? 'bg-white/90 text-emerald-700'
-                        : `${MESSAGE_TEMPLATE_TYPE_STYLES[template.type].background} ${MESSAGE_TEMPLATE_TYPE_STYLES[template.type].text}`
-                    }`}
+                    className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${MESSAGE_TEMPLATE_TYPE_STYLES[template.type].border} ${MESSAGE_TEMPLATE_TYPE_STYLES[template.type].background} ${MESSAGE_TEMPLATE_TYPE_STYLES[template.type].text}`}
                   >
                     {MESSAGE_TEMPLATE_TYPE_LABELS[template.type]}
                   </span>
                   <span
-                    className={`text-gray-900 ${
-                      isSelected ? 'font-semibold' : ''
+                    className={`${
+                      isSelected
+                        ? 'text-primary font-semibold'
+                        : 'text-gray-900'
                     }`}
                   >
                     {template.title}
                   </span>
-                </button>
+                </div>
 
                 {/* 1-2. 템플릿 삭제 버튼 */}
                 <button
@@ -112,7 +112,7 @@ function MessageTemplateList() {
       <button
         onClick={onOpenCreateMode}
         disabled={isLoadingTemplates}
-        className="h-11 w-full rounded-sm bg-gray-200 text-base font-medium text-gray-900 transition hover:bg-gray-300"
+        className="inline-flex h-10.5 w-full items-center justify-center rounded-sm bg-gray-200 text-base font-medium leading-none text-gray-900 transition hover:bg-primary hover:text-white active:bg-primary disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400"
       >
         새 템플릿
       </button>

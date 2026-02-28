@@ -22,8 +22,8 @@ function MessageTemplateModal() {
 
         {/* 2. 본문 컴포넌트 - 폼과 리스트 컴포넌트 포함 */}
         <div className="grid min-h-0 flex-1 grid-cols-[1fr_1.15fr] gap-6">
-          <MessageTemplateForm />
           <MessageTemplateList />
+          <MessageTemplateForm />
         </div>
       </div>
     </div>

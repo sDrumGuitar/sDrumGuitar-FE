@@ -59,7 +59,7 @@ export default function StudentSearchInput({
           text="검색"
           onClick={handleSearch}
           disabled={disabled}
-          className="min-w-[64px]"
+          className="min-w-16"
         />
       </div>
 

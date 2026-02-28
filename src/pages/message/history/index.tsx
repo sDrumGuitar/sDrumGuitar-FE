@@ -65,7 +65,7 @@ function MessageHistoryPage() {
         </div>
       </div>
 
-      <div className="hidden sm:block text-">
+      <div className="hidden sm:block">
         <TableSection
           dataList={messages}
           headers={MESSAGE_LIST_HEADER}

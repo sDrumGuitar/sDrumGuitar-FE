@@ -38,7 +38,7 @@ interface CourseFormState {
   start_date: string;
   schedules: CourseSchedule[];
   invoice: {
-    status: 'paid' | null;
+    status: 'PAID' | 'UNPAID' | null;
     method: string;
     paid_at: string;
   };
@@ -125,7 +125,7 @@ export default function CourseForm({
     form.schedules.every((s) => s.time.trim() !== '');
 
   const isPaymentValid =
-    form.invoice.status !== 'paid' ||
+    form.invoice.status !== 'PAID' ||
     (form.invoice.method !== undefined && form.invoice.paid_at.trim() !== '');
 
   const canSubmit = isBaseInfoValid && isPaymentValid;
@@ -148,17 +148,17 @@ export default function CourseForm({
       };
 
       const invoiceStatus: 'PAID' | 'UNPAID' =
-        form.invoice.status === 'paid' ? 'PAID' : 'UNPAID';
+        form.invoice.status === 'PAID' ? 'PAID' : 'UNPAID';
       const invoiceMethod: 'CARD' | 'CASH' | null =
-        form.invoice.status === 'paid'
-          ? form.invoice.method === 'card'
+        form.invoice.status === 'PAID'
+          ? form.invoice.method === 'CARD'
             ? 'CARD'
-            : form.invoice.method === 'cash'
+            : form.invoice.method === 'CASH'
               ? 'CASH'
               : null
           : null;
       const invoicePaidAt: string | null =
-        form.invoice.status === 'paid'
+        form.invoice.status === 'PAID'
           ? form.invoice.paid_at.includes('T')
             ? form.invoice.paid_at
             : `${formatDateOnly(form.invoice.paid_at)}T00:00:00`
@@ -290,18 +290,18 @@ export default function CourseForm({
       <FormField label="결제 여부">
         <RadioGroup
           options={PAYMENT_STATUS_OPTIONS}
-          value={form.invoice.status === 'paid' ? 'paid' : 'unpaid'}
+          value={form.invoice.status === 'PAID' ? 'PAID' : 'UNPAID'}
           onChange={(v) =>
             updateForm('invoice', {
               ...form.invoice,
-              status: v === 'paid' ? 'paid' : null,
+              status: v as 'PAID' | 'UNPAID',
             })
           }
           disabled={isViewMode}
         />
       </FormField>
 
-      {form.invoice.status === 'paid' && (
+      {form.invoice.status === 'PAID' && (
         <>
           <FormField label="결제 방식">
             <RadioGroup

@@ -1,5 +1,4 @@
-export type InvoiceStatus = 'paid' | 'unpaid';
-export type PaymentMethod = 'card' | 'cash' | null;
+import type { InvoiceStatus, PaymentMethod } from '@/types/invoice';
 
 export interface InvoiceData {
   invoiceId: number;

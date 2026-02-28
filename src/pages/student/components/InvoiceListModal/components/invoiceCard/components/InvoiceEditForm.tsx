@@ -2,7 +2,7 @@ import FormField from '@/shared/form/FormField';
 import Select from '@/shared/form/Select';
 import TextInput from '@/shared/form/TextInput';
 import { PAYMENT_METHOD_OPTIONS, PAYMENT_STATUS_OPTIONS } from '@/constants/invoice';
-import type { InvoiceStatus, PaymentMethod } from '../types';
+import type { InvoiceStatus, PaymentMethod } from '@/types/invoice';
 
 interface InvoiceEditFormProps {
   status: InvoiceStatus;
@@ -36,7 +36,7 @@ export default function InvoiceEditForm({
             onChange={(v) => {
               const next = v as InvoiceStatus;
               setStatus(next);
-              if (next === 'unpaid') {
+              if (next === 'UNPAID') {
                 setMethod(null);
                 setPaidAtDate('');
               }
@@ -49,7 +49,7 @@ export default function InvoiceEditForm({
           <Select
             options={PAYMENT_METHOD_OPTIONS}
             value={method ?? ''}
-            disabled={status === 'unpaid'}
+            disabled={status === 'UNPAID'}
             onChange={(v) => setMethod(v ? (v as PaymentMethod) : null)}
           />
         </FormField>
@@ -60,7 +60,7 @@ export default function InvoiceEditForm({
           <TextInput
             type="date"
             value={paidAtDate}
-            disabled={status === 'unpaid'}
+            disabled={status === 'UNPAID'}
             onChange={(v) => setPaidAtDate(v)}
           />
         </FormField>

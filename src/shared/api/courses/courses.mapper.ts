@@ -16,7 +16,9 @@ function mapStudent(apiCourse: ApiCourse): Course['student'] {
   return {
     student_id: apiCourse.student.student_id,
     name: apiCourse.student.name,
-    age_group: toLowerOrNull(apiCourse.student.age_group) as Course['student']['age_group'] | null,
+    age_group: toLowerOrNull(apiCourse.student.age_group) as
+      | Course['student']['age_group']
+      | null,
     phone: apiCourse.student.phone,
     parent_phone: apiCourse.student.parent_phone,
   };
@@ -25,15 +27,8 @@ function mapStudent(apiCourse: ApiCourse): Course['student'] {
 function mapInvoice(apiCourse: ApiCourse): Course['invoice'] {
   return {
     invoice_id: apiCourse.invoice?.invoice_id ?? 0,
-    method: apiCourse.invoice?.method
-      ? (apiCourse.invoice.method.toLowerCase() as Course['invoice']['method'])
-      : null,
-    status:
-      apiCourse.invoice?.status === 'PAID'
-        ? 'paid'
-        : apiCourse.invoice?.status === 'UNPAID'
-          ? null
-          : null,
+    method: apiCourse.invoice?.method ?? null,
+    status: apiCourse.invoice?.status ?? null,
     paid_at: apiCourse.invoice?.paid_at ?? '',
   };
 }

@@ -1,7 +1,12 @@
 import { useMemo, useState } from 'react';
-import type { PatchInvoicePayload } from '@/types/invoice';
+import type {
+  PatchInvoicePayload,
+  InvoiceStatus,
+  PaymentMethod,
+} from '@/types/invoice';
 import { patchInvoice } from '@/shared/api/invoices';
-import type { InvoiceData, InvoiceStatus, PaymentMethod } from '../types';
+import { useToastStore } from '@/store/feedback/toastStore';
+import type { InvoiceData } from '../types';
 import { formatDateLabel, fromDateOnly, toDateOnly } from '../utils/date';
 import { classTypeLabel, methodLabel, statusLabel } from '../utils/labels';
 
@@ -50,10 +55,11 @@ export default function useInvoiceCard(
     invoice.paidAt ? toDateOnly(invoice.paidAt) : '',
   );
 
+  const { addToast } = useToastStore();
   const [loading, setLoading] = useState(false);
 
   const validationError = useMemo(() => {
-    if (status === 'paid') {
+    if (status === 'PAID') {
       if (!method) return '완료 상태면 납부 방법이 필요합니다.';
       if (!paidAtDate) return '완료 상태면 납부 날짜가 필요합니다.';
     }
@@ -79,10 +85,6 @@ export default function useInvoiceCard(
       paid_at: paidAtDate ? fromDateOnly(paidAtDate) : null,
     };
 
-    if (status === 'unpaid') {
-      payload = { status: 'unpaid', method: null, paid_at: null };
-    }
-
     try {
       setLoading(true);
       await patchInvoice(invoice.invoiceId, payload);
@@ -94,6 +96,7 @@ export default function useInvoiceCard(
         paid_at: payload.paid_at,
       });
 
+      addToast('success', '청구서가 수정되었습니다.');
       setIsEdit(false);
     } catch (e) {
       console.error(e);

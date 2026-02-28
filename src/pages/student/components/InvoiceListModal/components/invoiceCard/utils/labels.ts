@@ -1,4 +1,4 @@
-import type { InvoiceStatus, PaymentMethod } from '../types';
+import type { InvoiceStatus, PaymentMethod } from '@/types/invoice';
 
 export function classTypeLabel(v: string) {
   if (v === 'DRUM') return '드럼';
@@ -10,12 +10,12 @@ export function classTypeLabel(v: string) {
 
 // 청구 상태 라벨
 export function statusLabel(v: InvoiceStatus) {
-  return v === 'paid' ? '완료' : '미납';
+  return v === 'PAID' ? '완료' : '미납';
 }
 
 // 납부 방법 라벨
 export function methodLabel(v: PaymentMethod) {
-  if (v === 'card') return '카드';
-  if (v === 'cash') return '현금';
+  if (v === 'CARD') return '카드';
+  if (v === 'CASH') return '현금';
   return '-';
 }

@@ -25,10 +25,12 @@ export function toDateOnly(value: number | string) {
   return parsed.format('YYYY-MM-DD');
 }
 
-// "2026-01-17" -> "2026-01-17T00:00:00"
+// "2026-01-17" -> "2026-01-17T00:00:00.000Z"
 export function fromDateOnly(v: string) {
   if (!v) return null;
-  return `${v}T00:00:00`;
+  const parsed = dayjs(v).startOf('day');
+  if (!parsed.isValid()) return null;
+  return parsed.toISOString();
 }
 
 export function formatDateLabel(value: string | number | null) {

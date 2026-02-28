@@ -3,8 +3,10 @@ import {
   MESSAGE_TEMPLATE_TYPE_STYLES,
 } from '@/constants/messageTemplate';
 import { useTemplateList } from '@/pages/message/template/components/MessageTemplateModal/hooks/useTemplateList';
-import { useTemplateMenuClose } from '@/pages/message/template/components/MessageTemplateModal/hooks/useTemplateMenuClose';
-import { IoIosMore } from 'react-icons/io';
+import ConfirmModal from '@/shared/modal/ConfirmModal';
+import { useToastStore } from '@/store/feedback/toastStore';
+import { useState } from 'react';
+import { IoTrashOutline } from 'react-icons/io5';
 
 // 문자 템플릿 목록 컴포넌트 - 템플릿 선택, 메뉴 토글, 삭제, 생성 기능 포함
 function MessageTemplateList() {
@@ -13,15 +15,28 @@ function MessageTemplateList() {
     templates,
     isLoadingTemplates,
     selectedTemplateId,
-    menuOpenId,
     onSelectTemplate,
-    onToggleMenu,
     onDeleteTemplate,
     onOpenCreateMode,
   } = useTemplateList();
+  const { addToast } = useToastStore();
 
-  // 템플릿 메뉴 닫기 훅 - 메뉴 외부 클릭 시 메뉴 닫기 기능 포함
-  useTemplateMenuClose();
+  const [confirmTargetId, setConfirmTargetId] = useState<number | null>(null);
+
+  const handleOpenDeleteConfirm = (templateId: number) => {
+    setConfirmTargetId(templateId);
+  };
+
+  const handleCloseDeleteConfirm = () => {
+    setConfirmTargetId(null);
+  };
+
+  const handleConfirmDelete = () => {
+    if (confirmTargetId === null) return;
+    onDeleteTemplate(confirmTargetId);
+    addToast('success', '삭제되었습니다.');
+    setConfirmTargetId(null);
+  };
 
   return (
     <div className="flex min-h-0 h-full flex-col gap-4">
@@ -76,38 +91,17 @@ function MessageTemplateList() {
                   </span>
                 </button>
 
-                {/* 1-2. 템플릿 메뉴 토글 버튼 */}
+                {/* 1-2. 템플릿 삭제 버튼 */}
                 <button
-                  data-template-menu-trigger
                   onClick={(event) => {
                     event.stopPropagation();
-                    onToggleMenu(template.id);
+                    handleOpenDeleteConfirm(template.id);
                   }}
-                  className="ml-2 px-2 text-lg leading-none text-gray-700"
+                  className="ml-2 inline-flex h-9 w-9 items-center justify-center rounded-full text-base text-rose-600 transition hover:bg-rose-50"
+                  aria-label="템플릿 삭제"
                 >
-                  <IoIosMore />
+                  <IoTrashOutline />
                 </button>
-
-                {/* 1-3. 템플릿 메뉴 패널 */}
-                {menuOpenId === template.id && (
-                  <div
-                    data-template-menu-panel
-                    className="absolute right-0 top-12 z-20 w-20 rounded-md bg-white py-1 shadow-[0_4px_10px_rgba(0,0,0,0.25)]"
-                  >
-                    <button
-                      onClick={() => onSelectTemplate(template.id)}
-                      className="w-full px-3 py-1 text-left text-sm text-gray-900 hover:bg-gray-100"
-                    >
-                      수정
-                    </button>
-                    <button
-                      onClick={() => onDeleteTemplate(template.id)}
-                      className="w-full px-3 py-1 text-left text-sm text-gray-900 hover:bg-gray-100"
-                    >
-                      삭제
-                    </button>
-                  </div>
-                )}
               </div>
             );
           })}
@@ -122,6 +116,17 @@ function MessageTemplateList() {
       >
         새 템플릿
       </button>
+
+      <ConfirmModal
+        isOpen={confirmTargetId !== null}
+        title="삭제하시겠습니까?"
+        description="삭제한 템플릿은 복구할 수 없습니다."
+        confirmText="삭제"
+        cancelText="취소"
+        isDanger
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCloseDeleteConfirm}
+      />
     </div>
   );
 }

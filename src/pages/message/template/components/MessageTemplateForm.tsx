@@ -3,7 +3,7 @@ import {
   MESSAGE_TEMPLATE_TYPE_STYLES,
   MESSAGE_TEMPLATE_TYPES,
 } from '@/constants/messageTemplate';
-import { useTemplateForm } from '@/pages/message/template/components/MessageTemplateModal/hooks/useTemplateForm';
+import { useTemplateForm } from '@/pages/message/template/hooks/useTemplateForm';
 import { useEffect, useRef, useState } from 'react';
 
 // 문자 템플릿 폼 컴포넌트 - 제목과 내용 입력, 제출 버튼 포함

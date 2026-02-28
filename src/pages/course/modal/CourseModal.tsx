@@ -1,4 +1,5 @@
 import { useCourseModalStore } from '@/store/course/courseModalStore';
+import ConfirmModal from '@/shared/modal/ConfirmModal';
 import ModalWrapper from '@/shared/modal/ModalWrapper';
 import CourseForm from './CourseForm';
 import { useState } from 'react';
@@ -9,13 +10,12 @@ interface CourseModalProps {
 function CourseModal({ onSuccess }: CourseModalProps) {
   const { mode, close } = useCourseModalStore();
   const [isDirty, setIsDirty] = useState(false);
+  const [isCloseConfirmOpen, setIsCloseConfirmOpen] = useState(false);
 
   const handleCloseRequest = () => {
     if ((mode === 'CREATE' || mode === 'UPDATE') && isDirty) {
-      const confirmed = window.confirm(
-        '작성 중인 내용이 사라집니다. 정말 닫으시겠습니까?',
-      );
-      if (!confirmed) return;
+      setIsCloseConfirmOpen(true);
+      return;
     }
 
     close();
@@ -36,6 +36,17 @@ function CourseModal({ onSuccess }: CourseModalProps) {
       </div>
 
       <CourseForm onDirtyChange={setIsDirty} onSuccess={onSuccess} />
+
+      <ConfirmModal
+        isOpen={isCloseConfirmOpen}
+        title="작성 중인 내용이 사라집니다."
+        description="정말 닫으시겠습니까?"
+        confirmText="닫기"
+        cancelText="취소"
+        isDanger
+        onConfirm={close}
+        onCancel={() => setIsCloseConfirmOpen(false)}
+      />
     </ModalWrapper>
   );
 }

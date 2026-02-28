@@ -2,7 +2,7 @@ import {
   MESSAGE_TEMPLATE_TYPE_LABELS,
   MESSAGE_TEMPLATE_TYPE_STYLES,
 } from '@/constants/messageTemplate';
-import { useTemplateList } from '@/pages/message/template/components/MessageTemplateModal/hooks/useTemplateList';
+import { useTemplateList } from '@/pages/message/template/hooks/useTemplateList';
 import ConfirmModal from '@/shared/modal/ConfirmModal';
 import { useToastStore } from '@/store/feedback/toastStore';
 import { useState } from 'react';
@@ -18,6 +18,9 @@ function MessageTemplateList() {
     onSelectTemplate,
     onDeleteTemplate,
     onOpenCreateMode,
+    isSwitchConfirmOpen,
+    onConfirmSwitch,
+    onCancelSwitch,
   } = useTemplateList();
   const { addToast } = useToastStore();
 
@@ -126,6 +129,16 @@ function MessageTemplateList() {
         isDanger
         onConfirm={handleConfirmDelete}
         onCancel={handleCloseDeleteConfirm}
+      />
+
+      <ConfirmModal
+        isOpen={isSwitchConfirmOpen}
+        title="저장되지 않은 변경사항이 있습니다."
+        description="저장 후 템플릿을 전환할까요?"
+        confirmText="저장 후 전환"
+        cancelText="그대로 전환"
+        onConfirm={onConfirmSwitch}
+        onCancel={onCancelSwitch}
       />
     </div>
   );

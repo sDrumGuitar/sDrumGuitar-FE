@@ -4,7 +4,7 @@ import PrivateSidebar from './PrivateSidebar';
 
 function PrivateLayout() {
   return (
-    <div className="w-full flex min-h-screen">
+    <div className="w-full flex min-h-screen flex-col md:flex-row">
       <PrivateSidebar />
       <OutletLayout />
       <ToastContainer />

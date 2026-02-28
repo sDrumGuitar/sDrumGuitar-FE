@@ -19,21 +19,21 @@ function SendMessageHeader({
   onApplyTemplate,
 }: SendMessageHeaderProps) {
   return (
-    <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+    <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
       <div>
         <p className="text-lg font-bold text-gray-900">메시지 작성</p>
         <p className="text-xs text-gray-500">
           {selectedStudentName} · {selectedStudentGroup}
         </p>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex w-full flex-col gap-2 md:w-auto md:flex-row md:items-center">
         <select
           value={selectedTemplateId}
           onChange={(event) => {
             const value = event.target.value;
             onSelectTemplate(value ? Number(value) : '');
           }}
-          className="h-10 min-w-48 rounded-lg border border-gray-200 bg-white px-3 text-sm text-gray-700 outline-none focus:border-primary"
+          className="h-10 w-full min-w-0 rounded-lg border border-gray-200 bg-white px-3 text-sm text-gray-700 outline-none focus:border-primary md:min-w-48"
         >
           <option value="">템플릿 선택</option>
           {templates.map((template) => (
@@ -45,7 +45,7 @@ function SendMessageHeader({
         <NormalButton
           text="템플릿 불러오기"
           onClick={onApplyTemplate}
-          className="h-10 px-4"
+          className="h-10 w-full px-4"
         />
       </div>
     </div>

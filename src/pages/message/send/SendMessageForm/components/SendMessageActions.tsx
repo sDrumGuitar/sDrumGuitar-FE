@@ -18,16 +18,26 @@ function SendMessageActions({
   const reserveButtonText = hasReservedAt ? '예약하기' : '예약 시간 설정';
 
   return (
-    <div className="mt-4 flex flex-wrap items-center justify-end gap-2">
+    <div className="mt-4 flex flex-col gap-2 md:flex-row md:items-center md:justify-end">
       {reservedAtLabel ? (
-        <span className="text-sm text-gray-600">{reservedAtLabel}</span>
+        <span className="text-xs text-gray-600 md:text-sm">
+          {reservedAtLabel}
+        </span>
       ) : null}
-      <NormalButton
-        text={reserveButtonText}
-        onClick={onReserve}
-        disabled={disabled}
-      />
-      <NormalButton text="전송하기" onClick={onSend} disabled={disabled} />
+      <div className="flex w-full flex-col gap-2 md:w-auto md:flex-row">
+        <NormalButton
+          text={reserveButtonText}
+          onClick={onReserve}
+          disabled={disabled}
+          className="h-10 w-full md:w-auto"
+        />
+        <NormalButton
+          text="전송하기"
+          onClick={onSend}
+          disabled={disabled}
+          className="h-10 w-full md:w-auto"
+        />
+      </div>
     </div>
   );
 }

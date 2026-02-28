@@ -4,13 +4,19 @@ import { IoIosLogOut } from 'react-icons/io';
 
 function PrivateSidebar() {
   return (
-    <div className="min-w-50 bg-primary-light flex flex-col justify-between">
-      <div>
+    <div className="w-full md:min-w-50 md:w-50 bg-primary-light flex flex-col">
+      <div className="flex items-center justify-between md:block px-4 py-4 md:px-0 md:py-0">
         <LogoName />
-        <MenuList />
+        <div className="md:hidden">
+          <LogoutButton compact />
+        </div>
       </div>
 
-      <LogoutButton />
+      <MenuList />
+
+      <div className="hidden md:block mt-auto">
+        <LogoutButton />
+      </div>
     </div>
   );
 }
@@ -18,15 +24,14 @@ export default PrivateSidebar;
 
 const LogoName = () => {
   return (
-    <p className="text-2xl font-bold px-4 py-10">
+    <p className="text-lg md:text-2xl font-bold md:px-4 md:py-10">
       에스드럼기타
-      <br />
-      음악교습소
+      <span className="ml-1 inline md:ml-0 md:block">음악교습소</span>
     </p>
   );
 };
 
-const LogoutButton = () => {
+const LogoutButton = ({ compact = false }: { compact?: boolean }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -39,7 +44,9 @@ const LogoutButton = () => {
   return (
     <div
       onClick={handleLogout}
-      className="px-4 py-6 text-left hover:text-black text-gray-500 hover:font-bold flex gap-1 items-center"
+      className={`text-left hover:text-black text-gray-500 hover:font-bold flex gap-1 items-center ${
+        compact ? 'px-3 py-2 text-sm' : 'px-4 py-6'
+      }`}
     >
       <IoIosLogOut size={18} />
       로그아웃

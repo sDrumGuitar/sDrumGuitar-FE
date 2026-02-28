@@ -3,11 +3,11 @@ import StudentList from './StudentList';
 
 function MessageSendPage() {
   return (
-    <div className="flex gap-6">
-      <div className="w-2/5">
+    <div className="flex flex-col gap-6 md:flex-row">
+      <div className="w-full md:w-2/5">
         <StudentList />
       </div>
-      <div className="w-3/5">
+      <div className="w-full md:w-3/5">
         <SendMessageForm />
       </div>
     </div>

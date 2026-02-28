@@ -45,7 +45,7 @@ function SendMessageHeader({
         <NormalButton
           text="템플릿 불러오기"
           onClick={onApplyTemplate}
-          className="h-10 w-full px-4 md:w-auto"
+          className="h-10 w-full px-4"
         />
       </div>
     </div>

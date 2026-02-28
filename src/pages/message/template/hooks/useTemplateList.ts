@@ -1,36 +1,11 @@
-import { DEFAULT_MESSAGE_TEMPLATE_TYPE } from '@/constants/messageTemplate';
 import { useMessageTemplateStore } from '@/store/message/messageTemplateStore';
+import {
+  canSubmitTemplateForm,
+  isTemplateFormDirtyAgainstSelected,
+  isTemplateFormDirtyForCreate,
+} from './templateFormUtils';
 
-const getIsDirty = (
-  mode: 'CREATE' | 'UPDATE',
-  form: { type: string; title: string; content: string },
-  templates: { id: number; type: string; title: string; content: string }[],
-  selectedTemplateId: number | null,
-) => {
-  if (mode === 'CREATE') {
-    return (
-      form.type.trim() !== DEFAULT_MESSAGE_TEMPLATE_TYPE ||
-      form.title.trim().length > 0 ||
-      form.content.trim().length > 0
-    );
-  }
-
-  if (!selectedTemplateId) return false;
-  const selectedTemplate = templates.find(
-    (template) => template.id === selectedTemplateId,
-  );
-  if (!selectedTemplate) return false;
-
-  return (
-    selectedTemplate.type !== form.type ||
-    selectedTemplate.title !== form.title ||
-    selectedTemplate.content !== form.content
-  );
-};
-
-const getCanSubmit = (form: { type: string; title: string; content: string }) =>
-  Boolean(form.type.trim() && form.title.trim() && form.content.trim());
-
+// 템플릿 목록과 선택 동작을 다루는 훅
 export const useTemplateList = () => {
   const templates = useMessageTemplateStore((state) => state.templates);
   const isLoadingTemplates = useMessageTemplateStore(
@@ -53,6 +28,7 @@ export const useTemplateList = () => {
   const addTemplate = useMessageTemplateStore((state) => state.addTemplate);
   const updateTemplate = useMessageTemplateStore((state) => state.updateTemplate);
 
+  // 현재 모드에 따라 생성/수정을 수행
   const handleSubmit = async () => {
     if (mode === 'CREATE') {
       await addTemplate();
@@ -61,15 +37,18 @@ export const useTemplateList = () => {
     updateTemplate();
   };
 
+  // 변경사항이 있을 경우 확인 후 템플릿을 전환
   const handleSelectTemplate = async (nextTemplateId: number) => {
     if (selectedTemplateId === nextTemplateId) return;
 
-    const isDirty = getIsDirty(
-      mode,
-      form,
-      templates,
-      selectedTemplateId,
-    );
+    const isDirty =
+      mode === 'CREATE'
+        ? isTemplateFormDirtyForCreate(form)
+        : isTemplateFormDirtyAgainstSelected(
+            form,
+            templates,
+            selectedTemplateId,
+          );
     if (!isDirty) {
       selectTemplate(nextTemplateId);
       return;
@@ -80,7 +59,7 @@ export const useTemplateList = () => {
     );
 
     if (shouldSave) {
-      const canSubmit = getCanSubmit(form);
+      const canSubmit = canSubmitTemplateForm(form);
       if (!canSubmit) {
         window.alert('제목과 내용을 모두 입력해야 저장할 수 있습니다.');
         return;

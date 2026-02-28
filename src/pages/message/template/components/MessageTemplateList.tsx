@@ -2,7 +2,7 @@ import {
   MESSAGE_TEMPLATE_TYPE_LABELS,
   MESSAGE_TEMPLATE_TYPE_STYLES,
 } from '@/constants/messageTemplate';
-import { useTemplateList } from '@/pages/message/template/components/MessageTemplateModal/hooks/useTemplateList';
+import { useTemplateList } from '@/pages/message/template/hooks/useTemplateList';
 import ConfirmModal from '@/shared/modal/ConfirmModal';
 import { useToastStore } from '@/store/feedback/toastStore';
 import { useState } from 'react';

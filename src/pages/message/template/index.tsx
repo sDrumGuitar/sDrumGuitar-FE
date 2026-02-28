@@ -1,11 +1,31 @@
-import MessageTemplateModal from './components/MessageTemplateModal';
+import { useMessageTemplateStore } from '@/store/message/messageTemplateStore';
+import { useEffect } from 'react';
+import MessageTemplateHeader from './components/MessageTemplateHeader';
+import MessageTemplateList from './components/MessageTemplateList';
+import MessageTemplateForm from './components/MessageTemplateForm';
 
 // 문자 템플릿 관리 페이지 컴포넌트
 function MessageTemplatePage() {
+  const fetchTemplates = useMessageTemplateStore(
+    (state) => state.fetchTemplates,
+  );
+
+  useEffect(() => {
+    fetchTemplates();
+  }, [fetchTemplates]);
+
   return (
-    <div>
-      {/* 1. 템플릿 편집 영역 */}
-      <MessageTemplateModal />
+    <div className="rounded-xl border border-gray-200 bg-white p-6">
+      <div className="flex h-155 flex-col overflow-hidden">
+        {/* 1. 페이지 헤더 컴포넌트 */}
+        <MessageTemplateHeader />
+
+        {/* 2. 본문 컴포넌트 - 폼과 리스트 컴포넌트 포함 */}
+        <div className="grid min-h-0 flex-1 grid-cols-[1fr_1.15fr] gap-6">
+          <MessageTemplateList />
+          <MessageTemplateForm />
+        </div>
+      </div>
     </div>
   );
 }

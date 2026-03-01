@@ -6,10 +6,14 @@ import {
   updateLessonAttendanceMakeUp,
 } from '@/shared/api/lessons';
 import { useToastStore } from '@/store/feedback/toastStore';
+import { useMessageSendModalStore } from '@/store/message/messageSendModalStore';
+import type { Student } from '@/types/student';
 
 interface UseAttendanceFlowParams {
   attendanceStatus: string | null;
   lessonId: number;
+  lessonName?: string;
+  lessonIndex?: number;
   onAttendanceUpdated: (
     lessonId: number,
     attendanceStatus: string | null,
@@ -21,6 +25,8 @@ interface UseAttendanceFlowParams {
 export function useAttendanceFlow({
   attendanceStatus,
   lessonId,
+  lessonName,
+  lessonIndex,
   onAttendanceUpdated,
   onRefreshLessons,
 }: UseAttendanceFlowParams) {
@@ -37,6 +43,7 @@ export function useAttendanceFlow({
   } = useDateModalStore();
   const { isOpen: isOpenTime, open: openTime } = useTimeModalStore();
   const { addToast } = useToastStore();
+  const { open: openMessageSendModal } = useMessageSendModalStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -117,6 +124,28 @@ export function useAttendanceFlow({
       onAttendanceUpdated(lessonId, 'makeup');
       await onRefreshLessons?.();
       addToast('success', '보강 일정이 성공적으로 저장되었습니다.');
+
+      if (lessonName) {
+        const placeholderStudent: Student = {
+          student_id: -lessonId,
+          name: lessonName,
+          age_group: 'adult',
+          phone: '',
+          parent_phone: '',
+          family_discount: false,
+          memo: null,
+        };
+
+        openMessageSendModal({
+          title: '보강 문자 보내기',
+          kind: 'makeup',
+          targetType: 'lesson',
+          student: placeholderStudent,
+          lessonId,
+          lessonIndex,
+          resetSelection: true,
+        });
+      }
     } catch (error) {
       console.error('Failed to update makeup schedule:', error);
       addToast('error', '보강 일정 저장에 실패했습니다.');

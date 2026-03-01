@@ -7,6 +7,8 @@ interface AttendanceButtonListProps {
   attendanceStatus: string | null;
   lessonId: number;
   lessonTag: string;
+  lessonName?: string;
+  lessonIndex?: number;
   onAttendanceUpdated: (
     lessonId: number,
     attendanceStatus: string | null,
@@ -19,6 +21,8 @@ export default function AttendanceButtonList({
   attendanceStatus,
   lessonId,
   lessonTag,
+  lessonName,
+  lessonIndex,
   onAttendanceUpdated,
   onRefreshLessons,
 }: AttendanceButtonListProps) {
@@ -36,6 +40,8 @@ export default function AttendanceButtonList({
   } = useAttendanceFlow({
     attendanceStatus,
     lessonId,
+    lessonName,
+    lessonIndex,
     onAttendanceUpdated,
     onRefreshLessons,
   });

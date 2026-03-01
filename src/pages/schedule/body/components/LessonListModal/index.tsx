@@ -60,6 +60,8 @@ export default function LessonListModal({
               attendanceStatus={lesson.attendance_status}
               lessonId={lesson.id}
               lessonTag={lesson.lesson_tag}
+              lessonName={lesson.name}
+              lessonIndex={lesson.lesson_index}
               onAttendanceUpdated={onAttendanceUpdated}
               onRefreshLessons={onRefreshLessons}
             />,

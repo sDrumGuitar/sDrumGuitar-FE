@@ -13,7 +13,7 @@ export const useSelectedStudentSummary = () => {
     selectedStudents.length === 0
       ? '구분 없음'
       : selectedStudents.length === 1
-        ? getAgeGroupLabel(selectedStudents[0].age_group)
+        ? getAgeGroupLabel(selectedStudents[0].age_group ?? null)
         : '구분 혼합';
 
   return {

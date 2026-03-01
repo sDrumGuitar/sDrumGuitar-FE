@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import ModalWrapper from './ModalWrapper';
 
 interface ConfirmModalProps {
@@ -21,10 +22,31 @@ function ConfirmModal({
   onConfirm,
   onCancel,
 }: ConfirmModalProps) {
+  const [canBackdropClose, setCanBackdropClose] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setCanBackdropClose(false);
+      const timer = setTimeout(() => {
+        setCanBackdropClose(true);
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
+  const handleBackdropClose = () => {
+    if (!canBackdropClose) return;
+    onCancel();
+  };
+
   if (!isOpen) return null;
 
   return (
-    <ModalWrapper onClose={onCancel} className="w-90! min-h-0! h-auto!">
+    <ModalWrapper
+      onClose={handleBackdropClose}
+      className="w-90! min-h-0! h-auto!"
+    >
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
           <h3 className="text-lg font-semibold text-gray-900">{title}</h3>

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { Student } from '@/types/student';
+import type { MessageRecipient } from '@/store/message/messageSendStore';
 
 export type MessageSendKind = 'general' | 'unpaid' | 'makeup';
 export type MessageSendTarget = 'none' | 'invoice' | 'lesson';
@@ -8,7 +8,7 @@ export interface MessageSendContext {
   title: string;
   kind: MessageSendKind;
   targetType: MessageSendTarget;
-  student: Student | null;
+  student: MessageRecipient | null;
   invoiceId?: number;
   lessonId?: number;
   lessonIndex?: number;

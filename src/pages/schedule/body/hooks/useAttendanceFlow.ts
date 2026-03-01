@@ -7,7 +7,7 @@ import {
 } from '@/shared/api/lessons';
 import { useToastStore } from '@/store/feedback/toastStore';
 import { useMessageSendModalStore } from '@/store/message/messageSendModalStore';
-import type { Student } from '@/types/student';
+import type { MessageRecipient } from '@/store/message/messageSendStore';
 
 interface UseAttendanceFlowParams {
   attendanceStatus: string | null;
@@ -126,23 +126,15 @@ export function useAttendanceFlow({
       addToast('success', '보강 일정이 성공적으로 저장되었습니다.');
 
       if (lessonName) {
-        const placeholderStudent: Student = {
-          student_id: -lessonId,
+        const recipient: MessageRecipient = {
           name: lessonName,
-          age_group: 'adult',
-          phone: '',
-          parent_phone: '',
-          family_discount: false,
-          memo: null,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
         };
 
         openMessageSendModal({
           title: '보강 문자 보내기',
           kind: 'makeup',
           targetType: 'lesson',
-          student: placeholderStudent,
+          student: recipient,
           lessonId,
           lessonIndex,
           resetSelection: true,

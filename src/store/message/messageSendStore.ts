@@ -1,22 +1,32 @@
 import { create } from 'zustand';
 import type { Student } from '@/types/student';
 
+export type MessageRecipient = {
+  student_id?: number;
+  name: string;
+  age_group?: Student['age_group'] | null;
+  phone?: string;
+  parent_phone?: string;
+  family_discount?: boolean;
+  memo?: string | null;
+};
+
 interface MessageSendState {
-  selectedStudents: Student[];
-  toggleStudent: (student: Student) => void;
-  setSelectedStudents: (students: Student[]) => void;
+  selectedStudents: MessageRecipient[];
+  toggleStudent: (student: MessageRecipient) => void;
+  setSelectedStudents: (students: MessageRecipient[]) => void;
   clearStudents: () => void;
-  isSelected: (student: Student) => boolean;
+  isSelected: (student: MessageRecipient) => boolean;
 }
 
-const getStudentKey = (student: Student) => {
+const getStudentKey = (student: MessageRecipient) => {
   if (typeof student.student_id === 'number')
     return `id:${student.student_id}`;
   return [
     `name:${student.name}`,
-    `group:${student.age_group}`,
-    `phone:${student.phone}`,
-    `parent:${student.parent_phone}`,
+    `group:${student.age_group ?? ''}`,
+    `phone:${student.phone ?? ''}`,
+    `parent:${student.parent_phone ?? ''}`,
   ].join('|');
 };
 

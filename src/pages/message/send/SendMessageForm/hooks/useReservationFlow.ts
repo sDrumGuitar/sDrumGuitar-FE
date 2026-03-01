@@ -1,10 +1,10 @@
 import { useDateModalStore } from '@/store/date/dateModalStore';
 import { useTimeModalStore } from '@/store/date/timeModalStore';
-import type { Student } from '@/types/student';
+import type { MessageRecipient } from '@/store/message/messageSendStore';
 
 interface ReservationPayloadInput {
   content: string;
-  students: Student[];
+  students: MessageRecipient[];
 }
 
 export const useReservationFlow = ({

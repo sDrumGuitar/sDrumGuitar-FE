@@ -1,8 +1,8 @@
-import type { Student } from '@/types/student';
+import type { MessageRecipient } from '@/store/message/messageSendStore';
 
 interface SendActionInput {
   content: string;
-  students: Student[];
+  students: MessageRecipient[];
 }
 
 export const useSendAction = ({ content, students }: SendActionInput) => {

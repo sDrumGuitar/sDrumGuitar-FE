@@ -3,6 +3,7 @@ import type {
   PaymentMethod,
   StudentInvoiceItem,
 } from '@/types/invoice';
+import type { InvoiceData } from './invoiceCard/types';
 import InvoiceCard from './invoiceCard';
 
 interface InvoiceListModalBodyProps {
@@ -13,12 +14,14 @@ interface InvoiceListModalBodyProps {
     method: PaymentMethod;
     paid_at: string | null;
   }) => void;
+  onSendMessage?: (invoice: InvoiceData) => void;
 }
 
 // 청구서 목록을 렌더링하는 모달 본문 컴포넌트
 export default function InvoiceListModalBody({
   invociesList,
   handlePatched,
+  onSendMessage,
 }: InvoiceListModalBodyProps) {
   return (
     <div className="max-h-120 overflow-y-auto space-y-4 pr-1">
@@ -44,6 +47,7 @@ export default function InvoiceListModalBody({
             key={invoice.invoice_id}
             invoice={invoiceObject}
             onPatched={handlePatched}
+            onSendMessage={onSendMessage}
           />
         );
       })}

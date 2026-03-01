@@ -11,12 +11,15 @@ import type {
   PaymentMethod,
   StudentInvoiceItem,
 } from '@/types/invoice';
+import { useMessageSendModalStore } from '@/store/message/messageSendModalStore';
+import type { InvoiceData } from './components/invoiceCard/types';
 
 // 학생 청구서 목록 모달 컴포넌트
 export default function InvoiceListModal() {
   const { isOpen, student, close } = useInvoiceModalStore(); // 모달 상태 및 학생 정보 관리
   const [loading, setLoading] = useState(false); // 로딩 상태 관리
   const [invociesList, setInvociesList] = useState<StudentInvoiceItem[]>([]); // 청구서 목록 상태 관리
+  const { open: openMessageSendModal } = useMessageSendModalStore();
 
   // 학생의 청구서 목록을 API에서 불러오는 함수
   const load = async () => {
@@ -62,6 +65,18 @@ export default function InvoiceListModal() {
     );
   };
 
+  const handleSendMessage = (invoice: InvoiceData) => {
+    if (!student) return;
+    openMessageSendModal({
+      title: '미납 문자 보내기',
+      kind: 'unpaid',
+      targetType: 'invoice',
+      student,
+      invoiceId: invoice.invoiceId,
+      resetSelection: true,
+    });
+  };
+
   // 모달이 열려있지 않거나 학생 정보가 없으면 아무것도 렌더링하지 않음
   if (!isOpen || !student) return null;
 
@@ -80,6 +95,7 @@ export default function InvoiceListModal() {
         <InvoiceListModalBody
           invociesList={invociesList}
           handlePatched={handlePatched}
+          onSendMessage={handleSendMessage}
         />
       )}
     </ModalWrapper>

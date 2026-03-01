@@ -24,4 +24,5 @@ export interface InvoiceCardProps {
     method: PaymentMethod;
     paid_at: string | null;
   }) => void;
+  onSendMessage?: (invoice: InvoiceData) => void;
 }

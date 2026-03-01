@@ -134,6 +134,8 @@ export function useAttendanceFlow({
           parent_phone: '',
           family_discount: false,
           memo: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         };
 
         openMessageSendModal({

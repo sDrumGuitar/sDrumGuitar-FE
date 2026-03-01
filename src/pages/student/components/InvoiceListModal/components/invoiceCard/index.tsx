@@ -5,7 +5,11 @@ import useInvoiceCard from './hooks/useInvoiceCard';
 import type { InvoiceCardProps } from './types';
 
 // 청구서 카드 컴포넌트
-export default function InvoiceCard({ invoice, onPatched }: InvoiceCardProps) {
+export default function InvoiceCard({
+  invoice,
+  onPatched,
+  onSendMessage,
+}: InvoiceCardProps) {
   const {
     isEdit,
     setIsEdit,
@@ -31,6 +35,9 @@ export default function InvoiceCard({ invoice, onPatched }: InvoiceCardProps) {
         handleCancel={handleCancel}
         loading={loading}
         handleSave={handleSave}
+        onSendMessage={
+          onSendMessage ? () => onSendMessage(invoice) : undefined
+        }
       />
 
       {/* 2. 상세 정보 */}

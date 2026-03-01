@@ -25,12 +25,14 @@ function ConfirmModal({
   const [canBackdropClose, setCanBackdropClose] = useState(false);
 
   useEffect(() => {
-    setCanBackdropClose(false);
-    const timer = setTimeout(() => {
-      setCanBackdropClose(true);
-    }, 100);
+    if (isOpen) {
+      setCanBackdropClose(false);
+      const timer = setTimeout(() => {
+        setCanBackdropClose(true);
+      }, 100);
 
-    return () => clearTimeout(timer);
+      return () => clearTimeout(timer);
+    }
   }, [isOpen]);
 
   const handleBackdropClose = () => {
@@ -41,7 +43,10 @@ function ConfirmModal({
   if (!isOpen) return null;
 
   return (
-    <ModalWrapper onClose={handleBackdropClose} className="w-90! min-h-0! h-auto!">
+    <ModalWrapper
+      onClose={handleBackdropClose}
+      className="w-90! min-h-0! h-auto!"
+    >
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
           <h3 className="text-lg font-semibold text-gray-900">{title}</h3>

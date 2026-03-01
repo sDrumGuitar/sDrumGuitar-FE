@@ -75,10 +75,13 @@ function MessageHistoryPage() {
               message.send_at,
               message.content,
               <MessageStatusBadge status={message.status} />,
-              <NormalButton
-                text="상세"
-                onClick={() => handleOpenDetail(message)}
-              />,
+              <div className="flex justify-center">
+                <NormalButton
+                  text="상세"
+                  onClick={() => handleOpenDetail(message)}
+                  className="h-8 px-3 text-xs whitespace-nowrap"
+                />
+              </div>,
             ])
           }
         />

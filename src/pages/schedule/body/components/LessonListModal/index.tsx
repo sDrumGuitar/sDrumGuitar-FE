@@ -1,8 +1,11 @@
 import { LessonListHeader } from '@/constants/lesson';
 import ModalWrapper from '@/shared/modal/ModalWrapper';
 import TableSection from '@/shared/modal/TableSection';
+import ConfirmModal from '@/shared/modal/ConfirmModal';
 
 import { useLessonModalStore } from '@/store/schedule/lessonModalStore';
+import { useMakeupMessageConfirmStore } from '@/store/message/makeupMessageConfirmStore';
+import { useMessageSendModalStore } from '@/store/message/messageSendModalStore';
 import type { Lesson } from '@/types/lesson';
 import { useEffect, useState } from 'react';
 import AttendanceButtonList from './components/AttendanceButtonList';
@@ -26,6 +29,12 @@ export default function LessonListModal({
 }: LessonListModalProps) {
   // 모달을 닫는 함수와 선택된 날짜 정보
   const { close, selectedDate } = useLessonModalStore();
+  const {
+    isOpen: isOpenMakeupSendConfirm,
+    context: makeupSendContext,
+    close: closeMakeupSendConfirm,
+  } = useMakeupMessageConfirmStore();
+  const { open: openMessageSendModal } = useMessageSendModalStore();
   // 선택된 날짜에 해당하는 수업 목록을 상태로 관리
   const [lessons, setLessons] = useState<Lesson[]>([]);
 
@@ -67,6 +76,22 @@ export default function LessonListModal({
             />,
           ]);
         }}
+      />
+
+      {/* 3. 보강 문자 보내기 확인 모달 */}
+      <ConfirmModal
+        isOpen={isOpenMakeupSendConfirm}
+        title="보강 문자 보내기"
+        description="보강 문자를 보내시겠습니까?"
+        confirmText="보내기"
+        cancelText="취소"
+        onConfirm={() => {
+          if (makeupSendContext) {
+            openMessageSendModal(makeupSendContext);
+          }
+          closeMakeupSendConfirm();
+        }}
+        onCancel={closeMakeupSendConfirm}
       />
     </ModalWrapper>
   );

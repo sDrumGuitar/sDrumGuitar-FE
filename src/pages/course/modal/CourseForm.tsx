@@ -3,13 +3,7 @@ import {
   LESSON_COUNT,
   WEEKDAY_OPTIONS,
 } from '@/constants/course';
-import {
-  CheckboxGroup,
-  FormField,
-  RadioGroup,
-  Select,
-  TextInput,
-} from '@/shared/form';
+import { CheckboxGroup, FormField, RadioGroup, Select } from '@/shared/form';
 import { useEffect, useState } from 'react';
 import CourseScheduleTimeList from './CourseScheduleTimeList';
 import type { Course, CourseSchedule } from '@/types/course';

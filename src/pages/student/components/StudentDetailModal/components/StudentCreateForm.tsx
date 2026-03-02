@@ -44,7 +44,7 @@ function StudentCreateForm({
 
   // 폼 제출 핸들러
   const handleSubmit = async () => {
-    if (!canSubmit) {
+    if (!isValidStudentForm(form)) {
       alert('필수 항목을 모두 입력해주세요.');
       return;
     }

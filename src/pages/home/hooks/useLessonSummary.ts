@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getLessons } from '@/shared/api/lessons';
 import { WEEKDAY_OPTIONS } from '@/constants/course';
 import { getWeekdayLabel } from '@/utils/date/getWeekdayLabel';
@@ -15,9 +15,23 @@ export const useLessonSummary = () => {
   const month = now.getMonth() + 1;
   const todayKey = toDateKey(now);
 
+  const queryClient = useQueryClient();
+  const scheduleCache = queryClient.getQueryData([
+    'lessons',
+    year,
+    month,
+  ]);
+  const scheduleCacheUpdatedAt = queryClient.getQueryState([
+    'lessons',
+    year,
+    month,
+  ])?.dataUpdatedAt;
+
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['home', 'lessons', year, month],
     queryFn: () => getLessons({ year, month }),
+    initialData: scheduleCache,
+    initialDataUpdatedAt: scheduleCache ? scheduleCacheUpdatedAt : undefined,
   });
 
   return useMemo(() => {

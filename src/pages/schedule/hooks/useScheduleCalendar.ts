@@ -1,8 +1,10 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { CalendarData } from '@/types/schedule';
 import { getLessons } from '@/shared/api/lessons';
 import { getClassTypeLabel } from '@/utils/course/getClassTypeLabel';
 import { useScheduleCalendarStore } from '@/store/schedule/scheduleCalendarStore';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import type { GetLessonsResponse } from '@/shared/api/lessons';
 
 /*
  * 캘린더 데이터를 관리하는 커스텀 훅
@@ -13,6 +15,20 @@ import { useScheduleCalendarStore } from '@/store/schedule/scheduleCalendarStore
 export const useScheduleCalendar = () => {
   const { currentMonth, currentYear } = useScheduleCalendarStore(); // 캘린더 상태 (현재 연도, 월)
   const [calendarData, setCalendarData] = useState<CalendarData>({}); // 캘린더 데이터 상태
+  const queryClient = useQueryClient();
+  const month = currentMonth + 1;
+  const homeLessonsCache = queryClient.getQueryData<GetLessonsResponse>([
+    'home',
+    'lessons',
+    currentYear,
+    month,
+  ]);
+  const homeLessonsUpdatedAt = queryClient.getQueryState([
+    'home',
+    'lessons',
+    currentYear,
+    month,
+  ])?.dataUpdatedAt;
 
   // 출석 상태 업데이트 핸들러
   const handleAttendanceUpdated = (
@@ -38,13 +54,8 @@ export const useScheduleCalendar = () => {
   };
 
   // 회차 데이터 불러오기
-  const fetchLessons = useCallback(async () => {
-    const response = await getLessons({
-      year: currentYear,
-      month: currentMonth + 1,
-    });
-
-    const data: CalendarData = response.days.reduce((acc, day) => {
+  const mapLessonsToCalendar = useCallback((response: GetLessonsResponse) => {
+    return response.days.reduce((acc, day) => {
       acc[day.date] = {
         date: day.date,
         lessons: day.lessons.map((lesson) => ({
@@ -65,19 +76,36 @@ export const useScheduleCalendar = () => {
       };
       return acc;
     }, {} as CalendarData);
+  }, []);
 
-    setCalendarData(data);
-  }, [currentMonth, currentYear]);
+  const { data, isFetching, refetch } = useQuery({
+    queryKey: ['lessons', currentYear, month],
+    queryFn: () => getLessons({ year: currentYear, month }),
+    initialData: homeLessonsCache,
+    initialDataUpdatedAt: homeLessonsCache ? homeLessonsUpdatedAt : undefined,
+    staleTime: 1000 * 60 * 5,
+    refetchOnMount: (query) => query.isStale(),
+  });
+
+  const fetchLessons = useCallback(() => {
+    refetch();
+  }, [refetch]);
 
   // 컴포넌트 마운트 시 회차 데이터 불러오기
+  const mappedData = useMemo(
+    () => (data ? mapLessonsToCalendar(data) : {}),
+    [data, mapLessonsToCalendar],
+  );
+
   useEffect(() => {
-    fetchLessons();
-  }, [fetchLessons]);
+    setCalendarData(mappedData);
+  }, [mappedData]);
 
   // 외부로 노출할 데이터와 함수
   return {
     calendarData,
     fetchLessons,
     handleAttendanceUpdated,
+    isRefreshing: isFetching,
   };
 };

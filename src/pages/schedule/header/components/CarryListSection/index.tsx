@@ -4,7 +4,7 @@ import CarryListModal from './components/CarryListModal';
 import { useCarryModalStore } from '@/store/schedule/carryModalStore';
 
 interface CarryListSectionProps {
-  onRefreshLessons: () => Promise<void>;
+  onRefreshLessons: () => void;
 }
 // 이월 목록 버튼과 모달을 포함하는 헤더의 오른쪽 섹션 컴포넌트
 function CarryListSection({ onRefreshLessons }: CarryListSectionProps) {

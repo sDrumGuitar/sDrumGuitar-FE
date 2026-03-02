@@ -1,40 +1,20 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { getRollOverLessons } from '@/shared/api/lessons';
-import type { LessonItem } from '@/shared/api/lessons';
-
-interface RolloverSummary {
-  totalCount: number;
-  lessons: LessonItem[];
-  isLoading: boolean;
-}
 
 export const useRolloverLessons = () => {
-  const [summary, setSummary] = useState<RolloverSummary>({
-    totalCount: 0,
-    lessons: [],
-    isLoading: true,
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ['home', 'rollover-lessons'],
+    queryFn: () => getRollOverLessons(),
   });
 
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchRolloverLessons = async () => {
-      const data = await getRollOverLessons();
-      if (!isMounted) return;
-
-      setSummary({
-        totalCount: data.total_count,
-        lessons: data.lessons.slice(0, 3),
-        isLoading: false,
-      });
-    };
-
-    fetchRolloverLessons();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  return useMemo(() => summary, [summary]);
+  return useMemo(
+    () => ({
+      totalCount: data?.total_count ?? 0,
+      lessons: data?.lessons.slice(0, 3) ?? [],
+      isLoading,
+      refetch,
+    }),
+    [data, isLoading, refetch],
+  );
 };

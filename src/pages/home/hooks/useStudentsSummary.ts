@@ -1,39 +1,20 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { getStudents } from '@/shared/api/students';
-import type { Student } from '@/types/student';
-
-interface StudentsSummary {
-  totalCount: number;
-  students: Student[];
-  isLoading: boolean;
-}
 
 export const useStudentsSummary = () => {
-  const [summary, setSummary] = useState<StudentsSummary>({
-    totalCount: 0,
-    students: [],
-    isLoading: true,
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ['home', 'students', 1, 3],
+    queryFn: () => getStudents({ page: 1, size: 3 }),
   });
 
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchStudents = async () => {
-      const data = await getStudents({ page: 1, size: 3 });
-      if (!isMounted) return;
-      setSummary({
-        totalCount: data.total_count,
-        students: data.students,
-        isLoading: false,
-      });
-    };
-
-    fetchStudents();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  return useMemo(() => summary, [summary]);
+  return useMemo(
+    () => ({
+      totalCount: data?.total_count ?? 0,
+      students: data?.students ?? [],
+      isLoading,
+      refetch,
+    }),
+    [data, isLoading, refetch],
+  );
 };

@@ -1,80 +1,64 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { getLessons } from '@/shared/api/lessons';
 import { WEEKDAY_OPTIONS } from '@/constants/course';
 import { getWeekdayLabel } from '@/utils/date/getWeekdayLabel';
-import { getWeekdayValueFromDate, toDateKey, type WeekdayValue } from '../utils/date';
-
-interface LessonSummary {
-  monthTotal: number;
-  todayTotal: number;
-  weekdayCounts: { label: string; value: number }[];
-  isLoading: boolean;
-}
+import {
+  getWeekdayValueFromDate,
+  toDateKey,
+  type WeekdayValue,
+} from '../utils/date';
 
 export const useLessonSummary = () => {
-  const [summary, setSummary] = useState<LessonSummary>({
-    monthTotal: 0,
-    todayTotal: 0,
-    weekdayCounts: WEEKDAY_OPTIONS.map((opt) => ({
-      label: opt.label,
-      value: 0,
-    })),
-    isLoading: true,
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  const todayKey = toDateKey(now);
+
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ['home', 'lessons', year, month],
+    queryFn: () => getLessons({ year, month }),
   });
 
-  useEffect(() => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1;
-    const todayKey = toDateKey(now);
+  return useMemo(() => {
+    const weekdayMap = new Map<WeekdayValue, number>();
+    WEEKDAY_OPTIONS.forEach((opt) => {
+      weekdayMap.set(opt.value, 0);
+    });
 
-    let isMounted = true;
+    let monthTotal = 0;
+    let todayTotal = 0;
 
-    const fetchLessons = async () => {
-      const data = await getLessons({ year, month });
-      if (!isMounted) return;
+    data?.days.forEach((day) => {
+      const dayLessons = day.lessons.filter(
+        (lesson) =>
+          lesson.lesson_tag !== 'rollover' &&
+          lesson.attendance_status !== 'rollover',
+      );
+      const dayTotal = dayLessons.length;
+      monthTotal += dayTotal;
 
-      const weekdayMap = new Map<WeekdayValue, number>();
-      WEEKDAY_OPTIONS.forEach((opt) => {
-        weekdayMap.set(opt.value, 0);
-      });
-
-      let monthTotal = 0;
-      let todayTotal = 0;
-
-      data.days.forEach((day) => {
-        const dayTotal = day.lessons.length;
-        monthTotal += dayTotal;
-
-        const parsed = new Date(day.date);
-        if (!Number.isNaN(parsed.getTime())) {
-          const weekday = getWeekdayValueFromDate(parsed);
-          weekdayMap.set(weekday, (weekdayMap.get(weekday) ?? 0) + dayTotal);
-          if (toDateKey(parsed) === todayKey) {
-            todayTotal += dayTotal;
-          }
+      const parsed = new Date(day.date);
+      if (!Number.isNaN(parsed.getTime())) {
+        const weekday = getWeekdayValueFromDate(parsed);
+        weekdayMap.set(weekday, (weekdayMap.get(weekday) ?? 0) + dayTotal);
+        if (toDateKey(parsed) === todayKey) {
+          todayTotal += dayTotal;
         }
-      });
+      }
+    });
 
-      const weekdayCounts = WEEKDAY_OPTIONS.map((opt) => ({
-        label: getWeekdayLabel(opt.value),
-        value: weekdayMap.get(opt.value) ?? 0,
-      }));
+    const weekdayCounts = WEEKDAY_OPTIONS.map((opt) => ({
+      label: getWeekdayLabel(opt.value),
+      value: weekdayMap.get(opt.value) ?? 0,
+    }));
 
-      setSummary({
-        monthTotal,
-        todayTotal,
-        weekdayCounts,
-        isLoading: false,
-      });
+    return {
+      monthTotal,
+      todayTotal,
+      weekdayCounts,
+      isLoading,
+      refetch,
     };
-
-    fetchLessons();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  return useMemo(() => summary, [summary]);
+  }, [data, isLoading, todayKey, refetch]);
 };

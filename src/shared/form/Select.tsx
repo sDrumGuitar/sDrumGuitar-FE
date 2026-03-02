@@ -42,15 +42,21 @@ function Select({ options, value, onChange, disabled = false }: SelectProps) {
       }
     };
 
-    const handleClose = () => setIsOpen(false);
+    const handleScroll = (event: Event) => {
+      const target = event.target as Node | null;
+      if (target && menuRef.current?.contains(target)) {
+        return;
+      }
+      setIsOpen(false);
+    };
 
     window.addEventListener('pointerdown', handlePointerDown);
-    window.addEventListener('scroll', handleClose, true);
-    window.addEventListener('resize', handleClose);
+    window.addEventListener('scroll', handleScroll, true);
+    window.addEventListener('resize', handleScroll);
     return () => {
       window.removeEventListener('pointerdown', handlePointerDown);
-      window.removeEventListener('scroll', handleClose, true);
-      window.removeEventListener('resize', handleClose);
+      window.removeEventListener('scroll', handleScroll, true);
+      window.removeEventListener('resize', handleScroll);
     };
   }, [isOpen]);
 
@@ -76,7 +82,7 @@ function Select({ options, value, onChange, disabled = false }: SelectProps) {
       setMenuStyle({
         top,
         left: rect.left,
-        width: rect.width,
+        width: Math.max(rect.width, 160),
       });
     };
 
@@ -139,8 +145,10 @@ function Select({ options, value, onChange, disabled = false }: SelectProps) {
                   0,
                 width:
                   menuStyle?.width ??
-                  triggerRef.current?.getBoundingClientRect().width ??
-                  0,
+                  Math.max(
+                    triggerRef.current?.getBoundingClientRect().width ?? 0,
+                    160,
+                  ),
                 visibility: menuStyle ? 'visible' : 'hidden',
                 pointerEvents: menuStyle ? 'auto' : 'none',
               }}

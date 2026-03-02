@@ -10,8 +10,7 @@ import { formatToKoreanDate } from '@/utils/date/formatKoreanDate';
 import { getClassTypeLabel } from '@/utils/course/getClassTypeLabel';
 import { getCourses } from '@/shared/api/courses';
 import Chip from '@/shared/chip/Chip';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import type { GetCoursesResponse } from '@/shared/api/courses/courses.types';
+import { useQuery } from '@tanstack/react-query';
 
 const formatToHourMinute = (time?: string) => {
   if (!time) return '';
@@ -35,27 +34,9 @@ const getInvoiceChipProps = (status: Course['invoice']['status']) =>
 
 function CoursePage() {
   const { isOpen, openCreate, openDetail } = useCourseModalStore();
-  const queryClient = useQueryClient();
-  const homeCache = queryClient.getQueryData<GetCoursesResponse>([
-    'home',
-    'courses',
-    1,
-    3,
-  ]);
-  const homeCacheUpdatedAt = queryClient.getQueryState([
-    'home',
-    'courses',
-    1,
-    3,
-  ])?.dataUpdatedAt;
-
   const { data, isFetching, refetch } = useQuery({
     queryKey: ['courses', { page: 1, size: 20 }],
     queryFn: () => getCourses({ page: 1, size: 20 }),
-    initialData: homeCache
-      ? { ...homeCache, page: 1, size: 20 }
-      : undefined,
-    initialDataUpdatedAt: homeCache ? homeCacheUpdatedAt : undefined,
     staleTime: 1000 * 60 * 5,
     refetchOnMount: (query) => query.isStale(),
   });

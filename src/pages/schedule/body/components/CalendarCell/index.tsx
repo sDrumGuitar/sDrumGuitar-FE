@@ -36,7 +36,11 @@ function CalendarCell({ date, isCurrentMonth, lessons }: CalendarCellProps) {
       <DateLabel date={date} />
 
       {/* 2. 회차 리스트 */}
-      <LessonBarList lessons={visibleLessons} hasMore={hasMore} />
+      <LessonBarList
+        lessons={visibleLessons}
+        hasMore={hasMore}
+        totalCount={lessons.length}
+      />
     </div>
   );
 }

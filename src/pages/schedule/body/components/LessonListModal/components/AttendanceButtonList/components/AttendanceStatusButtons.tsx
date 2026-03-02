@@ -1,6 +1,6 @@
 import { ATTENDANCE_COLORS } from '@/constants/lesson';
 import { ATTENDANCE_TYPE } from '@/types/lesson';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 interface AttendanceStatusButtonsProps {
@@ -59,8 +59,9 @@ export default function AttendanceStatusButtons({
     };
   }, [isOpen]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isOpen) return;
+    setMenuStyle(null);
     const trigger = triggerRef.current;
     if (!trigger) return;
     const rect = trigger.getBoundingClientRect();
@@ -111,15 +112,23 @@ export default function AttendanceStatusButtons({
             {currentLabel}
           </button>
 
-          {isOpen && !disabled && menuStyle
+          {isOpen && !disabled
             ? createPortal(
                 <div
                   ref={menuRef}
                   className="fixed z-50 rounded-md border bg-white shadow-md overflow-hidden"
                   style={{
-                    top: menuStyle.top,
-                    left: menuStyle.left,
-                    width: menuStyle.width,
+                    top:
+                      menuStyle?.top ??
+                      (triggerRef.current?.getBoundingClientRect().bottom ?? 0),
+                    left:
+                      menuStyle?.left ??
+                      (triggerRef.current?.getBoundingClientRect().left ?? 0),
+                    width:
+                      menuStyle?.width ??
+                      (triggerRef.current?.getBoundingClientRect().width ?? 0),
+                    visibility: menuStyle ? 'visible' : 'hidden',
+                    pointerEvents: menuStyle ? 'auto' : 'none',
                   }}
                 >
                   {options.map(([key, label]) => {

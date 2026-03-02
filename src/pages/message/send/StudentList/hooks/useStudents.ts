@@ -1,24 +1,32 @@
-import { useEffect, useState } from 'react';
-import { api } from '@/shared/api/axios';
-import type { Student } from '@/types/student';
+import { useMemo } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { getStudents } from '@/shared/api/students';
+import type { GetStudentsResponse } from '@/shared/api/students';
 
 export const useStudents = () => {
-  const [students, setStudents] = useState<Student[]>([]);
+  const queryClient = useQueryClient();
+  const studentListCache = queryClient.getQueryData<GetStudentsResponse>([
+    'students',
+    { page: 1, size: 20 },
+  ]);
+  const studentListUpdatedAt = queryClient.getQueryState([
+    'students',
+    { page: 1, size: 20 },
+  ])?.dataUpdatedAt;
 
-  useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        const response = await api.get('/students');
-        if (response.data.students && response.data.students.length > 0) {
-          setStudents(response.data.students);
-        }
-      } catch (error) {
-        console.error('Failed to fetch student:', error);
-      }
-    };
+  const { data } = useQuery({
+    queryKey: ['students', { page: 1, size: 20 }],
+    queryFn: () => getStudents({ page: 1, size: 20 }),
+    initialData: studentListCache,
+    initialDataUpdatedAt: studentListCache ? studentListUpdatedAt : undefined,
+    staleTime: 1000 * 60 * 5,
+    refetchOnMount: (query) => query.isStale(),
+  });
 
-    fetchStudents();
-  }, []);
-
-  return { students };
+  return useMemo(
+    () => ({
+      students: data?.students ?? [],
+    }),
+    [data],
+  );
 };

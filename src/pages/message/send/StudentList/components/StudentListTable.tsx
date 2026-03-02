@@ -17,7 +17,7 @@ function StudentListTable({
     <div>
       <div className="space-y-3 md:hidden">
         {students.length === 0 ? (
-          <div className="rounded-lg border border-dashed border-gray-200 py-10 text-center text-sm text-gray-500">
+          <div className="rounded-md border border-dashed border-gray-200 py-10 text-center text-sm text-gray-500">
             조회 내용이 없습니다.
           </div>
         ) : (

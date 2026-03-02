@@ -9,9 +9,9 @@ export const LessonListHeader = [
 
 // 출결 색상
 export const ATTENDANCE_COLORS = new Map([
-  ['attended', '#38A169'],
-  ['absent', '#F76868'],
-  ['makeup', '#FF7825'],
+  ['attended', '#3AA675'],
+  ['absent', '#E87272'],
+  ['makeup', '#EFA04C'],
   ['rollover', '#805AD5'],
 ]);
 

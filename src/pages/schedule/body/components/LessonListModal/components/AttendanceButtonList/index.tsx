@@ -60,7 +60,7 @@ export default function AttendanceButtonList({
   return (
     <div className="space-y-2">
       {/* 1. 출석 상태 버튼과 저장 버튼, 보강/이월 모달을 포함하는 컨테이너 */}
-      <div className="flex justify-between">
+      <div className="flex items-start gap-2 sm:flex-nowrap sm:items-center sm:justify-between">
         {/* 1-1. 출석 상태 버튼 컴포넌트 */}
         <AttendanceStatusButtons
           status={status}

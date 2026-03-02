@@ -24,7 +24,7 @@ export interface GetStudentResponse {
 // ====================
 export interface CreateStudentPayload {
   name: string;
-  age_group: string;
+  age_group: Student['age_group'];
   phone: string;
   parent_phone: string;
   // family_discount: boolean;

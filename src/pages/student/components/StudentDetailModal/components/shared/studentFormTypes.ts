@@ -21,7 +21,9 @@ export const INITIAL_FORM: StudentFormState = {
 };
 
 // 학생 폼의 유효성 검사 함수 - 필수 항목이 모두 입력되었는지 확인
-export const isValidStudentForm = (form: StudentFormState) => {
+export const isValidStudentForm = (
+  form: StudentFormState,
+): form is StudentFormState & { ageGroup: Student['age_group'] } => {
   return (
     form.name.trim() !== '' &&
     String(form.ageGroup).trim() !== '' &&

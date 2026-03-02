@@ -11,7 +11,7 @@ interface TableProps {
 // 테이블 컴포넌트
 function Table({ headers, rows, onRowClick, rowClassName }: TableProps) {
   return (
-    <table className="w-full">
+    <table className="w-full border-separate border-spacing-y-2">
       {/* 1. 테이블 헤더 */}
       <thead>
         <TableHeader headers={headers} />

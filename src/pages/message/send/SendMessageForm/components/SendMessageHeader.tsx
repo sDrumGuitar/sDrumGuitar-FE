@@ -33,7 +33,7 @@ function SendMessageHeader({
             const value = event.target.value;
             onSelectTemplate(value ? Number(value) : '');
           }}
-          className="h-10 w-full min-w-0 rounded-lg border border-gray-200 bg-white px-3 text-sm text-gray-700 outline-none focus:border-primary md:min-w-48"
+          className="h-10 w-full min-w-0 rounded-md border border-gray-200 bg-white px-3 text-sm text-gray-700 outline-none focus:border-primary md:min-w-48"
         >
           <option value="">템플릿 선택</option>
           {templates.map((template) => (

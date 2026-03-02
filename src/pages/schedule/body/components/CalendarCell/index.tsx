@@ -28,8 +28,8 @@ function CalendarCell({ date, isCurrentMonth, lessons }: CalendarCellProps) {
 
   return (
     <div
-      className={`h-40 border-r border-b p-1 cursor-pointer hover:bg-[#d5def5]
-        ${!isCurrentMonth ? 'bg-gray-50 text-gray-400' : ''}`}
+      className={`h-40 border-r border-b border-gray-200 p-1 cursor-pointer transition-colors hover:bg-slate-50
+        ${!isCurrentMonth ? 'bg-slate-50 text-gray-400' : 'bg-white'}`}
       onClick={() => onSelectedDate(date)}
     >
       {/* 1. 일자 */}

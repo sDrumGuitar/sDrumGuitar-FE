@@ -17,13 +17,18 @@ const LessonBar = ({ lesson }: LessonBarProps) => {
   const className = isRolloverPending
     ? 'text-xs px-1 py-0.5 rounded mb-0.5 truncate text-purple-700 border border-dashed'
     : `text-xs px-1 py-0.5 rounded mb-0.5 truncate ${
-        hasAttendance ? 'text-white' : 'bg-white text-black border border-black'
+        hasAttendance
+          ? 'text-slate-800 border'
+          : 'bg-white text-black border border-gray-300'
       }`;
 
   const style = isRolloverPending
     ? { backgroundColor: '#F3E8FF', borderColor: '#A855F7' }
     : hasAttendance
-      ? { backgroundColor: attendanceColor ?? undefined }
+      ? {
+          backgroundColor: attendanceColor ? `${attendanceColor}40` : undefined,
+          borderColor: attendanceColor ?? undefined,
+        }
       : undefined;
 
   return (

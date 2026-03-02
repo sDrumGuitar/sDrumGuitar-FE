@@ -21,7 +21,7 @@ export default function AttendanceStatusButtons({
   const options = useMemo(() => Array.from(ATTENDANCE_TYPE.entries()), []);
   const currentLabel = options.find(([key]) => key === status)?.[1] ?? '선택';
   const currentColor = status
-    ? ATTENDANCE_COLORS.get(status) ?? '#E5E7EB'
+    ? (ATTENDANCE_COLORS.get(status) ?? '#E5E7EB')
     : '#E5E7EB';
 
   useEffect(() => {
@@ -62,7 +62,7 @@ export default function AttendanceStatusButtons({
           </button>
 
           {isOpen && !disabled && (
-            <div className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-md overflow-hidden">
+            <div className="absolute z-10 mt-2 w-full rounded-md border bg-white shadow-md overflow-hidden">
               {options.map(([key, label]) => {
                 const color = ATTENDANCE_COLORS.get(key) ?? '#E5E7EB';
                 const isActive = status === key;

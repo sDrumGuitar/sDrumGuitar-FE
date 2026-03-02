@@ -14,7 +14,7 @@ const CalendarBodyGrid = ({ dataMap }: CalendarBodyGridProps) => {
   const dates = generateCalendarDates(currentYear, currentMonth);
 
   return (
-    <div className="grid grid-cols-7 border-l">
+    <div className="grid grid-cols-7 border border-t-0 border-gray-200 rounded-b-xl overflow-hidden bg-white">
       {dates.map(({ date, isCurrentMonth }) => (
         <CalendarCell
           key={date}

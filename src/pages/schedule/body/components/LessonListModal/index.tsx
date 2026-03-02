@@ -50,13 +50,16 @@ export default function LessonListModal({
   }, [dataMap, selectedDate]);
 
   return (
-    <ModalWrapper onClose={close}>
+    <ModalWrapper
+      onClose={close}
+      className="max-h-[90dvh] overflow-hidden sm:max-h-[85vh] flex flex-col"
+    >
       {/* 1. 모달 헤더 */}
       <LessonListModalHeader />
 
       {/* 2. 회차 리스트 테이블 */}
       {/* 모바일: 카드형 레이아웃 */}
-      <div className="sm:hidden max-h-[calc(100dvh-12rem)] overflow-y-auto space-y-2 pr-1">
+      <div className="sm:hidden flex-1 overflow-y-auto space-y-2 pr-1">
         {lessons.length === 0 && (
           <div className="py-10 text-center text-gray-500">
             <p>조회 내용이 없습니다.</p>
@@ -114,7 +117,7 @@ export default function LessonListModal({
       </div>
 
       {/* 데스크탑: 테이블 레이아웃 */}
-      <div className="hidden sm:block">
+      <div className="hidden sm:block flex-1 overflow-y-auto">
         <TableSection
           dataList={lessons}
           headers={LessonListHeader}

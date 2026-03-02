@@ -1,6 +1,7 @@
 import { ATTENDANCE_COLORS } from '@/constants/lesson';
 import { ATTENDANCE_TYPE } from '@/types/lesson';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 interface AttendanceStatusButtonsProps {
   status: string | null;
@@ -18,6 +19,13 @@ export default function AttendanceStatusButtons({
 }: AttendanceStatusButtonsProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  const [menuStyle, setMenuStyle] = useState<{
+    top: number;
+    left: number;
+    width: number;
+  } | null>(null);
   const options = useMemo(() => Array.from(ATTENDANCE_TYPE.entries()), []);
   const currentLabel = options.find(([key]) => key === status)?.[1] ?? '선택';
   const currentColor = status
@@ -29,14 +37,56 @@ export default function AttendanceStatusButtons({
 
     const handlePointerDown = (event: PointerEvent) => {
       const target = event.target as Node | null;
-      if (!dropdownRef.current || !target) return;
-      if (!dropdownRef.current.contains(target)) {
+      if (!target) return;
+      const inTrigger = dropdownRef.current?.contains(target) ?? false;
+      const inMenu = menuRef.current?.contains(target) ?? false;
+      if (!inTrigger && !inMenu) {
         setIsOpen(false);
       }
     };
 
+    const handleScroll = () => {
+      setIsOpen(false);
+    };
+
     window.addEventListener('pointerdown', handlePointerDown);
-    return () => window.removeEventListener('pointerdown', handlePointerDown);
+    window.addEventListener('scroll', handleScroll, true);
+    window.addEventListener('resize', handleScroll);
+    return () => {
+      window.removeEventListener('pointerdown', handlePointerDown);
+      window.removeEventListener('scroll', handleScroll, true);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, [isOpen]);
+
+  useLayoutEffect(() => {
+    if (!isOpen) return;
+    setMenuStyle(null);
+    const trigger = triggerRef.current;
+    if (!trigger) return;
+    const rect = trigger.getBoundingClientRect();
+    const measure = () => {
+      const menuHeight = menuRef.current?.offsetHeight ?? 0;
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const spaceAbove = rect.top;
+      const nextDirection =
+        menuHeight > 0 && spaceBelow < menuHeight && spaceAbove > spaceBelow
+          ? 'up'
+          : 'down';
+      const gap = 8;
+      const top =
+        nextDirection === 'up'
+          ? Math.max(gap, rect.top - menuHeight - gap)
+          : Math.min(window.innerHeight - menuHeight - gap, rect.bottom + gap);
+      setMenuStyle({
+        top,
+        left: rect.left,
+        width: rect.width,
+      });
+    };
+
+    const raf = requestAnimationFrame(measure);
+    return () => cancelAnimationFrame(raf);
   }, [isOpen]);
 
   return (
@@ -48,6 +98,7 @@ export default function AttendanceStatusButtons({
             type="button"
             onClick={() => !disabled && setIsOpen((prev) => !prev)}
             disabled={disabled}
+            ref={triggerRef}
             style={{
               borderColor: currentColor,
               color: currentColor,
@@ -61,30 +112,54 @@ export default function AttendanceStatusButtons({
             {currentLabel}
           </button>
 
-          {isOpen && !disabled && (
-            <div className="absolute z-10 mt-2 w-full rounded-md border bg-white shadow-md overflow-hidden">
-              {options.map(([key, label]) => {
-                const color = ATTENDANCE_COLORS.get(key) ?? '#E5E7EB';
-                const isActive = status === key;
-                const isDisabled = disabledKeys.includes(key);
+          {isOpen && !disabled
+            ? createPortal(
+                <div
+                  ref={menuRef}
+                  className="fixed z-50 rounded-md border bg-white shadow-md overflow-hidden"
+                  style={{
+                    top:
+                      menuStyle?.top ??
+                      (triggerRef.current?.getBoundingClientRect().bottom ?? 0),
+                    left:
+                      menuStyle?.left ??
+                      (triggerRef.current?.getBoundingClientRect().left ?? 0),
+                    width:
+                      menuStyle?.width ??
+                      (triggerRef.current?.getBoundingClientRect().width ?? 0),
+                    visibility: menuStyle ? 'visible' : 'hidden',
+                    pointerEvents: menuStyle ? 'auto' : 'none',
+                  }}
+                >
+                  {options.map(([key, label]) => {
+                    const color = ATTENDANCE_COLORS.get(key) ?? '#E5E7EB';
+                    const isActive = status === key;
+                    const isDisabled = disabledKeys.includes(key);
 
-                return (
-                  <button
-                    key={String(key)}
-                    type="button"
-                    onClick={() => !isDisabled && onChange(key)}
-                    disabled={isDisabled}
-                    className={`w-full px-3 py-2 text-sm text-left transition-colors ${
-                      isActive ? 'bg-gray-50' : ''
-                    } ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    style={{ color }}
-                  >
-                    {label}
-                  </button>
-                );
-              })}
-            </div>
-          )}
+                    return (
+                      <button
+                        key={String(key)}
+                        type="button"
+                        onClick={() => {
+                          if (!isDisabled) {
+                            onChange(key);
+                            setIsOpen(false);
+                          }
+                        }}
+                        disabled={isDisabled}
+                        className={`w-full px-3 py-2 text-sm text-left transition-colors ${
+                          isActive ? 'bg-gray-50' : ''
+                        } ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        style={{ color }}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>,
+                document.body,
+              )
+            : null}
         </div>
       </div>
 

@@ -93,12 +93,18 @@ function Select({ options, value, onChange, disabled = false }: SelectProps) {
         onClick={() => !disabled && setIsOpen((prev) => !prev)}
         className={` w-full rounded-sm border px-2 py-1.5 text-left text-sm transition-colors ${
           disabled
-            ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
+            ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-400'
             : 'bg-white text-primary border-primary hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30'
         }`}
       >
-        <span className="text-primary">{selectedLabel}</span>
-        <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-primary">
+        <span className={disabled ? 'text-gray-400' : 'text-primary'}>
+          {selectedLabel}
+        </span>
+        <span
+          className={`pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 ${
+            disabled ? 'text-gray-400' : 'text-primary'
+          }`}
+        >
           <svg
             width="14"
             height="14"

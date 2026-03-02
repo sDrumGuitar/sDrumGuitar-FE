@@ -21,7 +21,6 @@ export default function AttendanceStatusButtons({
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
-  const [, setOpenDirection] = useState<'up' | 'down'>('down');
   const [menuStyle, setMenuStyle] = useState<{
     top: number;
     left: number;
@@ -38,8 +37,10 @@ export default function AttendanceStatusButtons({
 
     const handlePointerDown = (event: PointerEvent) => {
       const target = event.target as Node | null;
-      if (!dropdownRef.current || !target) return;
-      if (!dropdownRef.current.contains(target)) {
+      if (!target) return;
+      const inTrigger = dropdownRef.current?.contains(target) ?? false;
+      const inMenu = menuRef.current?.contains(target) ?? false;
+      if (!inTrigger && !inMenu) {
         setIsOpen(false);
       }
     };
@@ -71,7 +72,6 @@ export default function AttendanceStatusButtons({
         menuHeight > 0 && spaceBelow < menuHeight && spaceAbove > spaceBelow
           ? 'up'
           : 'down';
-      setOpenDirection(nextDirection);
       const gap = 8;
       const top =
         nextDirection === 'up'
@@ -131,7 +131,12 @@ export default function AttendanceStatusButtons({
                       <button
                         key={String(key)}
                         type="button"
-                        onClick={() => !isDisabled && onChange(key)}
+                        onClick={() => {
+                          if (!isDisabled) {
+                            onChange(key);
+                            setIsOpen(false);
+                          }
+                        }}
                         disabled={isDisabled}
                         className={`w-full px-3 py-2 text-sm text-left transition-colors ${
                           isActive ? 'bg-gray-50' : ''

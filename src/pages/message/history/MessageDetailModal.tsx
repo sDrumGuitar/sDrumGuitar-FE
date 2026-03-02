@@ -47,7 +47,7 @@ function MessageDetailModal({ message }: MessageDetailModalProps) {
           ) : null}
         </div>
 
-        <div className="mt-4 rounded-lg bg-gray-50 p-4 text-sm leading-6 text-gray-800">
+        <div className="mt-4 rounded-md bg-gray-50 p-4 text-sm leading-6 text-gray-800">
           {message.content}
         </div>
       </div>

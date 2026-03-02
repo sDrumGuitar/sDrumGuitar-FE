@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import TableSection from '../../shared/modal/TableSection';
 import { getStudents } from '@/shared/api/students';
 import type { Student } from '@/types/student';
@@ -8,6 +7,8 @@ import ModalOpenButton from '@/shared/modal/ModalOpenButton';
 import { getAgeGroupLabel } from '@/utils/student/getAgeGroupLabel';
 import InvoiceListModal from './components/InvoiceListModal';
 import Chip from '@/shared/chip/Chip';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import type { GetStudentsResponse } from '@/shared/api/students';
 
 const getAgeGroupTone = (ageGroup: Student['age_group'] | null) => {
   const normalized = ageGroup ? String(ageGroup).toUpperCase() : '';
@@ -31,25 +32,73 @@ const getAgeGroupTone = (ageGroup: Student['age_group'] | null) => {
 function StudentPage() {
   // 학생 모달 상태 관리
   const { isOpen, openCreate, openDetail } = useStudentModalStore();
-  // 학생 목록 상태 관리
-  const [students, setStudents] = useState<Student[]>([]);
+  const queryClient = useQueryClient();
+  const homeCache = queryClient.getQueryData<GetStudentsResponse>([
+    'home',
+    'students',
+    1,
+    3,
+  ]);
+  const homeCacheUpdatedAt = queryClient.getQueryState([
+    'home',
+    'students',
+    1,
+    3,
+  ])?.dataUpdatedAt;
 
-  // 학생 목록을 API에서 불러오는 함수
-  const loadStudents = async () => {
-    const { students } = await getStudents({ page: 1, size: 20 });
-    setStudents(students);
-  };
+  const { data, isFetching, refetch } = useQuery({
+    queryKey: ['students', { page: 1, size: 20 }],
+    queryFn: () => getStudents({ page: 1, size: 20 }),
+    initialData: homeCache
+      ? { ...homeCache, page: 1, size: 20 }
+      : undefined,
+    initialDataUpdatedAt: homeCache ? homeCacheUpdatedAt : undefined,
+    staleTime: 1000 * 60 * 5,
+    refetchOnMount: (query) => query.isStale(),
+  });
 
-  // 컴포넌트가 마운트될 때 학생 목록 불러오기
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    loadStudents();
-  }, []);
+  const students = data?.students ?? [];
 
   return (
     <div>
       {/* 1. 헤더 */}
-      <ModalOpenButton text="신규학생 추가" openModal={openCreate} />
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <ModalOpenButton text="신규학생 추가" openModal={openCreate} />
+        <button
+          type="button"
+          onClick={() => refetch()}
+          disabled={isFetching}
+          className={`inline-flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 ${
+            isFetching
+              ? 'border-gray-200 text-gray-400 cursor-not-allowed'
+              : 'border-primary text-primary hover:bg-primary/10 active:scale-95 active:bg-primary/20'
+          }`}
+        >
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 20 20"
+            fill="none"
+            aria-hidden="true"
+            className={isFetching ? 'animate-spin' : ''}
+          >
+            <path
+              d="M16 10a6 6 0 1 1-1.76-4.24"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+            />
+            <path
+              d="M16 4v4h-4"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          최신화
+        </button>
+      </div>
 
       {/* 2. 테이블 */}
       <TableSection<Student>
@@ -78,7 +127,7 @@ function StudentPage() {
       />
 
       {/* 3-1. 학생 상세 모달 */}
-      {isOpen && <StudentModal onSuccess={loadStudents} />}
+      {isOpen && <StudentModal onSuccess={refetch} />}
       {/* 3-2. 청구서 목록 모달 */}
       <InvoiceListModal />
     </div>

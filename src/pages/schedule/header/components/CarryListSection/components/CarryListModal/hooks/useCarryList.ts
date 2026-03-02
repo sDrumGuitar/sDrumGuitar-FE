@@ -1,25 +1,36 @@
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { getRollOverLessons, type LessonItem } from '@/shared/api/lessons';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import type { GetRolloverLessonsResponse } from '@/shared/api/lessons';
 
 // 이월 목록을 관리하는 커스텀 훅 - 이월된 레슨 목록을 가져오고 상태로 관리
 export const useCarryList = () => {
-  // 이월된 레슨 목록
-  const [lessons, setLessons] = useState<LessonItem[]>([]);
+  const queryClient = useQueryClient();
+  const homeCache = queryClient.getQueryData<GetRolloverLessonsResponse>([
+    'home',
+    'rollover-lessons',
+  ]);
+  const homeCacheUpdatedAt = queryClient.getQueryState([
+    'home',
+    'rollover-lessons',
+  ])?.dataUpdatedAt;
 
-  // 이월된 레슨 목록을 API에서 가져오는 함수
-  const fetchLessons = async () => {
-    try {
-      const response = await getRollOverLessons();
-      setLessons(response.lessons);
-    } catch (error) {
-      console.error('Failed to fetch roll-over lessons:', error);
-    }
-  };
+  const { data, refetch } = useQuery({
+    queryKey: ['rollover-lessons'],
+    queryFn: () => getRollOverLessons(),
+    initialData: homeCache,
+    initialDataUpdatedAt: homeCache ? homeCacheUpdatedAt : undefined,
+    staleTime: 1000 * 60 * 5,
+    refetchOnMount: (query) => query.isStale(),
+  });
 
-  // 컴포넌트가 마운트될 때 이월된 레슨 목록을 가져옴
-  useEffect(() => {
-    fetchLessons();
-  }, []);
-
-  return { lessons, fetchLessons };
+  return useMemo(
+    () => ({
+      lessons: (data?.lessons ?? []) as LessonItem[],
+      fetchLessons: async () => {
+        await refetch();
+      },
+    }),
+    [data, refetch],
+  );
 };

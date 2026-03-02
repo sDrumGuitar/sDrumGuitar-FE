@@ -1,6 +1,7 @@
 import type { Student } from '@/types/student';
 import { useEffect, useState } from 'react';
 import NormalButton from '@/shared/button/NormalButton';
+import ConfirmModal from '@/shared/modal/ConfirmModal';
 import { updateStudent } from '@/shared/api/students';
 import { useStudentModalStore } from '@/store/student/studentModalStore';
 import { useInvoiceModalStore } from '@/store/invoice/invoiceModalStore';
@@ -28,6 +29,7 @@ function StudentDetailView({
   const [originalForm, setOriginalForm] =
     useState<StudentFormState>(mappedStudent); // 원본 폼 상태 저장 (수정 취소 시 사용)
   const [form, setForm] = useState<StudentFormState>(mappedStudent); // 현재 폼 상태
+  const [isCancelConfirmOpen, setIsCancelConfirmOpen] = useState(false);
   const { mode, openUpdate, openDetail } = useStudentModalStore(); // 모달 상태에서 현재 모드와 학생 상세/수정 오픈 함수 가져오기
   const isEditMode = mode === 'UPDATE'; //
 
@@ -131,11 +133,32 @@ function StudentDetailView({
                 onClick={handleSave}
                 disabled={!isDirty}
               />
-              <NormalButton text="취소" onClick={handleCancelEdit} />
+              <NormalButton
+                text="취소"
+                onClick={() => {
+                  if (isDirty) {
+                    setIsCancelConfirmOpen(true);
+                    return;
+                  }
+                  handleCancelEdit();
+                }}
+              />
             </>
           )}
         </div>
       </div>
+
+      <ConfirmModal
+        isOpen={isCancelConfirmOpen}
+        title="수정 취소"
+        description="수정한 내용이 초기화됩니다. 되돌리시겠습니까?"
+        confirmText="되돌리기"
+        onConfirm={() => {
+          setIsCancelConfirmOpen(false);
+          handleCancelEdit();
+        }}
+        onCancel={() => setIsCancelConfirmOpen(false)}
+      />
     </div>
   );
 }

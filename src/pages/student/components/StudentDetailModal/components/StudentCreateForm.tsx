@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import NormalButton from '@/shared/button/NormalButton';
 import { createStudent } from '@/shared/api/students';
+import ConfirmModal from '@/shared/modal/ConfirmModal';
 import { useStudentModalStore } from '@/store/student/studentModalStore';
 import StudentFormFields from './shared/StudentFormFields';
 import {
@@ -21,6 +22,7 @@ function StudentCreateForm({
 }: StudentCreateFormProps) {
   const { close } = useStudentModalStore(); // 모달 닫기 함수
   const [form, setForm] = useState<StudentFormState>(INITIAL_FORM); // 폼 상태 관리
+  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
   const isDirty = JSON.stringify(form) !== JSON.stringify(INITIAL_FORM); // 폼이 초기 상태에서 변경되었는지 여부
 
   // 폼 상태가 변경될 때마다 부모 컴포넌트에 변경 여부 알리기
@@ -74,13 +76,33 @@ function StudentCreateForm({
       <StudentFormFields form={form} onChange={updateForm} />
 
       {/* 2. 저장 버튼 */}
-      <div className="w-full flex justify-end">
+      <div className="w-full flex justify-end gap-2">
+        <NormalButton
+          onClick={() => {
+            setIsResetConfirmOpen(true);
+          }}
+          text="초기화"
+          disabled={!isDirty}
+        />
         <NormalButton
           onClick={handleSubmit}
           text="저장"
           disabled={!canSubmit}
         />
       </div>
+
+      <ConfirmModal
+        isOpen={isResetConfirmOpen}
+        title="초기화"
+        description="초기화 하시겠습니까?"
+        confirmText="초기화"
+        onConfirm={() => {
+          setForm(INITIAL_FORM);
+          onDirtyChange(false);
+          setIsResetConfirmOpen(false);
+        }}
+        onCancel={() => setIsResetConfirmOpen(false)}
+      />
     </div>
   );
 }

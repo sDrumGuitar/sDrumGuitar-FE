@@ -3,13 +3,7 @@ import {
   LESSON_COUNT,
   WEEKDAY_OPTIONS,
 } from '@/constants/course';
-import {
-  CheckboxGroup,
-  FormField,
-  RadioGroup,
-  Select,
-  TextInput,
-} from '@/shared/form';
+import { CheckboxGroup, FormField, RadioGroup, Select } from '@/shared/form';
 import { useEffect, useState } from 'react';
 import CourseScheduleTimeList from './CourseScheduleTimeList';
 import type { Course, CourseSchedule } from '@/types/course';
@@ -26,6 +20,7 @@ import {
   PAYMENT_STATUS_OPTIONS,
 } from '@/constants/invoice';
 import { useToastStore } from '@/store/feedback/toastStore';
+import ConfirmModal from '@/shared/modal/ConfirmModal';
 
 interface CourseFormState {
   student: {
@@ -96,6 +91,7 @@ export default function CourseForm({
   const [form, setForm] = useState<CourseFormState>(initialState);
   const [initialForm] = useState<CourseFormState>(initialState);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCancelConfirmOpen, setIsCancelConfirmOpen] = useState(false);
 
   const updateForm = <K extends keyof CourseFormState>(
     key: K,
@@ -108,6 +104,9 @@ export default function CourseForm({
   };
 
   const { isOpen, open } = useDateModalStore();
+  const [activeDateField, setActiveDateField] = useState<
+    'start' | 'paid' | null
+  >(null);
 
   const isViewMode = mode === 'DETAIL';
   const isDirty = JSON.stringify(form) !== JSON.stringify(initialForm);
@@ -115,6 +114,17 @@ export default function CourseForm({
   useEffect(() => {
     onDirtyChange(isDirty);
   }, [isDirty, onDirtyChange]);
+
+  const handleCancelEdit = () => {
+    setForm(initialForm);
+    setMode('DETAIL');
+  };
+
+  useEffect(() => {
+    if (!isOpen) {
+      setActiveDateField(null);
+    }
+  }, [isOpen]);
 
   const isBaseInfoValid =
     form.student.name.trim() !== '' &&
@@ -211,7 +221,7 @@ export default function CourseForm({
             const { student: detail } = await getStudent(student.id);
             updateForm('family_discount', Boolean(detail?.family_discount));
           }}
-          disabled={isViewMode}
+          disabled={isViewMode || mode === 'UPDATE'}
         />
       </FormField>
       <FormField label="클래스">
@@ -234,29 +244,29 @@ export default function CourseForm({
 
       <FormField label="수강 시작 날짜">
         <div
-          className={`border rounded-sm py-1 px-2 flex justify-between
+          className={`border rounded-sm py-1 px-2 flex justify-between items-center
         ${
           isViewMode
             ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
             : 'border-primary text-primary'
         }`}
         >
-          <p>
+          <p className="text-sm">
             {form.start_date
               ? formatToKoreanDate(form.start_date)
               : '날짜를 선택해주세요.'}
           </p>
           <button
-            onClick={open}
+            onClick={() => {
+              setActiveDateField('start');
+              open();
+            }}
             disabled={isViewMode}
-            className={`${isViewMode && 'cursor-none'}`}
+            className={`text-sm ${isViewMode && 'cursor-none'}`}
           >
             선택
           </button>
         </div>
-        {isOpen && (
-          <CalendarModal onSelect={(date) => updateForm('start_date', date)} />
-        )}
       </FormField>
 
       <FormField label="수강 요일">
@@ -318,33 +328,88 @@ export default function CourseForm({
           </FormField>
 
           <FormField label="결제일">
-            <TextInput
-              type="date"
-              value={form.invoice.paid_at}
-              onChange={(v) =>
-                updateForm('invoice', {
-                  ...form.invoice,
-                  paid_at: v,
-                })
-              }
-              disabled={isViewMode}
-            />
+            <div
+              className={`border rounded-sm py-1 px-2 flex justify-between
+            ${
+              isViewMode
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : 'border-primary text-primary'
+            }`}
+            >
+              <p className="text-sm">
+                {form.invoice.paid_at
+                  ? formatToKoreanDate(form.invoice.paid_at)
+                  : '날짜를 선택해주세요.'}
+              </p>
+              <button
+                onClick={() => {
+                  setActiveDateField('paid');
+                  open();
+                }}
+                disabled={isViewMode}
+                className={`text-sm ${isViewMode && 'cursor-none'}`}
+              >
+                선택
+              </button>
+            </div>
           </FormField>
         </>
+      )}
+
+      {isOpen && (
+        <CalendarModal
+          onSelect={(date) => {
+            if (activeDateField === 'start') {
+              updateForm('start_date', date);
+            }
+            if (activeDateField === 'paid') {
+              updateForm('invoice', {
+                ...form.invoice,
+                paid_at: date,
+              });
+            }
+          }}
+        />
       )}
 
       <div className="w-full flex justify-end gap-2">
         {mode === 'DETAIL' ? (
           <NormalButton onClick={() => setMode('UPDATE')} text="수정" />
         ) : (
-          <NormalButton
-            onClick={handleSubmit}
-            text="저장"
-            disabled={!canSubmit || !isDirty}
-            isLoading={isSubmitting}
-          />
+          <>
+            {mode === 'UPDATE' && (
+              <NormalButton
+                onClick={() => {
+                  if (isDirty) {
+                    setIsCancelConfirmOpen(true);
+                    return;
+                  }
+                  handleCancelEdit();
+                }}
+                text="취소"
+              />
+            )}
+            <NormalButton
+              onClick={handleSubmit}
+              text="저장"
+              disabled={!canSubmit || !isDirty}
+              isLoading={isSubmitting}
+            />
+          </>
         )}
       </div>
+
+      <ConfirmModal
+        isOpen={isCancelConfirmOpen}
+        title="수정 취소"
+        description="작성한 내용이 초기화됩니다. 되돌리시겠습니까?"
+        confirmText="되돌리기"
+        onConfirm={() => {
+          setIsCancelConfirmOpen(false);
+          handleCancelEdit();
+        }}
+        onCancel={() => setIsCancelConfirmOpen(false)}
+      />
     </div>
   );
 }

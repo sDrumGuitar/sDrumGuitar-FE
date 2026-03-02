@@ -21,7 +21,7 @@ export default function AttendanceStatusButtons({
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
-  const [openDirection, setOpenDirection] = useState<'up' | 'down'>('down');
+  const [, setOpenDirection] = useState<'up' | 'down'>('down');
   const [menuStyle, setMenuStyle] = useState<{
     top: number;
     left: number;

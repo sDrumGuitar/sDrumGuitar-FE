@@ -16,9 +16,9 @@ function TableRow({ columns, index, onClick, className }: TableRowProps) {
   return (
     <tr
       onClick={() => onClick?.(index)}
-      className={`text-gray-600 ${
+      className={`text-gray-700 ${
         isClickable ? 'cursor-pointer hover:text-primary' : ''
-      } ${!isSelected && isEven ? 'bg-gray-50' : ''} ${className ?? ''}`}
+      } ${!isSelected && isEven ? 'bg-transparent' : ''} ${className ?? ''}`}
     >
       {columns.map((data, idx) => (
         <TD key={idx}>{data}</TD>

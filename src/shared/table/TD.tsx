@@ -4,7 +4,11 @@ interface TDProps {
 
 // 테이블 데이터 셀 컴포넌트
 const TD = ({ children }: TDProps) => {
-  return <td className="text-center py-2 text-sm xl:text-base">{children}</td>;
+  return (
+    <td className="text-center py-3 text-sm xl:text-base bg-white border border-gray-100 first:rounded-l-xl last:rounded-r-xl">
+      {children}
+    </td>
+  );
 };
 
 export default TD;

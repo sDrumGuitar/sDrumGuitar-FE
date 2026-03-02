@@ -22,7 +22,7 @@ function NormalButton({
       disabled={isInteractionDisabled}
       onClick={onClick}
       className={`
-        font-bold py-1 px-2 rounded-lg flex items-center justify-center gap-2
+        text-sm font-bold py-1 px-2 rounded-md flex items-center justify-center gap-2
         transition ${isInteractionDisabled ? '' : 'pressable'}
         ${
           isInteractionDisabled

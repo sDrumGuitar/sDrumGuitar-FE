@@ -28,7 +28,7 @@ function NumberInput({
         onChange?.(nextValue);
       }}
       className={`
-        border flex-1 rounded-sm pl-2 py-1
+        placeholder:text-sm border flex-1 rounded-sm pl-2 py-1
         ${
           disabled
             ? 'bg-gray-100 text-gray-400 cursor-not-allowed'

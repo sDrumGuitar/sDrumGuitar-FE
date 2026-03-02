@@ -55,28 +55,89 @@ export default function LessonListModal({
       <LessonListModalHeader />
 
       {/* 2. 회차 리스트 테이블 */}
-      <TableSection
-        dataList={lessons}
-        headers={LessonListHeader}
-        getRows={(lessons) => {
-          if (!lessons || lessons.length === 0) return [];
-          return lessons.map((lesson) => [
-            lesson.name,
-            lesson.class_type,
-            `${lesson.lesson_index}회차`,
-            lesson.paid_at ? String(lesson.paid_at) : '-',
-            <AttendanceButtonList
-              attendanceStatus={lesson.attendance_status}
-              lessonId={lesson.id}
-              lessonTag={lesson.lesson_tag}
-              lessonName={lesson.name}
-              lessonIndex={lesson.lesson_index}
-              onAttendanceUpdated={onAttendanceUpdated}
-              onRefreshLessons={onRefreshLessons}
-            />,
-          ]);
-        }}
-      />
+      {/* 모바일: 카드형 레이아웃 */}
+      <div className="sm:hidden max-h-[calc(100dvh-12rem)] overflow-y-auto space-y-3 pr-1">
+        {lessons.length === 0 && (
+          <div className="py-10 text-center text-gray-500">
+            <p>조회 내용이 없습니다.</p>
+          </div>
+        )}
+        {lessons.map((lesson) => (
+          <div
+            key={lesson.id}
+            className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-400">이름</p>
+                <p className="text-base font-semibold text-gray-800">
+                  {lesson.name}
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm text-gray-400">결제일</p>
+                <p className="text-sm text-gray-700">
+                  {lesson.paid_at ? String(lesson.paid_at) : '-'}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-3 grid grid-cols-2 gap-3 text-sm text-gray-700">
+              <div>
+                <p className="text-xs text-gray-400">클래스</p>
+                <p>{lesson.class_type ?? '-'}</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-400">수강 회차</p>
+                <p>
+                  {lesson.lesson_index != null
+                    ? `${lesson.lesson_index}회차`
+                    : '-'}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <p className="text-xs text-gray-400 mb-2">출결</p>
+              <AttendanceButtonList
+                attendanceStatus={lesson.attendance_status}
+                lessonId={lesson.id}
+                lessonTag={lesson.lesson_tag}
+                lessonName={lesson.name}
+                lessonIndex={lesson.lesson_index}
+                onAttendanceUpdated={onAttendanceUpdated}
+                onRefreshLessons={onRefreshLessons}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* 데스크탑: 테이블 레이아웃 */}
+      <div className="hidden sm:block">
+        <TableSection
+          dataList={lessons}
+          headers={LessonListHeader}
+          getRows={(lessons) => {
+            if (!lessons || lessons.length === 0) return [];
+            return lessons.map((lesson) => [
+              lesson.name,
+              lesson.class_type,
+              lesson.lesson_index != null ? `${lesson.lesson_index}회차` : '-',
+              lesson.paid_at ? String(lesson.paid_at) : '-',
+              <AttendanceButtonList
+                attendanceStatus={lesson.attendance_status}
+                lessonId={lesson.id}
+                lessonTag={lesson.lesson_tag}
+                lessonName={lesson.name}
+                lessonIndex={lesson.lesson_index}
+                onAttendanceUpdated={onAttendanceUpdated}
+                onRefreshLessons={onRefreshLessons}
+              />,
+            ]);
+          }}
+        />
+      </div>
 
       {/* 3. 보강 문자 보내기 확인 모달 */}
       <ConfirmModal

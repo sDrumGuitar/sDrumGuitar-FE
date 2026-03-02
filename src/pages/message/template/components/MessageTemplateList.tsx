@@ -71,7 +71,7 @@ function MessageTemplateList() {
                     onSelectTemplate(template.id);
                   }
                 }}
-                className={`relative flex items-center justify-between rounded-lg px-4 py-3 transition ${
+                className={`relative flex items-center justify-between rounded-md px-4 py-3 transition ${
                   isSelected
                     ? 'border border-primary bg-primary/10 shadow-[0_12px_28px_-16px_rgba(97,129,216,0.45)]'
                     : 'border border-transparent bg-gray-100'

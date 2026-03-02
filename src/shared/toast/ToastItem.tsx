@@ -16,7 +16,7 @@ export default function ToastItem({ id, type, message }: ToastItemProps) {
     <div
       onClick={() => removeToast(id)}
       className={`
-        flex items-center gap-3 p-4 rounded-lg border shadow-lg
+        flex items-center gap-3 p-4 rounded-md border shadow-lg
         min-w-[300px] max-w-[450px] cursor-pointer animate-slide-in
         ${style.bg} ${style.border} ${style.text}
       `}

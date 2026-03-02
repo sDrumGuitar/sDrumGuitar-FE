@@ -27,7 +27,7 @@ export default function InvoiceCard({
   } = useInvoiceCard(invoice, onPatched);
 
   return (
-    <div className="rounded-lg bg-white border border-gray-300 p-6">
+    <div className="rounded-md bg-white border border-gray-300 p-6">
       {/* 1. 헤더 */}
       <InvoiceCardHeader
         isEdit={isEdit}
@@ -35,9 +35,7 @@ export default function InvoiceCard({
         handleCancel={handleCancel}
         loading={loading}
         handleSave={handleSave}
-        onSendMessage={
-          onSendMessage ? () => onSendMessage(invoice) : undefined
-        }
+        onSendMessage={onSendMessage ? () => onSendMessage(invoice) : undefined}
       />
 
       {/* 2. 상세 정보 */}

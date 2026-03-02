@@ -14,7 +14,18 @@ export interface Course extends Base {
 export interface CourseStudent {
   student_id: number;
   name: string;
-  age_group: 'preschool' | 'element' | 'middle' | 'high' | 'adult' | null;
+  age_group:
+    | 'preschool'
+    | 'element'
+    | 'middle'
+    | 'high'
+    | 'adult'
+    | 'PRESCHOOL'
+    | 'ELEMENT'
+    | 'MIDDLE'
+    | 'HIGH'
+    | 'ADULT'
+    | null;
   phone: string;
   parent_phone: string;
 }

@@ -4,9 +4,15 @@ import { formatPhoneNumber } from '@/utils/student/formatPhoneNumber';
 
 // API에서 받은 학생 데이터를 폼 상태로 매핑하는 함수
 export const mapStudentToForm = (student: Student): StudentFormState => {
+  const normalizedAgeGroup = String(student.age_group).toUpperCase();
+  const ageGroup =
+    normalizedAgeGroup === 'ELEMENTARY'
+      ? 'ELEMENT'
+      : (normalizedAgeGroup as StudentFormState['ageGroup']);
+
   return {
     name: student.name,
-    ageGroup: student.age_group,
+    ageGroup,
     phone: formatPhoneNumber(student.phone),
     parentPhone: formatPhoneNumber(student.parent_phone),
     familyDiscount: student.family_discount,

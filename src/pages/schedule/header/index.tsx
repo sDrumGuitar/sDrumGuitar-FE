@@ -2,7 +2,7 @@ import CarryListSection from './components/CarryListSection';
 import SelectMonthSection from './components/SelectMonthSection';
 
 interface CalendarHeaderProps {
-  onRefreshLessons: () => void;
+  onRefreshLessons: () => Promise<void>;
   isRefreshing?: boolean;
 }
 

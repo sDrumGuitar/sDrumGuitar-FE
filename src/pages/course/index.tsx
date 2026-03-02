@@ -11,7 +11,7 @@ import { getClassTypeLabel } from '@/utils/course/getClassTypeLabel';
 import { getCourses } from '@/shared/api/courses';
 import Chip from '@/shared/chip/Chip';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import type { GetCoursesResponse } from '@/shared/api/courses';
+import type { GetCoursesResponse } from '@/shared/api/courses/courses.types';
 
 const formatToHourMinute = (time?: string) => {
   if (!time) return '';

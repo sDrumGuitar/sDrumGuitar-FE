@@ -87,8 +87,8 @@ export const useScheduleCalendar = () => {
     refetchOnMount: (query) => query.isStale(),
   });
 
-  const fetchLessons = useCallback(() => {
-    refetch();
+  const fetchLessons = useCallback(async () => {
+    await refetch();
   }, [refetch]);
 
   // 컴포넌트 마운트 시 회차 데이터 불러오기

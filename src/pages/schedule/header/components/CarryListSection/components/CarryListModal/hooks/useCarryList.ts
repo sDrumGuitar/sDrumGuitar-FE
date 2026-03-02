@@ -27,7 +27,9 @@ export const useCarryList = () => {
   return useMemo(
     () => ({
       lessons: (data?.lessons ?? []) as LessonItem[],
-      fetchLessons: refetch,
+      fetchLessons: async () => {
+        await refetch();
+      },
     }),
     [data, refetch],
   );

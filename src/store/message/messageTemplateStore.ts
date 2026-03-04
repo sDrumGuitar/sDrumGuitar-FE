@@ -2,7 +2,11 @@ import {
   DEFAULT_MESSAGE_TEMPLATE_TYPE,
   type MessageTemplateType,
 } from '@/constants/messageTemplate';
-import { createMessageTemplate, getMessageTemplates } from '@/shared/api/message';
+import {
+  createMessageTemplate,
+  getMessageTemplates,
+  updateMessageTemplate,
+} from '@/shared/api/message';
 import type { MessageTemplate } from '@/types/messageTemplate';
 import { create } from 'zustand';
 
@@ -32,15 +36,12 @@ interface MessageTemplateStore {
   toggleMenu: (id: number) => void;
   closeMenu: () => void;
   addTemplate: () => Promise<void>;
-  updateTemplate: () => void;
+  updateTemplate: () => Promise<void>;
   deleteTemplate: (id: number) => void;
 }
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_SIZE = 10;
-
-const getNowString = () =>
-  new Date().toISOString().slice(0, 19).replace('T', ' ');
 
 const getEmptyForm = (): MessageTemplateForm => ({
   type: DEFAULT_MESSAGE_TEMPLATE_TYPE,
@@ -157,7 +158,7 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
       }
     },
 
-    updateTemplate: () => {
+    updateTemplate: async () => {
       const { selectedTemplateId, form, templates } = get();
       if (!selectedTemplateId) return;
 
@@ -166,23 +167,42 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
       const type = form.type;
       if (!title || !content) return;
 
-      const now = getNowString();
-      const nextTemplates = templates.map((template) =>
-        template.id === selectedTemplateId
-          ? {
-              ...template,
-              type,
-              title,
-              content,
-              updated_at: now,
-            }
-          : template,
+      const selectedTemplate = templates.find(
+        (template) => template.id === selectedTemplateId,
       );
+      if (!selectedTemplate) return;
 
-      set({
-        templates: nextTemplates,
-        templatesUpdatedAt: Date.now(),
-      });
+      const payload: {
+        type?: MessageTemplateType;
+        title?: string;
+        content?: string;
+      } = {};
+      if (selectedTemplate.type !== type) payload.type = type;
+      if (selectedTemplate.title !== title) payload.title = title;
+      if (selectedTemplate.content !== content) payload.content = content;
+      if (Object.keys(payload).length === 0) return;
+
+      try {
+        const updatedTemplate = await updateMessageTemplate(
+          selectedTemplateId,
+          payload,
+        );
+        const nextTemplates = templates.map((template) =>
+          template.id === selectedTemplateId ? updatedTemplate : template,
+        );
+
+        set({
+          templates: nextTemplates,
+          form: {
+            type: updatedTemplate.type ?? DEFAULT_MESSAGE_TEMPLATE_TYPE,
+            title: updatedTemplate.title,
+            content: updatedTemplate.content,
+          },
+          templatesUpdatedAt: Date.now(),
+        });
+      } catch (error) {
+        console.error('Failed to update message template:', error);
+      }
     },
 
     deleteTemplate: (id) => {

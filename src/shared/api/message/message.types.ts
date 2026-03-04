@@ -10,6 +10,18 @@ export interface MessageTemplateApiItem {
   updated_at: string;
 }
 
+export interface MessageTemplateApiResponse {
+  template_id?: number;
+  templateId?: number;
+  type: string;
+  title: string;
+  content: string;
+  created_at?: string;
+  createdAt?: string;
+  updated_at?: string;
+  updatedAt?: string;
+}
+
 export interface CreateMessageTemplatePayload {
   type: MessageTemplateType;
   title: string;
@@ -18,18 +30,24 @@ export interface CreateMessageTemplatePayload {
 
 export interface CreateMessageTemplateApiResponse {
   templateId: number;
-  type: MessageTemplateType;
+  type: string;
   title: string;
   content: string;
   createdAt: string;
   updatedAt: string;
 }
 
+export interface UpdateMessageTemplatePayload {
+  type?: MessageTemplateType;
+  title?: string;
+  content?: string;
+}
+
 export interface GetMessageTemplatesApiResponse {
   total_count: number;
   page: number;
   size: number;
-  templates: MessageTemplateApiItem[];
+  templates: MessageTemplateApiResponse[];
 }
 
 export interface GetMessageTemplatesProps {

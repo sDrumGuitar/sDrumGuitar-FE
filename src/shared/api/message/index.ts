@@ -17,12 +17,6 @@ export type {
   UpdateMessageTemplatePayload,
 } from './message.types';
 
-const TEMPLATE_TYPE_TO_API: Record<string, string> = {
-  ATTENDANCE: 'attended',
-  ABSENT: 'absent',
-  MAKEUP: 'makeup',
-};
-
 const TEMPLATE_TYPE_FROM_API: Record<string, MessageTemplate['type']> = {
   attended: 'ATTENDANCE',
   attendance: 'ATTENDANCE',
@@ -38,7 +32,7 @@ const normalizeTemplateTypeFromApi = (type: string): MessageTemplate['type'] => 
 };
 
 const normalizeTemplateTypeToApi = (type: MessageTemplate['type']) =>
-  TEMPLATE_TYPE_TO_API[type] ?? String(type).toLowerCase();
+  String(type).trim().toUpperCase();
 
 const mapMessageTemplate = (
   template: MessageTemplateApiResponse,
@@ -150,4 +144,13 @@ export const updateMessageTemplate = async (
   );
 
   return mapMessageTemplate(res.data);
+};
+
+// ====================
+// DELETE : 메시지 템플릿 삭제
+// ====================
+export const deleteMessageTemplate = async (
+  templateId: number,
+): Promise<void> => {
+  await api.delete(`/messages/templates/${templateId}`);
 };

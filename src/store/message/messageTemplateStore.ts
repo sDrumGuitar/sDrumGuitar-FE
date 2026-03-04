@@ -4,9 +4,11 @@ import {
 } from '@/constants/messageTemplate';
 import {
   createMessageTemplate,
+  deleteMessageTemplate,
   getMessageTemplates,
   updateMessageTemplate,
 } from '@/shared/api/message';
+import { useToastStore } from '@/store/feedback/toastStore';
 import type { MessageTemplate } from '@/types/messageTemplate';
 import { create } from 'zustand';
 
@@ -37,7 +39,7 @@ interface MessageTemplateStore {
   closeMenu: () => void;
   addTemplate: () => Promise<void>;
   updateTemplate: () => Promise<void>;
-  deleteTemplate: (id: number) => void;
+  deleteTemplate: (id: number) => Promise<void>;
 }
 
 const DEFAULT_PAGE = 1;
@@ -208,13 +210,28 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
           },
           templatesUpdatedAt: Date.now(),
         });
+        useToastStore.getState().addToast('success', '템플릿이 수정되었습니다.');
       } catch (error) {
         console.error('Failed to update message template:', error);
+        useToastStore
+          .getState()
+          .addToast('error', '템플릿 수정에 실패했습니다.');
       }
     },
 
-    deleteTemplate: (id) => {
+    deleteTemplate: async (id) => {
       const { templates, selectedTemplateId, totalCount } = get();
+
+      try {
+        await deleteMessageTemplate(id);
+      } catch (error) {
+        console.error('Failed to delete message template:', error);
+        useToastStore
+          .getState()
+          .addToast('error', '템플릿 삭제에 실패했습니다.');
+        return;
+      }
+
       const nextTemplates = templates.filter((template) => template.id !== id);
       const nextTotalCount = Math.max(0, totalCount - 1);
 
@@ -228,6 +245,7 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
           menuOpenId: null,
           templatesUpdatedAt: Date.now(),
         });
+        useToastStore.getState().addToast('success', '삭제되었습니다.');
         return;
       }
 
@@ -241,6 +259,7 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
           menuOpenId: null,
           templatesUpdatedAt: Date.now(),
         });
+        useToastStore.getState().addToast('success', '삭제되었습니다.');
         return;
       }
 
@@ -250,6 +269,7 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
         menuOpenId: null,
         templatesUpdatedAt: Date.now(),
       });
+      useToastStore.getState().addToast('success', '삭제되었습니다.');
     },
   }),
 );

@@ -5,8 +5,8 @@ interface SendMessageHeaderProps {
   selectedStudentName: string;
   selectedStudentGroup: string;
   templates: MessageTemplate[];
-  selectedTemplateId: number | '';
-  onSelectTemplate: (id: number | '') => void;
+  selectedTemplateId: string;
+  onSelectTemplate: (id: string) => void;
   onApplyTemplate: () => void;
 }
 
@@ -30,8 +30,7 @@ function SendMessageHeader({
         <select
           value={selectedTemplateId}
           onChange={(event) => {
-            const value = event.target.value;
-            onSelectTemplate(value ? Number(value) : '');
+            onSelectTemplate(event.target.value);
           }}
           className="h-10 w-full min-w-0 rounded-md border border-gray-200 bg-white px-3 text-sm text-gray-700 outline-none focus:border-primary md:min-w-48"
         >

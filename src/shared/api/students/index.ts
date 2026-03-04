@@ -36,17 +36,24 @@ interface StudentApiResponse {
   updatedAt?: string;
 }
 
-const normalizeStudentResponse = (student: StudentApiResponse): Student => ({
-  student_id: Number(student.student_id ?? student.studentId ?? 0),
-  name: student.name,
-  age_group: (student.age_group ?? student.ageGroup ?? 'adult') as Student['age_group'],
-  phone: student.phone ?? '',
-  parent_phone: student.parent_phone ?? student.parentPhone ?? '',
-  memo: student.memo ?? null,
-  family_discount: Boolean(student.family_discount ?? student.familyDiscount),
-  created_at: student.created_at ?? student.createdAt ?? '',
-  updated_at: student.updated_at ?? student.updatedAt ?? '',
-});
+const normalizeStudentResponse = (student: StudentApiResponse): Student => {
+  const studentId = student.student_id ?? student.studentId;
+  if (studentId == null) {
+    throw new Error('Student ID is missing in the API response.');
+  }
+
+  return {
+    student_id: Number(studentId),
+    name: student.name,
+    age_group: (student.age_group ?? student.ageGroup ?? 'adult') as Student['age_group'],
+    phone: student.phone ?? '',
+    parent_phone: student.parent_phone ?? student.parentPhone ?? '',
+    memo: student.memo ?? null,
+    family_discount: Boolean(student.family_discount ?? student.familyDiscount),
+    created_at: student.created_at ?? student.createdAt ?? '',
+    updated_at: student.updated_at ?? student.updatedAt ?? '',
+  };
+};
 
 const normalizeAgeGroupForRequest = (ageGroup: Student['age_group']) =>
   String(ageGroup).toLowerCase() as Student['age_group'];

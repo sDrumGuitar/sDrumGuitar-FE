@@ -13,6 +13,7 @@ interface InvoiceListModalBodyProps {
     status: InvoiceStatus;
     method: PaymentMethod;
     paid_at: string | null;
+    updated_at?: string;
   }) => void;
   onSendMessage?: (invoice: InvoiceData) => void;
 }

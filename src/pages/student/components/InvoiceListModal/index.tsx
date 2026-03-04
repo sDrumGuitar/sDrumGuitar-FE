@@ -50,6 +50,7 @@ export default function InvoiceListModal() {
     status: InvoiceStatus;
     method: PaymentMethod;
     paid_at: string | null;
+    updated_at?: string;
   }) => {
     setInvociesList((prev) =>
       prev.map((p) =>
@@ -59,6 +60,7 @@ export default function InvoiceListModal() {
               status: next.status,
               method: next.method,
               paid_at: next.paid_at,
+              updated_at: next.updated_at ?? p.updated_at,
             }
           : p,
       ),

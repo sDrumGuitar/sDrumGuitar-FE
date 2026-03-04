@@ -13,13 +13,14 @@ export const useStudentsSummary = () => {
     { page: 1, size: 20 },
   ])?.dataUpdatedAt;
   const hasEnoughCache = (studentsCache?.students.length ?? 0) >= 3;
-  const initialData = hasEnoughCache
-    ? {
-        ...studentsCache,
-        size: 3,
-        students: studentsCache?.students.slice(0, 3) ?? [],
-      }
-    : undefined;
+  const initialData =
+    hasEnoughCache && studentsCache
+      ? {
+          ...studentsCache,
+          size: 3,
+          students: studentsCache.students.slice(0, 3),
+        }
+      : undefined;
 
   const { data, isLoading, refetch } = useQuery<GetStudentsResponse>({
     queryKey: ['home', 'students', 1, 3],

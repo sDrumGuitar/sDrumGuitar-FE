@@ -8,6 +8,13 @@ import type {
   GetCoursesResponse,
 } from './courses.types';
 
+export type {
+  CreateCoursePayload,
+  GetCoursesApiResponse,
+  GetCoursesProps,
+  GetCoursesResponse,
+} from './courses.types';
+
 // ====================
 // GET : 모든 수강 정보 불러오기
 // ====================

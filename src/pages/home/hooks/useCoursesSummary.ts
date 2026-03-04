@@ -13,13 +13,14 @@ export const useCoursesSummary = () => {
     { page: 1, size: 20 },
   ])?.dataUpdatedAt;
   const hasEnoughCache = (coursesCache?.courses.length ?? 0) >= 3;
-  const initialData = hasEnoughCache
-    ? {
-        ...coursesCache,
-        size: 3,
-        courses: coursesCache?.courses.slice(0, 3) ?? [],
-      }
-    : undefined;
+  const initialData =
+    hasEnoughCache && coursesCache
+      ? {
+          ...coursesCache,
+          size: 3,
+          courses: coursesCache.courses.slice(0, 3),
+        }
+      : undefined;
 
   const { data, isLoading, refetch } = useQuery<GetCoursesResponse>({
     queryKey: ['home', 'courses', 1, 3],

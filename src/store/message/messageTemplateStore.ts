@@ -24,6 +24,7 @@ interface MessageTemplateStore {
   menuOpenId: number | null;
   isLoadingTemplates: boolean;
   hasLoadedTemplates: boolean;
+  templatesUpdatedAt: number | null;
   fetchTemplates: (options?: { page?: number; size?: number; force?: boolean }) => Promise<void>;
   selectTemplate: (id: number) => void;
   setFormField: (field: FormField, value: MessageTemplateForm[FormField]) => void;
@@ -57,6 +58,7 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
     menuOpenId: null,
     isLoadingTemplates: false,
     hasLoadedTemplates: false,
+    templatesUpdatedAt: null,
 
     fetchTemplates: async (options) => {
       const { hasLoadedTemplates, isLoadingTemplates } = get();
@@ -76,6 +78,7 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
         menuOpenId: null,
         isLoadingTemplates: false,
         hasLoadedTemplates: true,
+        templatesUpdatedAt: Date.now(),
       });
     },
 
@@ -147,6 +150,7 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
             title: createdTemplate.title,
             content: createdTemplate.content,
           },
+          templatesUpdatedAt: Date.now(),
         });
       } catch (error) {
         console.error('Failed to create message template:', error);
@@ -177,6 +181,7 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
 
       set({
         templates: nextTemplates,
+        templatesUpdatedAt: Date.now(),
       });
     },
 
@@ -193,6 +198,7 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
           mode: 'CREATE',
           form: getEmptyForm(),
           menuOpenId: null,
+          templatesUpdatedAt: Date.now(),
         });
         return;
       }
@@ -205,6 +211,7 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
           mode: 'CREATE',
           form: getEmptyForm(),
           menuOpenId: null,
+          templatesUpdatedAt: Date.now(),
         });
         return;
       }
@@ -213,6 +220,7 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
         templates: nextTemplates,
         totalCount: nextTotalCount,
         menuOpenId: null,
+        templatesUpdatedAt: Date.now(),
       });
     },
   }),

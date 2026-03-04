@@ -6,6 +6,9 @@ import { useMessageTemplateStore } from '@/store/message/messageTemplateStore';
 export const useMessageTemplatesSummary = () => {
   const templatesCache = useMessageTemplateStore((state) => state.templates);
   const totalCountCache = useMessageTemplateStore((state) => state.totalCount);
+  const templatesUpdatedAt = useMessageTemplateStore(
+    (state) => state.templatesUpdatedAt,
+  );
   const hasEnoughCache = templatesCache.length >= 3 && totalCountCache > 0;
   const initialData: GetMessageTemplatesResponse | undefined = hasEnoughCache
     ? {
@@ -21,6 +24,7 @@ export const useMessageTemplatesSummary = () => {
     queryFn: () => getMessageTemplates({ page: 1, size: 3 }),
     enabled: !hasEnoughCache,
     initialData,
+    initialDataUpdatedAt: initialData ? templatesUpdatedAt ?? undefined : undefined,
   });
 
   return useMemo(

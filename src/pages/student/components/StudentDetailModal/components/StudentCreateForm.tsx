@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import NormalButton from '@/shared/button/NormalButton';
 import { createStudent } from '@/shared/api/students';
 import ConfirmModal from '@/shared/modal/ConfirmModal';
+import { useToastStore } from '@/store/feedback/toastStore';
 import { useStudentModalStore } from '@/store/student/studentModalStore';
 import StudentFormFields from './shared/StudentFormFields';
 import {
@@ -21,6 +22,7 @@ function StudentCreateForm({
   onSuccess,
 }: StudentCreateFormProps) {
   const { close } = useStudentModalStore(); // 모달 닫기 함수
+  const { addToast } = useToastStore();
   const [form, setForm] = useState<StudentFormState>(INITIAL_FORM); // 폼 상태 관리
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
   const isDirty = JSON.stringify(form) !== JSON.stringify(INITIAL_FORM); // 폼이 초기 상태에서 변경되었는지 여부
@@ -47,7 +49,7 @@ function StudentCreateForm({
   // 폼 제출 핸들러
   const handleSubmit = async () => {
     if (!isValidStudentForm(form)) {
-      alert('필수 항목을 모두 입력해주세요.');
+      addToast('error', '필수 항목을 모두 입력해주세요.');
       return;
     }
 
@@ -63,10 +65,11 @@ function StudentCreateForm({
       setForm(INITIAL_FORM);
       onDirtyChange(false);
       onSuccess();
+      addToast('success', '학생이 추가되었습니다.');
       close();
     } catch (error) {
       console.error('학생 등록 실패', error);
-      alert('학생 등록에 실패했습니다.');
+      addToast('error', '학생 등록에 실패했습니다.');
     }
   };
 

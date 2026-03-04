@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import NormalButton from '@/shared/button/NormalButton';
 import ConfirmModal from '@/shared/modal/ConfirmModal';
 import { updateStudent } from '@/shared/api/students';
+import { useToastStore } from '@/store/feedback/toastStore';
 import { useStudentModalStore } from '@/store/student/studentModalStore';
 import { useInvoiceModalStore } from '@/store/invoice/invoiceModalStore';
 import StudentFormFields from './shared/StudentFormFields';
@@ -30,6 +31,7 @@ function StudentDetailView({
     useState<StudentFormState>(mappedStudent); // 원본 폼 상태 저장 (수정 취소 시 사용)
   const [form, setForm] = useState<StudentFormState>(mappedStudent); // 현재 폼 상태
   const [isCancelConfirmOpen, setIsCancelConfirmOpen] = useState(false);
+  const { addToast } = useToastStore();
   const { mode, openUpdate, openDetail } = useStudentModalStore(); // 모달 상태에서 현재 모드와 학생 상세/수정 오픈 함수 가져오기
   const isEditMode = mode === 'UPDATE'; //
 
@@ -73,7 +75,7 @@ function StudentDetailView({
   const handleSave = async () => {
     // 1. 폼 유효성 검사 - 필수 항목이 모두 입력되었는지 확인
     if (!isValidStudentForm(form)) {
-      alert('필수 항목을 모두 입력해주세요.');
+      addToast('error', '필수 항목을 모두 입력해주세요.');
       return;
     }
 
@@ -92,9 +94,10 @@ function StudentDetailView({
       onDirtyChange(false);
       onSuccess();
       openDetail(updatedStudent);
+      addToast('success', '학생 정보가 수정되었습니다.');
     } catch (error) {
       console.error('학생 수정 실패', error);
-      alert('학생 수정에 실패했습니다.');
+      addToast('error', '학생 수정에 실패했습니다.');
     }
   };
 
@@ -129,11 +132,6 @@ function StudentDetailView({
           {isEditMode && (
             <>
               <NormalButton
-                text="저장"
-                onClick={handleSave}
-                disabled={!isDirty}
-              />
-              <NormalButton
                 text="취소"
                 onClick={() => {
                   if (isDirty) {
@@ -142,6 +140,11 @@ function StudentDetailView({
                   }
                   handleCancelEdit();
                 }}
+              />
+              <NormalButton
+                text="저장"
+                onClick={handleSave}
+                disabled={!isDirty}
               />
             </>
           )}

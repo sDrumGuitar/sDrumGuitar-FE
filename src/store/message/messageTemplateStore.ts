@@ -83,7 +83,18 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
     },
 
     selectTemplate: (id) => {
-      const selectedTemplate = get().templates.find((template) => template.id === id);
+      const { selectedTemplateId, templates } = get();
+      if (selectedTemplateId === id) {
+        set({
+          selectedTemplateId: null,
+          mode: 'CREATE',
+          form: getEmptyForm(),
+          menuOpenId: null,
+        });
+        return;
+      }
+
+      const selectedTemplate = templates.find((template) => template.id === id);
       if (!selectedTemplate) return;
 
       set({
@@ -143,13 +154,10 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
         set({
           templates: nextTemplates,
           totalCount: totalCount + 1,
-          selectedTemplateId: createdTemplate.id,
-          mode: 'UPDATE',
-          form: {
-            type: createdTemplate.type ?? DEFAULT_MESSAGE_TEMPLATE_TYPE,
-            title: createdTemplate.title,
-            content: createdTemplate.content,
-          },
+          selectedTemplateId: null,
+          mode: 'CREATE',
+          form: getEmptyForm(),
+          menuOpenId: null,
           templatesUpdatedAt: Date.now(),
         });
       } catch (error) {

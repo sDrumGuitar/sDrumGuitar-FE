@@ -49,7 +49,10 @@ export const useTemplateList = () => {
 
   // 변경사항이 있을 경우 확인 후 템플릿을 전환
   const handleSelectTemplate = async (nextTemplateId: number) => {
-    if (selectedTemplateId === nextTemplateId) return;
+    if (selectedTemplateId === nextTemplateId) {
+      selectTemplate(nextTemplateId);
+      return;
+    }
 
     const isDirty =
       mode === 'CREATE'

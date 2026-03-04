@@ -8,6 +8,7 @@ import { useReservationFlow } from './hooks/useReservationFlow';
 import { useSendAction } from './hooks/useSendAction';
 import { useSelectedStudentSummary } from './hooks/useSelectedStudentSummary';
 import { useMessageTemplateStore } from '@/store/message/messageTemplateStore';
+import { useToastStore } from '@/store/feedback/toastStore';
 import { useEffect, useState } from 'react';
 
 function SendMessageForm() {
@@ -16,7 +17,8 @@ function SendMessageForm() {
   const fetchTemplates = useMessageTemplateStore(
     (state) => state.fetchTemplates,
   );
-  const [selectedTemplateId, setSelectedTemplateId] = useState<number | ''>('');
+  const { addToast } = useToastStore();
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string>('');
   const { selectedStudents, selectedStudentName, selectedStudentGroup } =
     useSelectedStudentSummary();
   const isSubmitDisabled = selectedStudents.length === 0 || !isContentValid;
@@ -38,15 +40,25 @@ function SendMessageForm() {
   });
   const handleApplyTemplate = () => {
     if (!selectedTemplateId) return;
+    const selectedTemplateIdNumber = Number(selectedTemplateId);
     const selectedTemplate = templates.find(
-      (template) => template.id === selectedTemplateId,
+      (template) =>
+        template.id === selectedTemplateIdNumber ||
+        String(template.id) === String(selectedTemplateId),
     );
-    if (!selectedTemplate) return;
+    if (!selectedTemplate) {
+      addToast('error', '선택한 템플릿을 불러오지 못했습니다.');
+      return;
+    }
+    if (!selectedTemplate.content) {
+      addToast('error', '선택한 템플릿에 내용이 없습니다.');
+      return;
+    }
     setContent(selectedTemplate.content);
   };
 
   useEffect(() => {
-    fetchTemplates();
+    fetchTemplates({ force: true });
   }, [fetchTemplates]);
 
   return (

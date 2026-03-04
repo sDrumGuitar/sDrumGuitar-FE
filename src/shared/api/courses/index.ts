@@ -50,12 +50,12 @@ export const createCourse = async (
 };
 
 // ====================
-// PUT : 수강 정보 수정하기
+// PATCH : 수강 정보 수정하기
 // ====================
 export const updateCourse = async (
   id: number,
   payload: Partial<CreateCoursePayload>,
 ): Promise<Course> => {
-  const res = await api.put<Course>(`/courses/${id}`, payload);
+  const res = await api.patch<Course>(`/courses/${id}`, payload);
   return res.data;
 };

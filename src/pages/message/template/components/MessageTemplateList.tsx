@@ -4,7 +4,6 @@ import {
 } from '@/constants/messageTemplate';
 import { useTemplateList } from '@/pages/message/template/hooks/useTemplateList';
 import ConfirmModal from '@/shared/modal/ConfirmModal';
-import { useToastStore } from '@/store/feedback/toastStore';
 import { useState } from 'react';
 import { IoTrashOutline } from 'react-icons/io5';
 import Chip from '@/shared/chip/Chip';
@@ -23,7 +22,6 @@ function MessageTemplateList() {
     onConfirmSwitch,
     onCancelSwitch,
   } = useTemplateList();
-  const { addToast } = useToastStore();
 
   const [confirmTargetId, setConfirmTargetId] = useState<number | null>(null);
 
@@ -38,7 +36,6 @@ function MessageTemplateList() {
   const handleConfirmDelete = () => {
     if (confirmTargetId === null) return;
     onDeleteTemplate(confirmTargetId);
-    addToast('success', '삭제되었습니다.');
     setConfirmTargetId(null);
   };
 

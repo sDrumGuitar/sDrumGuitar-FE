@@ -60,6 +60,8 @@ export const useScheduleCalendar = () => {
       const normalized = value.toLowerCase();
       return normalized === 'notyet' ? null : normalized;
     };
+    const normalizeLessonTag = (value?: string) =>
+      value ? value.toLowerCase() : '';
 
     return response.days.reduce((acc, day) => {
       acc[day.date] = {
@@ -73,7 +75,7 @@ export const useScheduleCalendar = () => {
           lesson_index: lesson.lesson_index,
           id: lesson.lesson_id,
           paid_at: '',
-          lesson_tag: lesson.lesson_tag,
+          lesson_tag: normalizeLessonTag(lesson.lesson_tag),
           attendance_status: normalizeAttendanceStatus(lesson.attendance_status),
         })),
       };

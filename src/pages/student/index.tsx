@@ -7,7 +7,8 @@ import ModalOpenButton from '@/shared/modal/ModalOpenButton';
 import { getAgeGroupLabel } from '@/utils/student/getAgeGroupLabel';
 import InvoiceListModal from './components/InvoiceListModal';
 import Chip from '@/shared/chip/Chip';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import type { GetStudentsResponse } from '@/shared/api/students';
 
 const getAgeGroupTone = (ageGroup: Student['age_group'] | null) => {
   const normalized = ageGroup ? String(ageGroup).toUpperCase() : '';
@@ -31,9 +32,27 @@ const getAgeGroupTone = (ageGroup: Student['age_group'] | null) => {
 function StudentPage() {
   // 학생 모달 상태 관리
   const { isOpen, openCreate, openDetail } = useStudentModalStore();
+  const queryClient = useQueryClient();
+  const homeCache = queryClient.getQueryData<GetStudentsResponse>([
+    'home',
+    'students',
+    1,
+    3,
+  ]);
+  const homeCacheUpdatedAt = queryClient.getQueryState([
+    'home',
+    'students',
+    1,
+    3,
+  ])?.dataUpdatedAt;
+
   const { data, isFetching, refetch } = useQuery({
     queryKey: ['students', { page: 1, size: 20 }],
     queryFn: () => getStudents({ page: 1, size: 20 }),
+    initialData: homeCache
+      ? { ...homeCache, page: 1, size: 20 }
+      : undefined,
+    initialDataUpdatedAt: homeCache ? homeCacheUpdatedAt : undefined,
     staleTime: 1000 * 60 * 5,
     refetchOnMount: (query) => query.isStale(),
   });

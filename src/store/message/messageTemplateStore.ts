@@ -17,7 +17,6 @@ interface MessageTemplateForm {
 
 interface MessageTemplateStore {
   templates: MessageTemplate[];
-  totalCount: number;
   selectedTemplateId: number | null;
   mode: TemplateMode;
   form: MessageTemplateForm;
@@ -50,7 +49,6 @@ const getEmptyForm = (): MessageTemplateForm => ({
 export const useMessageTemplateStore = create<MessageTemplateStore>(
   (set, get) => ({
     templates: [],
-    totalCount: 0,
     selectedTemplateId: null,
     mode: 'CREATE',
     form: getEmptyForm(),
@@ -66,10 +64,9 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
       if (!force && (hasLoadedTemplates || isLoadingTemplates)) return;
 
       set({ isLoadingTemplates: true });
-      const { templates, total_count } = await getMessageTemplates({ page, size });
+      const { templates } = await getMessageTemplates({ page, size });
       set({
         templates,
-        totalCount: total_count,
         selectedTemplateId: null,
         mode: 'CREATE',
         form: getEmptyForm(),
@@ -122,7 +119,7 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
       }),
 
     addTemplate: async () => {
-      const { form, templates, totalCount } = get();
+      const { form, templates } = get();
       const title = form.title.trim();
       const content = form.content.trim();
 
@@ -139,7 +136,6 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
         const nextTemplates = [createdTemplate, ...templates];
         set({
           templates: nextTemplates,
-          totalCount: totalCount + 1,
           selectedTemplateId: createdTemplate.id,
           mode: 'UPDATE',
           form: {
@@ -181,14 +177,12 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
     },
 
     deleteTemplate: (id) => {
-      const { templates, selectedTemplateId, totalCount } = get();
+      const { templates, selectedTemplateId } = get();
       const nextTemplates = templates.filter((template) => template.id !== id);
-      const nextTotalCount = Math.max(0, totalCount - 1);
 
       if (!nextTemplates.length) {
         set({
           templates: [],
-          totalCount: nextTotalCount,
           selectedTemplateId: null,
           mode: 'CREATE',
           form: getEmptyForm(),
@@ -200,7 +194,6 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
       if (selectedTemplateId === id) {
         set({
           templates: nextTemplates,
-          totalCount: nextTotalCount,
           selectedTemplateId: null,
           mode: 'CREATE',
           form: getEmptyForm(),
@@ -211,7 +204,6 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
 
       set({
         templates: nextTemplates,
-        totalCount: nextTotalCount,
         menuOpenId: null,
       });
     },

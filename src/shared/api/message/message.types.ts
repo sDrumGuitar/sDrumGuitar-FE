@@ -20,7 +20,8 @@ export interface CreateMessageTemplatePayload {
 }
 
 export interface CreateMessageTemplateApiResponse {
-  templateId: number;
+  template_id?: number;
+  templateId?: number;
   type: string;
   title: string;
   content: string;

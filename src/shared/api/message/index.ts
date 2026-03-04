@@ -54,14 +54,20 @@ const mapMessageTemplate = (
 
 const mapCreatedTemplate = (
   template: CreateMessageTemplateApiResponse,
-): MessageTemplate => ({
-  id: template.templateId,
-  type: normalizeTemplateTypeFromApi(template.type),
-  title: template.title,
-  content: template.content,
-  created_at: template.createdAt,
-  updated_at: template.updatedAt,
-});
+): MessageTemplate => {
+  const templateId = template.template_id ?? template.templateId;
+  if (templateId == null) {
+    throw new Error('Template ID is missing in the create response.');
+  }
+  return {
+    id: Number(templateId),
+    type: normalizeTemplateTypeFromApi(template.type),
+    title: template.title,
+    content: template.content,
+    created_at: template.createdAt,
+    updated_at: template.updatedAt,
+  };
+};
 
 // ====================
 // GET : 메시지 템플릿 목록 불러오기

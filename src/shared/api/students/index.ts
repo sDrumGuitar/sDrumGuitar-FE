@@ -32,7 +32,11 @@ export const getStudents = async ({
     const students = Array.isArray(res.data.students) ? res.data.students : [];
 
     return {
-      total_count: Number(res.headers['x-total-count'] ?? students.length),
+      total_count: Number(
+        res.data.total_count ??
+          res.headers['x-total-count'] ??
+          students.length,
+      ),
       page,
       size,
       students,

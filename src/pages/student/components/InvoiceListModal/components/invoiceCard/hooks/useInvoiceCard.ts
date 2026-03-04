@@ -20,6 +20,7 @@ interface UseInvoiceCardResult {
   setMethod: (next: PaymentMethod) => void;
   paidAtDate: string;
   setPaidAtDate: (next: string) => void;
+  isDirty: boolean;
   loading: boolean;
   validationError: string | null;
   handleCancel: () => void;
@@ -51,9 +52,8 @@ export default function useInvoiceCard(
   // 편집 상태 (props 기준으로 초기화)
   const [status, setStatus] = useState<InvoiceStatus>(invoice.status);
   const [method, setMethod] = useState<PaymentMethod>(invoice.method);
-  const [paidAtDate, setPaidAtDate] = useState<string>(
-    invoice.paidAt ? toDateOnly(invoice.paidAt) : '',
-  );
+  const initialPaidAtDate = invoice.paidAt ? toDateOnly(invoice.paidAt) : '';
+  const [paidAtDate, setPaidAtDate] = useState<string>(initialPaidAtDate);
 
   const { addToast } = useToastStore();
   const [loading, setLoading] = useState(false);
@@ -65,6 +65,13 @@ export default function useInvoiceCard(
     }
     return null;
   }, [status, method, paidAtDate]);
+
+  const isDirty = useMemo(() => {
+    const statusChanged = status !== invoice.status;
+    const methodChanged = method !== invoice.method;
+    const paidAtChanged = paidAtDate !== initialPaidAtDate;
+    return statusChanged || methodChanged || paidAtChanged;
+  }, [status, method, paidAtDate, invoice.status, invoice.method, initialPaidAtDate]);
 
   const handleCancel = () => {
     setIsEdit(false);
@@ -127,6 +134,7 @@ export default function useInvoiceCard(
     setMethod,
     paidAtDate,
     setPaidAtDate,
+    isDirty,
     loading,
     validationError,
     handleCancel,

@@ -6,6 +6,7 @@ interface InvoiceCardHeaderProps {
   handleCancel: () => void;
   loading: boolean;
   handleSave: () => void;
+  isDirty: boolean;
   onSendMessage?: () => void;
 }
 
@@ -16,6 +17,7 @@ export default function InvoiceCardHeader({
   handleCancel,
   loading,
   handleSave,
+  isDirty,
   onSendMessage,
 }: InvoiceCardHeaderProps) {
   return (
@@ -33,7 +35,7 @@ export default function InvoiceCardHeader({
           <NormalButton
             text={loading ? '저장중...' : '저장'}
             onClick={handleSave}
-            disabled={loading}
+            disabled={loading || !isDirty}
           />
         </>
       )}

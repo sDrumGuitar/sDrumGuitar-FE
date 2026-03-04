@@ -21,10 +21,12 @@ const CarryListTable = ({ lessons, onRegister }: CarryListTableProps) => {
           lesson.name,
           lesson.class_type,
           formatToKoreanDate(lesson.start_at),
-          <NormalButton
-            text="등록"
-            onClick={() => onRegister(lesson.lesson_id)}
-          />,
+          <div className="flex justify-center">
+            <NormalButton
+              text="등록"
+              onClick={() => onRegister(lesson.lesson_id)}
+            />
+          </div>,
         ]);
       }}
     />

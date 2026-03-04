@@ -19,12 +19,12 @@ export const useTemplateForm = () => {
   );
 
   // 모드에 따라 생성/수정 제출을 처리
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (mode === 'CREATE') {
-      addTemplate();
+      await addTemplate();
       return;
     }
-    updateTemplate();
+    await updateTemplate();
   };
 
   const canSubmit = canSubmitTemplateForm(form);

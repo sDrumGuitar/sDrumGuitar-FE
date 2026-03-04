@@ -6,30 +6,63 @@ import type {
   GetMessageTemplatesApiResponse,
   GetMessageTemplatesProps,
   GetMessageTemplatesResponse,
-  MessageTemplateApiItem,
+  MessageTemplateApiResponse,
+  UpdateMessageTemplatePayload,
 } from './message.types';
 
 export type {
   CreateMessageTemplatePayload,
   GetMessageTemplatesProps,
   GetMessageTemplatesResponse,
-  MessageTemplateApiItem,
+  UpdateMessageTemplatePayload,
 } from './message.types';
 
-const mapMessageTemplate = (template: MessageTemplateApiItem): MessageTemplate => ({
-  id: template.template_id,
-  type: template.type,
-  title: template.title,
-  content: template.content,
-  created_at: template.created_at,
-  updated_at: template.updated_at,
-});
+const TEMPLATE_TYPE_TO_API: Record<string, string> = {
+  ATTENDANCE: 'attended',
+  ABSENT: 'absent',
+  MAKEUP: 'makeup',
+};
+
+const TEMPLATE_TYPE_FROM_API: Record<string, MessageTemplate['type']> = {
+  attended: 'ATTENDANCE',
+  attendance: 'ATTENDANCE',
+  absent: 'ABSENT',
+  makeup: 'MAKEUP',
+};
+
+const normalizeTemplateTypeFromApi = (type: string): MessageTemplate['type'] => {
+  const normalized = String(type).trim().toLowerCase();
+  const mapped = TEMPLATE_TYPE_FROM_API[normalized];
+  if (mapped) return mapped;
+  return String(type).trim().toUpperCase() as MessageTemplate['type'];
+};
+
+const normalizeTemplateTypeToApi = (type: MessageTemplate['type']) =>
+  TEMPLATE_TYPE_TO_API[type] ?? String(type).toLowerCase();
+
+const mapMessageTemplate = (
+  template: MessageTemplateApiResponse,
+): MessageTemplate => {
+  const templateId = template.template_id ?? template.templateId;
+  if (templateId == null) {
+    throw new Error('Template ID is missing in the API response.');
+  }
+
+  return {
+    id: Number(templateId),
+    type: normalizeTemplateTypeFromApi(template.type),
+    title: template.title,
+    content: template.content,
+    created_at: template.created_at ?? template.createdAt ?? '',
+    updated_at: template.updated_at ?? template.updatedAt ?? '',
+  };
+};
 
 const mapCreatedTemplate = (
   template: CreateMessageTemplateApiResponse,
 ): MessageTemplate => ({
   id: template.templateId,
-  type: template.type,
+  type: normalizeTemplateTypeFromApi(template.type),
   title: template.title,
   content: template.content,
   created_at: template.createdAt,
@@ -80,7 +113,41 @@ export const createMessageTemplate = async (
 ): Promise<MessageTemplate> => {
   const res = await api.post<CreateMessageTemplateApiResponse>(
     '/messages/templates',
-    payload,
+    {
+      ...payload,
+      type: normalizeTemplateTypeToApi(payload.type),
+    },
   );
   return mapCreatedTemplate(res.data);
+};
+
+// ====================
+// PATCH : 메시지 템플릿 수정
+// ====================
+export const updateMessageTemplate = async (
+  templateId: number,
+  payload: UpdateMessageTemplatePayload,
+): Promise<MessageTemplate> => {
+  const body: Record<string, string> = {};
+
+  if (payload.type) {
+    body.type = normalizeTemplateTypeToApi(payload.type);
+  }
+  if (payload.title !== undefined) {
+    body.title = payload.title;
+  }
+  if (payload.content !== undefined) {
+    body.content = payload.content;
+  }
+
+  if (Object.keys(body).length === 0) {
+    throw new Error('At least one field must be provided');
+  }
+
+  const res = await api.patch<MessageTemplateApiResponse>(
+    `/messages/templates/${templateId}`,
+    body,
+  );
+
+  return mapMessageTemplate(res.data);
 };

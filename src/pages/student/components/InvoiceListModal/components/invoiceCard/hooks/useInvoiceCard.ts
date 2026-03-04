@@ -9,6 +9,7 @@ import { useToastStore } from '@/store/feedback/toastStore';
 import type { InvoiceData } from '../types';
 import { formatDateLabel, fromDateOnly, toDateOnly } from '../utils/date';
 import { classTypeLabel, methodLabel, statusLabel } from '../utils/labels';
+import { isAxiosError } from 'axios';
 
 // 청구서 카드에서 사용되는 데이터와 로직을 관리하는 커스텀 훅
 interface UseInvoiceCardResult {
@@ -44,6 +45,7 @@ export default function useInvoiceCard(
     status: InvoiceStatus;
     method: PaymentMethod;
     paid_at: string | null;
+    updated_at?: string;
   }) => void,
 ): UseInvoiceCardResult {
   const [isEdit, setIsEdit] = useState(false);
@@ -87,19 +89,24 @@ export default function useInvoiceCard(
 
     try {
       setLoading(true);
-      await patchInvoice(invoice.invoiceId, payload);
+      const patched = await patchInvoice(invoice.invoiceId, payload);
 
       onPatched({
-        invoice_id: invoice.invoiceId,
-        status: payload.status,
-        method: payload.method,
-        paid_at: payload.paid_at,
+        invoice_id: patched.invoice_id,
+        status: patched.status,
+        method: patched.method,
+        paid_at: patched.paid_at,
+        updated_at: patched.updated_at,
       });
 
       addToast('success', '청구서가 수정되었습니다.');
       setIsEdit(false);
     } catch (e) {
-      console.error(e);
+      if (isAxiosError(e)) {
+        console.error('Invoice patch failed:', e.response?.status, e.response?.data);
+      } else {
+        console.error(e);
+      }
       alert('청구 정보 수정에 실패했습니다.');
     } finally {
       setLoading(false);

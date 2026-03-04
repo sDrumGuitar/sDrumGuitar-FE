@@ -8,6 +8,7 @@ export interface Invoice {
   enrollment_id: number;
   issued_at: string;
   paid_at: string | null;
+  updated_at?: string;
 
   status: InvoiceStatus;
   method: PaymentMethod;
@@ -29,4 +30,14 @@ export interface PatchInvoicePayload {
   status: InvoiceStatus;
   method: PaymentMethod;
   paid_at: string | null;
+}
+
+export interface PatchInvoiceResponse {
+  invoice_id: number;
+  enrollment_id?: number;
+  student_id?: number;
+  status: InvoiceStatus;
+  method: PaymentMethod;
+  paid_at: string | null;
+  updated_at: string;
 }

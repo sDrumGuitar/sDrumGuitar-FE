@@ -1,4 +1,12 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import {
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import { createPortal } from 'react-dom';
 
 interface SelectOption {
@@ -11,23 +19,60 @@ interface SelectProps {
   value: string;
   onChange?: (value: string) => void;
   disabled?: boolean;
+  placeholder?: string;
+  renderValue?: (label: string, option: SelectOption | null) => ReactNode;
+  renderOption?: (
+    option: SelectOption,
+    state: { isSelected: boolean; isActive: boolean },
+  ) => ReactNode;
 }
 
-function Select({ options, value, onChange, disabled = false }: SelectProps) {
+function Select({
+  options,
+  value,
+  onChange,
+  disabled = false,
+  placeholder = '선택',
+  renderValue,
+  renderOption,
+}: SelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const listRef = useRef<HTMLUListElement | null>(null);
+  const suppressToggleRef = useRef(false);
+  const listId = useId();
   const [menuStyle, setMenuStyle] = useState<{
     top: number;
     left: number;
     width: number;
   } | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const menuOptions = useMemo(
+    () => [{ label: placeholder, value: '' }, ...options],
+    [options, placeholder],
+  );
 
   const selectedLabel = useMemo(
-    () => options.find((opt) => opt.value === value)?.label ?? '선택',
-    [options, value],
+    () =>
+      menuOptions.find((opt) => opt.value === value)?.label ?? placeholder,
+    [menuOptions, placeholder, value],
   );
+  const selectedOption = useMemo(
+    () => menuOptions.find((opt) => opt.value === value) ?? null,
+    [menuOptions, value],
+  );
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const selectedIndex = Math.max(
+      0,
+      menuOptions.findIndex((opt) => opt.value === value),
+    );
+    setActiveIndex(selectedIndex === -1 ? 0 : selectedIndex);
+  }, [isOpen, menuOptions, value]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -50,14 +95,56 @@ function Select({ options, value, onChange, disabled = false }: SelectProps) {
       setIsOpen(false);
     };
 
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (!isOpen) return;
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        setActiveIndex((prev) => Math.min(prev + 1, menuOptions.length - 1));
+      }
+      if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        setActiveIndex((prev) => Math.max(prev - 1, 0));
+      }
+      if (event.key === 'Home') {
+        event.preventDefault();
+        setActiveIndex(0);
+      }
+      if (event.key === 'End') {
+        event.preventDefault();
+        setActiveIndex(menuOptions.length - 1);
+      }
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        const target = menuOptions[activeIndex];
+        if (target) {
+          handleSelect(target.value);
+        }
+      }
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setIsOpen(false);
+        triggerRef.current?.focus();
+      }
+    };
+
     window.addEventListener('pointerdown', handlePointerDown);
     window.addEventListener('scroll', handleScroll, true);
     window.addEventListener('resize', handleScroll);
+    window.addEventListener('keydown', handleKeyDown, true);
     return () => {
       window.removeEventListener('pointerdown', handlePointerDown);
       window.removeEventListener('scroll', handleScroll, true);
       window.removeEventListener('resize', handleScroll);
+      window.removeEventListener('keydown', handleKeyDown, true);
     };
+  }, [isOpen, activeIndex, menuOptions]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const raf = requestAnimationFrame(() => {
+      listRef.current?.focus();
+    });
+    return () => cancelAnimationFrame(raf);
   }, [isOpen]);
 
   useLayoutEffect(() => {
@@ -90,24 +177,67 @@ function Select({ options, value, onChange, disabled = false }: SelectProps) {
     return () => cancelAnimationFrame(raf);
   }, [isOpen]);
 
+  const handleSelect = (nextValue: string) => {
+    onChange?.(nextValue);
+    setIsOpen(false);
+    suppressToggleRef.current = true;
+    triggerRef.current?.focus();
+  };
+
   return (
     <div className="relative" ref={dropdownRef}>
       <button
         type="button"
         ref={triggerRef}
         disabled={disabled}
-        onClick={() => !disabled && setIsOpen((prev) => !prev)}
+        onClick={() => {
+          if (disabled) return;
+          if (suppressToggleRef.current) {
+            suppressToggleRef.current = false;
+            return;
+          }
+          setIsOpen((prev) => !prev);
+        }}
+        onKeyDown={(event) => {
+          if (disabled) return;
+          if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+            event.preventDefault();
+            if (!isOpen) {
+              setIsOpen(true);
+            }
+            return;
+          }
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            if (suppressToggleRef.current) {
+              suppressToggleRef.current = false;
+              return;
+            }
+            if (!isOpen) {
+              setIsOpen(true);
+            }
+          }
+        }}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+        aria-controls={listId}
         className={`relative w-full rounded-sm border px-2 py-1.5 pr-9 text-left text-sm transition-colors ${
           disabled
             ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-400'
             : 'bg-white text-primary border-primary hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30'
         }`}
       >
-        <span
-          className={`block truncate ${disabled ? 'text-gray-400' : 'text-primary'}`}
-        >
-          {selectedLabel}
-        </span>
+        {renderValue ? (
+          renderValue(selectedLabel, selectedOption)
+        ) : (
+          <span
+            className={`block truncate ${
+              disabled ? 'text-gray-400' : 'text-primary'
+            }`}
+          >
+            {selectedLabel}
+          </span>
+        )}
         <span
           className={`pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 ${
             disabled ? 'text-gray-400' : 'text-primary'
@@ -155,36 +285,71 @@ function Select({ options, value, onChange, disabled = false }: SelectProps) {
                 pointerEvents: menuStyle ? 'auto' : 'none',
               }}
             >
-              <button
-                type="button"
-                onClick={() => {
-                  onChange?.('');
-                  setIsOpen(false);
+              <ul
+                id={listId}
+                ref={listRef}
+                role="listbox"
+                tabIndex={0}
+                aria-activedescendant={`${listId}-option-${activeIndex}`}
+                className="flex flex-col gap-1 p-1 text-sm focus:outline-none"
+                onKeyDown={(event) => {
+                  if (event.key === 'ArrowDown') {
+                    event.preventDefault();
+                    setActiveIndex((prev) =>
+                      Math.min(prev + 1, menuOptions.length - 1),
+                    );
+                  }
+                  if (event.key === 'ArrowUp') {
+                    event.preventDefault();
+                    setActiveIndex((prev) => Math.max(prev - 1, 0));
+                  }
+                  if (event.key === 'Home') {
+                    event.preventDefault();
+                    setActiveIndex(0);
+                  }
+                  if (event.key === 'End') {
+                    event.preventDefault();
+                    setActiveIndex(menuOptions.length - 1);
+                  }
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    const target = menuOptions[activeIndex];
+                    if (target) {
+                      handleSelect(target.value);
+                    }
+                  }
+                  if (event.key === 'Escape') {
+                    event.preventDefault();
+                    setIsOpen(false);
+                    triggerRef.current?.focus();
+                  }
                 }}
-                className={`w-full px-3 py-2 text-left text-sm transition-colors ${
-                  value === '' ? 'bg-gray-50 text-gray-900' : 'text-gray-600'
-                } hover:bg-gray-50`}
               >
-                선택
-              </button>
-              {options.map((opt) => {
-                const isActive = opt.value === value;
-                return (
-                  <button
-                    key={opt.value}
-                    type="button"
-                    onClick={() => {
-                      onChange?.(opt.value);
-                      setIsOpen(false);
-                    }}
-                    className={`w-full px-3 py-2 text-left text-sm transition-colors ${
-                      isActive ? 'bg-primary/10 text-primary' : 'text-gray-700'
-                    } hover:bg-gray-50`}
-                  >
-                    {opt.label}
-                  </button>
-                );
-              })}
+                {menuOptions.map((opt, index) => {
+                  const isSelected = opt.value === value;
+                  const isActive = index === activeIndex;
+                  return (
+                    <li key={`${opt.value || 'empty'}-${index}`}>
+                      <button
+                        id={`${listId}-option-${index}`}
+                        type="button"
+                        role="option"
+                        aria-selected={isSelected}
+                        onClick={() => handleSelect(opt.value)}
+                        className={`w-full px-3 py-2 text-left text-sm transition-colors ${
+                          isSelected
+                            ? 'bg-primary/10 text-primary'
+                            : 'text-gray-700'
+                        } ${isActive ? 'bg-gray-50' : ''} hover:bg-gray-50`}
+                      >
+                        {renderOption
+                          ? renderOption(opt, { isSelected, isActive })
+                          : opt.label}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>,
             document.body,
           )

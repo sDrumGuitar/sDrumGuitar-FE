@@ -234,14 +234,14 @@ export default function CourseForm({
 
       <FormField label="수강 시작 날짜">
         <div
-          className={`border rounded-sm py-1 px-2 flex justify-between items-center
+          className={`border rounded-sm py-1 px-2 flex items-center gap-2 min-w-0
         ${
           isViewMode
             ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
             : 'border-primary text-primary'
         }`}
         >
-          <p className="text-sm">
+          <p className="text-sm truncate">
             {form.start_date
               ? formatToKoreanDate(form.start_date)
               : '날짜를 선택해주세요.'}
@@ -252,7 +252,7 @@ export default function CourseForm({
               open();
             }}
             disabled={isViewMode}
-            className={`text-sm ${isViewMode && 'cursor-none'}`}
+            className={`text-sm shrink-0 ${isViewMode && 'cursor-none'}`}
           >
             선택
           </button>
@@ -319,14 +319,14 @@ export default function CourseForm({
 
           <FormField label="결제일">
             <div
-              className={`border rounded-sm py-1 px-2 flex justify-between
+              className={`border rounded-sm py-1 px-2 flex items-center gap-2 min-w-0
             ${
               isViewMode
                 ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                 : 'border-primary text-primary'
             }`}
             >
-              <p className="text-sm">
+              <p className="text-sm truncate">
                 {form.invoice.paid_at
                   ? formatToKoreanDate(form.invoice.paid_at)
                   : '날짜를 선택해주세요.'}
@@ -337,7 +337,7 @@ export default function CourseForm({
                   open();
                 }}
                 disabled={isViewMode}
-                className={`text-sm ${isViewMode && 'cursor-none'}`}
+                className={`text-sm shrink-0 ${isViewMode && 'cursor-none'}`}
               >
                 선택
               </button>

@@ -32,15 +32,22 @@ const normalizePaymentMethod = (method?: string | null) => {
 
 const normalizePatchInvoiceResponse = (
   data: PatchInvoiceApiResponse,
-): PatchInvoiceResponse => ({
-  invoice_id: Number(data.invoice_id ?? data.invoiceId ?? 0),
-  enrollment_id: data.enrollment_id ?? data.enrollmentId,
-  student_id: data.student_id ?? data.studentId,
-  status: normalizeInvoiceStatus(data.status),
-  method: normalizePaymentMethod(data.method),
-  paid_at: data.paid_at ?? data.paidAt ?? null,
-  updated_at: data.updated_at ?? data.updatedAt ?? '',
-});
+): PatchInvoiceResponse => {
+  const invoiceId = data.invoice_id ?? data.invoiceId;
+  if (invoiceId == null) {
+    throw new Error('Invoice ID is missing in the API response.');
+  }
+
+  return {
+    invoice_id: Number(invoiceId),
+    enrollment_id: data.enrollment_id ?? data.enrollmentId,
+    student_id: data.student_id ?? data.studentId,
+    status: normalizeInvoiceStatus(data.status),
+    method: normalizePaymentMethod(data.method),
+    paid_at: data.paid_at ?? data.paidAt ?? null,
+    updated_at: data.updated_at ?? data.updatedAt ?? '',
+  };
+};
 
 // ====================
 // GET : 학생 1명 청구서 목록

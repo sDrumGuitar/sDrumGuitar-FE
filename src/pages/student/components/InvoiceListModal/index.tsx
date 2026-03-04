@@ -12,6 +12,7 @@ import type {
   StudentInvoiceItem,
 } from '@/types/invoice';
 import { useMessageSendModalStore } from '@/store/message/messageSendModalStore';
+import { useToastStore } from '@/store/feedback/toastStore';
 import type { InvoiceData } from './components/invoiceCard/types';
 
 // 학생 청구서 목록 모달 컴포넌트
@@ -20,6 +21,7 @@ export default function InvoiceListModal() {
   const [loading, setLoading] = useState(false); // 로딩 상태 관리
   const [invociesList, setInvociesList] = useState<StudentInvoiceItem[]>([]); // 청구서 목록 상태 관리
   const { open: openMessageSendModal } = useMessageSendModalStore();
+  const { addToast } = useToastStore();
 
   // 학생의 청구서 목록을 API에서 불러오는 함수
   const load = async () => {
@@ -31,7 +33,7 @@ export default function InvoiceListModal() {
       setInvociesList(res.items);
     } catch (e) {
       console.error(e);
-      alert('청구서 정보를 불러오는데 실패했습니다.');
+      addToast('error', '청구서 정보를 불러오는데 실패했습니다.');
       close();
     } finally {
       setLoading(false);

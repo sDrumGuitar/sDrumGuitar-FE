@@ -4,10 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import InputField from './components/InputField';
 import LoginButton from './components/LoginButton';
 import LogoName from './components/LogoName';
+import { useToastStore } from '@/store/feedback/toastStore';
 
 function LoginPage() {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { addToast } = useToastStore();
 
   const navigate = useNavigate();
   const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD;
@@ -25,7 +27,7 @@ function LoginPage() {
     }
 
     setErrorMessage(null);
-    alert('로그인되었습니다.');
+    addToast('success', '로그인되었습니다.');
     navigate('/home');
   };
 

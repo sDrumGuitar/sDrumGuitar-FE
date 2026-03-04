@@ -84,7 +84,7 @@ export default function useInvoiceCard(
 
   const handleSave = async () => {
     if (validationError) {
-      alert(validationError);
+      addToast('warning', validationError);
       return;
     }
 
@@ -114,7 +114,7 @@ export default function useInvoiceCard(
       } else {
         console.error(e);
       }
-      alert('청구 정보 수정에 실패했습니다.');
+      addToast('error', '청구 정보 수정에 실패했습니다.');
     } finally {
       setLoading(false);
     }

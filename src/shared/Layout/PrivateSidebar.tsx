@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { MenuList } from './menuList/MenuList';
 import { IoIosLogOut } from 'react-icons/io';
+import { useToastStore } from '@/store/feedback/toastStore';
 
 function PrivateSidebar() {
   return (
@@ -33,11 +34,12 @@ const LogoName = () => {
 
 const LogoutButton = ({ compact = false }: { compact?: boolean }) => {
   const navigate = useNavigate();
+  const { addToast } = useToastStore();
 
   const handleLogout = () => {
     // 👉 추후 실제 로그아웃 로직 추가 가능
     // ex) auth.signOut(), 토큰 삭제 등
-    alert('로그아웃 되었습니다.');
+    addToast('info', '로그아웃 되었습니다.');
     navigate('/');
   };
 

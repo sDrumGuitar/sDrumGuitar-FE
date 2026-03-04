@@ -1,6 +1,7 @@
 import { useDateModalStore } from '@/store/date/dateModalStore';
 import { useTimeModalStore } from '@/store/date/timeModalStore';
 import type { MessageRecipient } from '@/store/message/messageSendStore';
+import { useToastStore } from '@/store/feedback/toastStore';
 
 interface ReservationPayloadInput {
   content: string;
@@ -23,6 +24,7 @@ export const useReservationFlow = ({
     selectedHour,
     selectedMin,
   } = useTimeModalStore();
+  const { addToast } = useToastStore();
 
   const pad2 = (value: string | number) => String(value).padStart(2, '0');
   const formatDate = (dateValue: string) => {
@@ -53,13 +55,13 @@ export const useReservationFlow = ({
 
   const handleTimeSave = () => {
     if (!selectedDate || selectedHour === null || selectedMin === null) {
-      alert('날짜와 시간을 모두 선택해주세요.');
+      addToast('warning', '날짜와 시간을 모두 선택해주세요.');
       return;
     }
 
     const startDate = new Date(selectedDate);
     if (Number.isNaN(startDate.getTime())) {
-      alert('선택한 날짜 형식이 올바르지 않습니다.');
+      addToast('error', '선택한 날짜 형식이 올바르지 않습니다.');
       return;
     }
 

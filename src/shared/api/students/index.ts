@@ -18,6 +18,39 @@ export type {
   UpdateStudentPayload,
 } from './students.types';
 
+interface StudentApiResponse {
+  student_id?: number;
+  studentId?: number;
+  name: string;
+  age_group?: Student['age_group'];
+  ageGroup?: Student['age_group'];
+  phone?: string | null;
+  parent_phone?: string | null;
+  parentPhone?: string | null;
+  memo?: string | null;
+  family_discount?: boolean;
+  familyDiscount?: boolean;
+  created_at?: string;
+  createdAt?: string;
+  updated_at?: string;
+  updatedAt?: string;
+}
+
+const normalizeStudentResponse = (student: StudentApiResponse): Student => ({
+  student_id: Number(student.student_id ?? student.studentId ?? 0),
+  name: student.name,
+  age_group: (student.age_group ?? student.ageGroup ?? 'adult') as Student['age_group'],
+  phone: student.phone ?? '',
+  parent_phone: student.parent_phone ?? student.parentPhone ?? '',
+  memo: student.memo ?? null,
+  family_discount: Boolean(student.family_discount ?? student.familyDiscount),
+  created_at: student.created_at ?? student.createdAt ?? '',
+  updated_at: student.updated_at ?? student.updatedAt ?? '',
+});
+
+const normalizeAgeGroupForRequest = (ageGroup: Student['age_group']) =>
+  String(ageGroup).toLowerCase() as Student['age_group'];
+
 // ====================
 // GET : 모든 학생 정보 불러오기
 // ====================
@@ -76,18 +109,21 @@ export const createStudent = async (payload: CreateStudentPayload) => {
 };
 
 // ====================
-// PATCH : 학생 정보 수정 (json-server 권장)
+// PATCH : 학생 정보 수정
 // ====================
 export const updateStudent = async (
   studentId: number,
   payload: UpdateStudentPayload,
 ) => {
-  const res = await api.put(`/students/${studentId}`, {
-    ...payload,
-    updated_at: new Date().toISOString(),
+  const { family_discount, ...rest } = payload;
+  const res = await api.patch<StudentApiResponse>(`/students/${studentId}`, {
+    ...rest,
+    age_group: normalizeAgeGroupForRequest(rest.age_group),
+    family_discount,
+    familyDiscount: family_discount,
   });
 
-  return res.data;
+  return normalizeStudentResponse(res.data);
 };
 
 // ====================

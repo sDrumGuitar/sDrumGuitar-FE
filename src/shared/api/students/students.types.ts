@@ -32,7 +32,7 @@ export interface CreateStudentPayload {
 }
 
 // ====================
-// PATCH : 학생 정보 수정 (json-server 권장)
+// PATCH : 학생 정보 수정
 // ====================
 export interface UpdateStudentPayload {
   name: string;

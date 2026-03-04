@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useDateModalStore } from '@/store/date/dateModalStore';
 import { useTimeModalStore } from '@/store/date/timeModalStore';
 import {
@@ -46,6 +47,7 @@ export function useAttendanceFlow({
   const { addToast } = useToastStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { open: openMakeupSendConfirm } = useMakeupMessageConfirmStore();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     setStatus(attendanceStatus);
@@ -73,6 +75,10 @@ export function useAttendanceFlow({
       });
       setSavedStatus(status);
       onAttendanceUpdated(lessonId, status);
+      if (status === 'rollover') {
+        queryClient.invalidateQueries({ queryKey: ['rollover-lessons'] });
+        queryClient.invalidateQueries({ queryKey: ['home', 'rollover-lessons'] });
+      }
       addToast('success', '출결 상태가 성공적으로 저장되었습니다.');
     } catch (error) {
       console.error('Failed to update attendance:', error);

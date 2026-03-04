@@ -55,6 +55,12 @@ export const useScheduleCalendar = () => {
 
   // 회차 데이터 불러오기
   const mapLessonsToCalendar = useCallback((response: GetLessonsResponse) => {
+    const normalizeAttendanceStatus = (value?: string) => {
+      if (!value) return null;
+      const normalized = value.toLowerCase();
+      return normalized === 'notyet' ? null : normalized;
+    };
+
     return response.days.reduce((acc, day) => {
       acc[day.date] = {
         date: day.date,
@@ -68,10 +74,7 @@ export const useScheduleCalendar = () => {
           id: lesson.lesson_id,
           paid_at: '',
           lesson_tag: lesson.lesson_tag,
-          attendance_status:
-            lesson.attendance_status === 'notyet'
-              ? null
-              : lesson.attendance_status,
+          attendance_status: normalizeAttendanceStatus(lesson.attendance_status),
         })),
       };
       return acc;

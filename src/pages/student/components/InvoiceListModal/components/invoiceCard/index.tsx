@@ -53,6 +53,10 @@ export default function InvoiceCard({
           paidAtDate={paidAtDate}
           setPaidAtDate={setPaidAtDate}
           validationError={validationError}
+          onCancel={handleCancel}
+          onSave={handleSave}
+          loading={loading}
+          isDirty={isDirty}
         />
       )}
     </div>

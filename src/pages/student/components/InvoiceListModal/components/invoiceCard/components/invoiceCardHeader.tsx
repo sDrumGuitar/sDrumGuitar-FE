@@ -29,16 +29,7 @@ export default function InvoiceCardHeader({
           ) : null}
           <NormalButton text="수정하기" onClick={() => setIsEdit(true)} />
         </>
-      ) : (
-        <>
-          <NormalButton text="취소" onClick={handleCancel} />
-          <NormalButton
-            text={loading ? '저장중...' : '저장'}
-            onClick={handleSave}
-            disabled={loading || !isDirty}
-          />
-        </>
-      )}
+      ) : null}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import FormField from '@/shared/form/FormField';
 import Select from '@/shared/form/Select';
 import TextInput from '@/shared/form/TextInput';
+import NormalButton from '@/shared/button/NormalButton';
 import { PAYMENT_METHOD_OPTIONS, PAYMENT_STATUS_OPTIONS } from '@/constants/invoice';
 import type { InvoiceStatus, PaymentMethod } from '@/types/invoice';
 
@@ -12,6 +13,10 @@ interface InvoiceEditFormProps {
   paidAtDate: string;
   setPaidAtDate: (next: string) => void;
   validationError: string | null;
+  onCancel: () => void;
+  onSave: () => void;
+  loading: boolean;
+  isDirty: boolean;
 }
 
 // 청구서 편집 폼 컴포넌트
@@ -23,6 +28,10 @@ export default function InvoiceEditForm({
   paidAtDate,
   setPaidAtDate,
   validationError,
+  onCancel,
+  onSave,
+  loading,
+  isDirty,
 }: InvoiceEditFormProps) {
   return (
     <div className="mt-4 pt-4 border-t border-gray-200 space-y-3">
@@ -70,6 +79,15 @@ export default function InvoiceEditForm({
       {validationError && (
         <div className="text-sm text-red-500">{validationError}</div>
       )}
+
+      <div className="flex justify-end gap-2">
+        <NormalButton text="취소" onClick={onCancel} />
+        <NormalButton
+          text={loading ? '저장중...' : '저장'}
+          onClick={onSave}
+          disabled={loading || !isDirty}
+        />
+      </div>
     </div>
   );
 }

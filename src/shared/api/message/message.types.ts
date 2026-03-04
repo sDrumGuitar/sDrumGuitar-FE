@@ -1,15 +1,6 @@
 import type { MessageTemplate } from '@/types/messageTemplate';
 import type { MessageTemplateType } from '@/constants/messageTemplate';
 
-export interface MessageTemplateApiItem {
-  template_id: number;
-  type: MessageTemplateType;
-  title: string;
-  content: string;
-  created_at: string;
-  updated_at: string;
-}
-
 export interface MessageTemplateApiResponse {
   template_id?: number;
   templateId?: number;

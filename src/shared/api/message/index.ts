@@ -42,14 +42,21 @@ const normalizeTemplateTypeToApi = (type: MessageTemplate['type']) =>
 
 const mapMessageTemplate = (
   template: MessageTemplateApiResponse,
-): MessageTemplate => ({
-  id: Number(template.template_id ?? template.templateId ?? 0),
-  type: normalizeTemplateTypeFromApi(template.type),
-  title: template.title,
-  content: template.content,
-  created_at: template.created_at ?? template.createdAt ?? '',
-  updated_at: template.updated_at ?? template.updatedAt ?? '',
-});
+): MessageTemplate => {
+  const templateId = template.template_id ?? template.templateId;
+  if (templateId == null) {
+    throw new Error('Template ID is missing in the API response.');
+  }
+
+  return {
+    id: Number(templateId),
+    type: normalizeTemplateTypeFromApi(template.type),
+    title: template.title,
+    content: template.content,
+    created_at: template.created_at ?? template.createdAt ?? '',
+    updated_at: template.updated_at ?? template.updatedAt ?? '',
+  };
+};
 
 const mapCreatedTemplate = (
   template: CreateMessageTemplateApiResponse,

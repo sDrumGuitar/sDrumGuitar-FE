@@ -97,13 +97,15 @@ function Select({ options, value, onChange, disabled = false }: SelectProps) {
         ref={triggerRef}
         disabled={disabled}
         onClick={() => !disabled && setIsOpen((prev) => !prev)}
-        className={` w-full rounded-sm border px-2 py-1.5 text-left text-sm transition-colors ${
+        className={`relative w-full rounded-sm border px-2 py-1.5 pr-9 text-left text-sm transition-colors ${
           disabled
             ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-400'
             : 'bg-white text-primary border-primary hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30'
         }`}
       >
-        <span className={disabled ? 'text-gray-400' : 'text-primary'}>
+        <span
+          className={`block truncate ${disabled ? 'text-gray-400' : 'text-primary'}`}
+        >
           {selectedLabel}
         </span>
         <span

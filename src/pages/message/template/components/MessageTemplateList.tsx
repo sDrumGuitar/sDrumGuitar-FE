@@ -42,7 +42,7 @@ function MessageTemplateList() {
   return (
     <div className="flex min-h-0 h-full flex-col gap-4">
       {/* 1. 템플릿 목록 */}
-      <div className="relative min-h-0 flex-1 overflow-y-auto pr-1 pl-1 pb-1">
+      <div className="relative min-h-0 flex-1 md:overflow-y-auto md:pr-1 md:pl-1 md:pb-1">
         <div className="flex flex-col gap-3 py-1">
           {isLoadingTemplates && templates.length === 0 && (
             <div className="rounded-sm bg-gray-100 px-4 py-3 text-sm text-gray-500">
@@ -131,9 +131,10 @@ function MessageTemplateList() {
       <ConfirmModal
         isOpen={isSwitchConfirmOpen}
         title="저장되지 않은 변경사항이 있습니다."
-        description="저장 후 템플릿을 전환할까요?"
-        confirmText="저장 후 전환"
-        cancelText="그대로 전환"
+        description="변경 사항이 사라집니다. 계속하시겠습니까?"
+        confirmText="변경 사항 버리기"
+        cancelText="계속 수정"
+        isDanger
         onConfirm={onConfirmSwitch}
         onCancel={onCancelSwitch}
       />

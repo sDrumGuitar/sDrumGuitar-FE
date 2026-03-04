@@ -220,6 +220,12 @@ export const useMessageTemplateStore = create<MessageTemplateStore>(
     },
 
     deleteTemplate: async (id) => {
+      if (!Number.isFinite(id)) {
+        useToastStore
+          .getState()
+          .addToast('error', '삭제할 템플릿 ID가 없습니다.');
+        return;
+      }
       const { templates, selectedTemplateId, totalCount } = get();
 
       try {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ModalWrapper from './ModalWrapper';
 
 interface ConfirmModalProps {
@@ -23,20 +23,49 @@ function ConfirmModal({
   onCancel,
 }: ConfirmModalProps) {
   const [canBackdropClose, setCanBackdropClose] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const confirmButtonRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
-    if (isOpen) {
-      setCanBackdropClose(false);
-      const timer = setTimeout(() => {
-        setCanBackdropClose(true);
-      }, 100);
+    if (!isOpen) return;
+    setCanBackdropClose(false);
+    const timer = setTimeout(() => {
+      setCanBackdropClose(true);
+    }, 100);
 
-      return () => clearTimeout(timer);
-    }
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        handleConfirm();
+      }
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        onCancel();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown, true);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('keydown', handleKeyDown, true);
+    };
+  }, [isOpen, onCancel, onConfirm]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const raf = requestAnimationFrame(() => {
+      confirmButtonRef.current?.focus();
+    });
+    return () => cancelAnimationFrame(raf);
   }, [isOpen]);
 
   const handleBackdropClose = () => {
     if (!canBackdropClose) return;
+    onCancel();
+  };
+
+  const handleConfirm = () => {
+    onConfirm();
     onCancel();
   };
 
@@ -47,7 +76,7 @@ function ConfirmModal({
       onClose={handleBackdropClose}
       className="w-90! min-h-0! h-auto!"
     >
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4" tabIndex={-1} ref={wrapperRef}>
         <div className="flex flex-col gap-1">
           <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
           {description && (
@@ -66,7 +95,8 @@ function ConfirmModal({
           </button>
           <button
             type="button"
-            onClick={onConfirm}
+            onClick={handleConfirm}
+            ref={confirmButtonRef}
             className={`h-10 rounded-md px-4 text-sm font-semibold text-white ${
               isDanger
                 ? 'bg-rose-600 hover:bg-rose-700'

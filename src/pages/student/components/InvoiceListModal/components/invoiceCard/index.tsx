@@ -19,6 +19,7 @@ export default function InvoiceCard({
     setMethod,
     paidAtDate,
     setPaidAtDate,
+    isDirty,
     loading,
     validationError,
     handleCancel,
@@ -35,6 +36,7 @@ export default function InvoiceCard({
         handleCancel={handleCancel}
         loading={loading}
         handleSave={handleSave}
+        isDirty={isDirty}
         onSendMessage={onSendMessage ? () => onSendMessage(invoice) : undefined}
       />
 

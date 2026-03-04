@@ -21,6 +21,7 @@ import {
 } from '@/constants/invoice';
 import { useToastStore } from '@/store/feedback/toastStore';
 import ConfirmModal from '@/shared/modal/ConfirmModal';
+import { toDateOnly, toInvoicePaidAt } from './courseFormDateUtils';
 
 interface CourseFormState {
   student: {
@@ -148,15 +149,6 @@ export default function CourseForm({
 
     setIsSubmitting(true);
     try {
-      const formatDateOnly = (value: string) => {
-        const parsed = new Date(value);
-        if (Number.isNaN(parsed.getTime())) return value;
-        const yyyy = parsed.getFullYear();
-        const mm = String(parsed.getMonth() + 1).padStart(2, '0');
-        const dd = String(parsed.getDate()).padStart(2, '0');
-        return `${yyyy}-${mm}-${dd}`;
-      };
-
       const invoiceStatus: 'PAID' | 'UNPAID' =
         form.invoice.status === 'PAID' ? 'PAID' : 'UNPAID';
       const invoiceMethod: 'CARD' | 'CASH' | null =
@@ -164,22 +156,20 @@ export default function CourseForm({
           ? form.invoice.method === 'CARD'
             ? 'CARD'
             : form.invoice.method === 'CASH'
-              ? 'CASH'
-              : null
+            ? 'CASH'
+            : null
           : null;
-      const invoicePaidAt: string | null =
-        form.invoice.status === 'PAID'
-          ? form.invoice.paid_at.includes('T')
-            ? form.invoice.paid_at
-            : `${formatDateOnly(form.invoice.paid_at)}T00:00:00`
-          : null;
+      const invoicePaidAt = toInvoicePaidAt(
+        form.invoice.paid_at,
+        invoiceStatus,
+      );
 
       const payload = {
         student_id: form.student.student_id,
         class_type: form.class_type,
         family_discount: form.family_discount,
         lesson_count: form.lesson_count,
-        start_date: formatDateOnly(form.start_date),
+        start_date: toDateOnly(form.start_date),
         schedules: form.schedules,
         invoice: {
           status: invoiceStatus,

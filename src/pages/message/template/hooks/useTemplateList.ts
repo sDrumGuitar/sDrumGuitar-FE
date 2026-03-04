@@ -49,8 +49,6 @@ export const useTemplateList = () => {
 
   // 변경사항이 있을 경우 확인 후 템플릿을 전환
   const handleSelectTemplate = async (nextTemplateId: number) => {
-    if (selectedTemplateId === nextTemplateId) return;
-
     const isDirty =
       mode === 'CREATE'
         ? isTemplateFormDirtyForCreate(form)
@@ -59,6 +57,16 @@ export const useTemplateList = () => {
             templates,
             selectedTemplateId,
           );
+    if (selectedTemplateId === nextTemplateId) {
+      if (!isDirty) {
+        selectTemplate(nextTemplateId);
+        return;
+      }
+
+      setPendingTemplateId(nextTemplateId);
+      setSwitchConfirmOpen(true);
+      return;
+    }
     if (!isDirty) {
       selectTemplate(nextTemplateId);
       return;
@@ -84,7 +92,6 @@ export const useTemplateList = () => {
 
   const handleCancelSwitch = () => {
     if (pendingTemplateId === null) return;
-    selectTemplate(pendingTemplateId);
     setPendingTemplateId(null);
     setSwitchConfirmOpen(false);
   };

@@ -4,7 +4,6 @@ import { useRolloverLessons } from './hooks/useRolloverLessons';
 import { useCoursesSummary } from './hooks/useCoursesSummary';
 import { useStudentsSummary } from './hooks/useStudentsSummary';
 import { useMessageTemplatesSummary } from './hooks/useMessageTemplatesSummary';
-import { useEffect, useRef, useState } from 'react';
 import LessonSummaryCards from './components/sections/LessonSummaryCards';
 import LessonDistributionSection from './components/sections/LessonDistributionSection';
 import RolloverLessonSection from './components/sections/RolloverLessonSection';
@@ -18,36 +17,8 @@ function HomePage() {
   const coursesSummary = useCoursesSummary();
   const studentsSummary = useStudentsSummary();
   const templatesSummary = useMessageTemplatesSummary();
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [cooldownSeconds, setCooldownSeconds] = useState(0);
-  const cooldownTimerRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    if (cooldownSeconds <= 0) {
-      if (cooldownTimerRef.current !== null) {
-        window.clearInterval(cooldownTimerRef.current);
-        cooldownTimerRef.current = null;
-      }
-      return;
-    }
-
-    if (cooldownTimerRef.current === null) {
-      cooldownTimerRef.current = window.setInterval(() => {
-        setCooldownSeconds((prev) => Math.max(0, prev - 1));
-      }, 1000);
-    }
-
-    return () => {
-      if (cooldownTimerRef.current !== null) {
-        window.clearInterval(cooldownTimerRef.current);
-        cooldownTimerRef.current = null;
-      }
-    };
-  }, [cooldownSeconds]);
 
   const handleRefresh = async () => {
-    if (isRefreshing || cooldownSeconds > 0) return;
-    setIsRefreshing(true);
     await Promise.all([
       lessonSummary.refetch(),
       rolloverSummary.refetch(),
@@ -55,15 +26,11 @@ function HomePage() {
       studentsSummary.refetch(),
       templatesSummary.refetch(),
     ]);
-    setIsRefreshing(false);
-    setCooldownSeconds(30);
   };
 
   return (
     <div className="space-y-6">
       <DashboardHeader
-        cooldownSeconds={cooldownSeconds}
-        isRefreshing={isRefreshing}
         onRefresh={handleRefresh}
       />
 

@@ -30,7 +30,7 @@ function MessageTemplateForm() {
   }, [isTypeOpen]);
 
   return (
-    <div className="flex flex-col gap-7.5">
+    <div className="flex flex-col gap-5 md:gap-7.5">
       <div className="flex min-h-0 h-full flex-col gap-4">
         {/* 1. 유형 입력 필드 */}
         <div className="flex flex-col gap-2" ref={typeMenuRef}>
@@ -58,7 +58,7 @@ function MessageTemplateForm() {
             </button>
             {isTypeOpen && (
               <div className="absolute z-10 mt-2 w-full overflow-hidden rounded-md border border-gray-200 bg-white shadow-[0_6px_20px_rgba(0,0,0,0.12)]">
-                <ul className="flex flex-col gap-1 p-2 text-sm">
+                <ul className="flex max-h-72 flex-col gap-1 overflow-auto p-2 text-sm overscroll-contain">
                   {MESSAGE_TEMPLATE_TYPES.map((type) => {
                     const isSelected = form.type === type;
                     return (
@@ -107,7 +107,7 @@ function MessageTemplateForm() {
           value={form.content}
           onChange={(event) => setFormField('content', event.target.value)}
           placeholder="문자 내용을 입력하세요."
-          className="h-full min-h-0 w-full resize-none rounded-sm bg-gray-100 px-4 py-3 text-base leading-6 outline-none focus:ring-1 focus:ring-gray-300"
+          className="min-h-48 w-full resize-none rounded-sm bg-gray-100 px-4 py-3 text-base leading-6 outline-none focus:ring-1 focus:ring-gray-300 md:h-full md:min-h-0"
         />
       </div>
 

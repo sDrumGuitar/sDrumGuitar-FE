@@ -10,6 +10,7 @@ import { useToastStore } from '@/store/feedback/toastStore';
 import { type MessageSendContext } from '@/store/message/messageSendModalStore';
 import { useMakeupMessageConfirmStore } from '@/store/message/makeupMessageConfirmStore';
 import type { MessageRecipient } from '@/store/message/messageSendStore';
+import { rolloverLessonKeys } from '@/shared/queryKeys/rolloverLessons';
 
 interface UseAttendanceFlowParams {
   attendanceStatus: string | null;
@@ -76,8 +77,12 @@ export function useAttendanceFlow({
       setSavedStatus(status);
       onAttendanceUpdated(lessonId, status);
       if (status === 'rollover') {
-        queryClient.invalidateQueries({ queryKey: ['rollover-lessons'] });
-        queryClient.invalidateQueries({ queryKey: ['home', 'rollover-lessons'] });
+        queryClient.invalidateQueries({
+          queryKey: rolloverLessonKeys.all,
+        });
+        queryClient.invalidateQueries({
+          queryKey: rolloverLessonKeys.home(),
+        });
       }
       addToast('success', '출결 상태가 성공적으로 저장되었습니다.');
     } catch (error) {

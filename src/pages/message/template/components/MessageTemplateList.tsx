@@ -131,9 +131,10 @@ function MessageTemplateList() {
       <ConfirmModal
         isOpen={isSwitchConfirmOpen}
         title="저장되지 않은 변경사항이 있습니다."
-        description="저장 후 템플릿을 전환할까요?"
-        confirmText="저장 후 전환"
-        cancelText="그대로 전환"
+        description="변경 사항이 사라집니다. 계속하시겠습니까?"
+        confirmText="변경 사항 버리기"
+        cancelText="계속 수정"
+        isDanger
         onConfirm={onConfirmSwitch}
         onCancel={onCancelSwitch}
       />

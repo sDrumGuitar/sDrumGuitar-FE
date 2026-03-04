@@ -33,10 +33,6 @@ export default function InvoiceCard({
       <InvoiceCardHeader
         isEdit={isEdit}
         setIsEdit={setIsEdit}
-        handleCancel={handleCancel}
-        loading={loading}
-        handleSave={handleSave}
-        isDirty={isDirty}
         onSendMessage={onSendMessage ? () => onSendMessage(invoice) : undefined}
       />
 

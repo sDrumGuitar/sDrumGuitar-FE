@@ -3,10 +3,6 @@ import NormalButton from '@/shared/button/NormalButton';
 interface InvoiceCardHeaderProps {
   isEdit: boolean;
   setIsEdit: (isEdit: boolean) => void;
-  handleCancel: () => void;
-  loading: boolean;
-  handleSave: () => void;
-  isDirty: boolean;
   onSendMessage?: () => void;
 }
 
@@ -14,10 +10,6 @@ interface InvoiceCardHeaderProps {
 export default function InvoiceCardHeader({
   isEdit,
   setIsEdit,
-  handleCancel,
-  loading,
-  handleSave,
-  isDirty,
   onSendMessage,
 }: InvoiceCardHeaderProps) {
   return (

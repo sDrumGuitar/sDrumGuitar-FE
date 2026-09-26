@@ -5,6 +5,7 @@ import InputField from './components/InputField';
 import LoginButton from './components/LoginButton';
 import LogoName from './components/LogoName';
 import { useToastStore } from '@/store/feedback/toastStore';
+import { IS_MOCK } from '@/shared/api/axios';
 
 function LoginPage() {
   const [password, setPassword] = useState('');
@@ -19,7 +20,8 @@ function LoginPage() {
   const handleLogin = () => {
     if (!isEnabled) return;
 
-    const isValid = adminPassword === password;
+    // 목업 모드에서는 아무 비밀번호나 통과
+    const isValid = IS_MOCK || adminPassword === password;
 
     if (!isValid) {
       setErrorMessage('비밀번호가 맞지 않습니다.');
